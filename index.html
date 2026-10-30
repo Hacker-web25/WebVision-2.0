@@ -184,6 +184,9 @@ legend{padding:0}
 .t-dates li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--ui-line);font-size:14px}
 .t-dates b{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
 .t-dates b.hot{color:#b05a00}
+.t-dates b small{display:block;font-size:12px;font-weight:400;color:var(--muted);text-align:right}
+.t-dates b.soon,.t-dates b.soon small{color:var(--bad)}
+.t-fine{margin:10px 0 0;font-size:12.5px;color:var(--muted)}
 .t-note{font-size:13px;background:var(--surface);border-radius:7px;padding:10px 12px}
 .t-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .t-acts .btn{height:40px;font-size:14px;padding:0 14px;border-radius:7px}
@@ -353,6 +356,11 @@ legend{padding:0}
 .mk.end .mk-l{transform:translateX(-100%);text-align:right;left:8px}
 .mk-l b{font-size:14px;font-weight:600}
 .mk-l span{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.mk-l span.lf{color:var(--ink);font-weight:500}
+.nextdl{display:flex;flex-direction:column;gap:2px;text-align:right;font-size:13px;color:var(--muted)}
+.nextdl b{font-size:17px;font-weight:600;color:var(--ink)}
+.nextdl em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink)}
+.nextdl em.soon{color:var(--bad);font-weight:600}
 .tl-warn{margin:6px 0 14px;font-size:13.5px;background:var(--bad-bg);color:var(--bad);border-radius:7px;padding:10px 12px}
 .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;padding:16px}
 .trav{background:var(--surface);border-radius:9px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;transition:opacity 260ms var(--ease-out),transform 260ms var(--ease-out)}
@@ -567,6 +575,7 @@ html.lenis,html.lenis body{height:auto}
               </fieldset>
               <div class="two">
                 <div><label class="lbl" for="arr">Arrival date</label><input class="ctl" type="date" id="arr"></div>
+                <div><label class="lbl" for="arrTime">Landing time <span style="font-weight:400">(India time, optional)</span></label><input class="ctl" type="time" id="arrTime"></div>
                 <fieldset id="priorField" hidden><legend class="lbl">Indian visa before?</legend><div class="yn"><input type="radio" name="prior" id="pr-y" value="yes"><label for="pr-y">Yes</label><input type="radio" name="prior" id="pr-n" value="no" checked><label for="pr-n">No</label></div></fieldset>
               </div>
               <div class="late">
@@ -764,7 +773,7 @@ html.lenis,html.lenis body{height:auto}
         <div class="frag" data-ui data-rise>
           <div class="frag-bar"><h3>Timeline</h3><span class="note" id="tlRoute"></span></div>
           <div class="tl-wrap">
-            <div class="tl-top"><div class="days"><b id="daysLeft">0</b><span id="daysTxt">days to arrival</span></div></div>
+            <div class="tl-top"><div class="days"><b id="daysLeft">0</b><span id="daysTxt">days to arrival</span></div><div class="nextdl" id="nextDl"></div></div>
             <div class="flight" aria-hidden="true"><svg viewBox="0 0 1000 250" id="flightSvg">
               <path class="base" d="M70 150 C 330 -20, 670 -20, 930 150" fill="none" stroke-linecap="round"/>
               <path class="draw" id="flPath" d="M70 150 C 330 -20, 670 -20, 930 150" fill="none" stroke-linecap="round"/>
@@ -846,6 +855,13 @@ const DAY=864e5;
 const sod=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x};
 const addDays=(d,n)=>new Date(d.getTime()+n*DAY);
 const fmtD=d=>d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+const mkKey=l=>l==='Land in India'?'Land':l.replace(' opens','');
+const dayDiff=d=>Math.round((sod(d)-sod(new Date()))/DAY);
+const daysLeftTxt=n=>n<0?'Passed':n===0?'Today':n===1?'1 day left':n+' days left';
+const landAt=()=>{if(!state.time)return null;const[h,m]=state.time.split(':').map(Number),a=state.arr;return new Date(Date.UTC(a.getFullYear(),a.getMonth(),a.getDate(),h,m)-330*6e4)};
+const istTime=d=>d.toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit'})+' IST';
+function clockFor(label){const l=landAt();if(!l)return '';if(label==='Land')return istTime(l);if(label==='Arrival Card')return istTime(new Date(l.getTime()-72*36e5));return ''}
+const subFor=(label,d)=>{const n=dayDiff(d);return label==='Land'?(n<0?'Landed':n===0?'Today':n===1?'Tomorrow':'In '+n+' days'):daysLeftTxt(n)};
 const fmtSize=b=>b<1048576?Math.max(1,Math.round(b/1024))+' KB':(b/1048576).toFixed(2)+' MB';
 const isoDate=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -866,7 +882,7 @@ const COUNTRIES=[['JP','Japan','voa','Japanese'],['KR','South Korea','voa','Sout
 const PORTS=[['DEL','Delhi',1],['BOM','Mumbai',1],['BLR','Bengaluru',1],['MAA','Chennai',1],['CCU','Kolkata',1],['HYD','Hyderabad',1],['GOX','Goa (Mopa)',0],['COK','Kochi',0],['AMD','Ahmedabad',0],['JAI','Jaipur',0]];
 const PURP={tourism:['e-Tourist Visa',null],business:['e-Business Visa',['Business card','A copy, uploaded with the form']],medical:['e-Medical Visa',['Hospital letter','From the hospital in India, on its letterhead']]};
 const COLORS={voa:'#17704a',evisa:'#f7941d',mission:'#a93322',check:'#565e75'};
-const state={nat:'JP',purpose:'tourism',port:'BLR',arr:addDays(sod(new Date()),21),prior:'no',pak:'no',mil:'no'};
+const state={nat:'JP',purpose:'tourism',port:'BLR',arr:addDays(sod(new Date()),21),prior:'no',pak:'no',mil:'no',time:''};
 const natSel=$('#nat'),portSel=$('#port'),arrIn=$('#arr');
 natSel.innerHTML=COUNTRIES.map(c=>`<option value="${c[0]}">${esc(c[1])}</option>`).join('');
 portSel.innerHTML=PORTS.map(p=>`<option value="${p[0]}">${esc(p[1])}</option>`).join('');
@@ -908,10 +924,10 @@ function renderTicket(animate){
   t.innerHTML=`<div class="t-head"><div style="display:flex;flex-direction:column;gap:10px"><span class="t-kind"><i></i>${esc(r.kind)}</span><h3 class="t-title">${esc(r.title)}</h3></div><div class="t-port"><b>${esc(r.port[0])}</b><span>${esc(r.port[1])}</span></div></div>
   <p class="t-reason">${esc(r.reason)}</p>${note}
   <div class="t-cols"><div><h4>${r.type==='voa'?'Carry':'You will need'}</h4><ul class="t-docs">${docs.map(d=>`<li><b>${esc(d[0])}</b><span>${esc(d[1])}</span></li>`).join('')}</ul></div>
-  <div><h4>Dates</h4><ul class="t-dates">${dates.map(d=>`<li><span>${esc(d[0])}</span><b class="${d[2]?'hot':''}">${esc(fmtD(d[1]))}</b></li>`).join('')}</ul></div></div>
+  <div><h4>Dates</h4><ul class="t-dates">${dates.map(d=>{const n=dayDiff(d[1]),c=clockFor(d[0]);return `<li><span>${esc(d[0])}</span><b class="${d[2]?'hot':''}${n>=0&&n<=2&&d[0]!=='Land'?' soon':''}">${esc(fmtD(d[1]))}${c?' · '+esc(c):''}<small>${esc(subFor(d[0],d[1]))}</small></b></li>`}).join('')}</ul>${r.type==='evisa'?'<p class="t-fine">Apply by is the last day that still leaves the required 4 days before landing. Aim to apply earlier in the day.</p>':''}</div></div>
   <div class="t-acts">${cta}<button class="btn btn-ghost" type="button" id="copyPlan">Copy checklist</button></div>
   <p class="t-src">Rule from the <a href="${src}" target="_blank" rel="noopener">official ${r.type==='voa'?'visa-on-arrival page':'e-Visa site'}</a>, checked 30 Oct 2026. Unofficial preview, not a visa.</p>`;
-  $('#copyPlan').addEventListener('click',e=>copyText([`Pravesh entry plan (unofficial)`,`${r.kind}: ${r.title}`,r.reason,'','Documents:',...docs.map(d=>`- ${d[0]}: ${d[1]}`),'','Dates:',...dates.map(d=>`- ${d[0]}: ${fmtD(d[1])}`),'','Apply only at https://indianvisaonline.gov.in'].join('\n'),e.currentTarget));
+  $('#copyPlan').addEventListener('click',e=>copyText([`Pravesh entry plan (unofficial)`,`${r.kind}: ${r.title}`,r.reason,'','Documents:',...docs.map(d=>`- ${d[0]}: ${d[1]}`),'','Dates:',...dates.map(d=>`- ${d[0]}: ${fmtD(d[1])}${clockFor(d[0])?' '+clockFor(d[0]):''} (${subFor(d[0],d[1])})`),'','Apply only at https://indianvisaonline.gov.in'].join('\n'),e.currentTarget));
   if(animate) Array.from(t.children).forEach((el,i)=>anim(el,[{opacity:.2,filter:'blur(4px)',transform:'translateY(6px)'},{opacity:1,filter:'blur(0)',transform:'none'}],{duration:280,delay:i*30}));
 }
 function readPlan(){
@@ -922,6 +938,7 @@ function readPlan(){
   state.pak=f.querySelector('[name=pak]:checked').value;
   state.mil=f.querySelector('[name=mil]:checked').value;
   const d=arrIn.value?new Date(arrIn.value+'T00:00:00'):null; if(d&&!isNaN(d)) state.arr=d;
+  state.time=$('#arrTime').value||'';
   $('#priorField').hidden=state.nat!=='AE';
 }
 $('#routeForm').addEventListener('change',()=>{readPlan();srvPlan=null;renderTicket(true);renderTimeline(true);if(window.__imprint)window.__imprint();syncPlan();saveSoon()});
@@ -1133,14 +1150,18 @@ $$('[data-copy]').forEach(b=>b.addEventListener('click',()=>copyText(b.dataset.c
 /* ---------- Trip ---------- */
 function renderTimeline(){
   const r=routeFor(state),today=sod(new Date()),arr=sod(state.arr),days=Math.round((arr-today)/DAY);
-  $('#daysLeft').textContent=Math.max(0,days);$('#daysTxt').textContent=days===1?'day to arrival':'days to arrival';
+  const la=landAt(),ms=la?la.getTime()-Date.now():0;
+  if(la&&ms>0){const dd=Math.floor(ms/DAY),hh=Math.floor(ms%DAY/36e5);$('#daysLeft').textContent=dd;$('#daysTxt').textContent=(dd===1?'day ':'days ')+hh+' h to landing, '+istTime(la)}
+  else{$('#daysLeft').textContent=Math.max(0,days);$('#daysTxt').textContent=days===1?'day to arrival':'days to arrival'}
   $('#tlRoute').textContent=`${r.c[1]} · ${r.kind} · ${r.port[1]}`;
   if(window.__flight) window.__flight(r);
   const end=addDays(arr,2),span=Math.max(DAY,end-today),pct=d=>Math.min(100,Math.max(0,(d-today)/span*100));
   const mk=[{d:today,l:'Today',k:''}];if(r.type==='evisa')mk.push({d:addDays(arr,-4),l:'Apply by',k:'accent'});if(r.type==='voa'||r.type==='evisa')mk.push({d:addDays(arr,-3),l:'Arrival Card opens',k:''});mk.push({d:arr,l:'Land in India',k:'accent'});
   const tl=$('#tl');
-  tl.innerHTML=`<div class="tl-track"></div><div class="tl-fill"></div>`+mk.map((m,i)=>{const p=pct(m.d),pos=p<8?'start':p>90?'end':'';return `<div class="mk ${m.k} ${i%2?'down':''} ${pos}" style="left:${p}%"><div class="mk-l"><b>${esc(m.l)}</b><span>${esc(fmtD(m.d))}</span></div></div>`}).join('');
+  tl.innerHTML=`<div class="tl-track"></div><div class="tl-fill"></div>`+mk.map((m,i)=>{const p=pct(m.d),pos=p<8?'start':p>90?'end':'';return `<div class="mk ${m.k} ${i%2?'down':''} ${pos}" style="left:${p}%"><div class="mk-l"><b>${esc(m.l)}</b><span>${esc(fmtD(m.d))}${clockFor(mkKey(m.l))?' · '+esc(clockFor(mkKey(m.l))):''}</span>${m.l==='Today'?'':`<span class="lf">${esc(subFor(mkKey(m.l),m.d))}</span>`}</div></div>`}).join('');
   const fill=tl.querySelector('.tl-fill');requestAnimationFrame(()=>requestAnimationFrame(()=>fill.style.setProperty('--fill',pct(arr)+'%')));
+  const nx=mk.slice(1).find(m=>dayDiff(m.d)>=0),nd=$('#nextDl');
+  nd.innerHTML=nx?`<span>Next date</span><b>${esc(nx.l)}</b><em class="${dayDiff(nx.d)<=2&&nx.l!=='Land in India'?'soon':''}">${esc(fmtD(nx.d))} · ${esc(subFor(mkKey(nx.l),nx.d))}</em>`:'<span>All dates have passed</span>';
   $('#tlWarn').innerHTML=r.type==='evisa'&&addDays(arr,-4)<today?'<p class="tl-warn">Less than 4 days to go. Apply today and expect it to be tight.</p>':'';
 }
 renderTimeline();
