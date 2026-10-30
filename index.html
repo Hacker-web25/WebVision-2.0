@@ -1558,7 +1558,9 @@ const globe=(function(){
       let op=0;
       if(env>0){tmpA.copy(f.a);spin.localToWorld(tmpA);tmpB.copy(tmpA).normalize();tmpC.copy(camera.position).sub(tmpA).normalize();
         const face=tmpB.dot(tmpC);op=env*cl((face-.12)/.25,0,1);
-        tmpA.project(camera);f.chip.style.transform=`translate3d(${((tmpA.x*.5+.5)*vw).toFixed(1)}px,${((-tmpA.y*.5+.5)*vh).toFixed(1)}px,0) translate(-50%,calc(-100% - 14px))`}
+        tmpA.project(camera);
+        const cw=(f.chip.offsetWidth||140)/2+10,px=cl(((tmpA.x*.5+.5)*vw),cw,vw-cw),py=cl(((-tmpA.y*.5+.5)*vh),24,vh-24);
+        f.chip.style.transform=`translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) translate(-50%,calc(-100% - 14px))`}
       f.chip.style.opacity=op.toFixed(2);
     });
     renderer.render(scene,camera);
