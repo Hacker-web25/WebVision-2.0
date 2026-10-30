@@ -28,6 +28,19 @@ test('exchange rates come from the server and are cached', async () => {
   s.clock.ratesDown = false;
 });
 
+test('assistant: replies, keeps only whitelisted actions, and says when it is not set up', async () => {
+  s.clock.aiText = '```json\n{"reply":"Declare the extra wine.","actions":[{"type":"addItem","kind":"alc","qty":3,"value":0},{"type":"runScript","value":"x"},{"type":"setPlan","nat":"ZZ","port":"DEL"}]}\n```';
+  const r = await s.call('POST', '/api/assistant', { messages: [{ role: 'user', content: 'I bring 3 litres of wine' }], context: { route: 'evisa' } });
+  assert.equal(r.status, 200); assert.equal(r.data.reply, 'Declare the extra wine.');
+  assert.deepEqual(r.data.actions, [{ type: 'addItem', kind: 'alc', qty: 3, value: 0 }, { type: 'setPlan', port: 'DEL' }]);
+  assert.match(s.clock.lastPrompt[0].content, /Baggage Rules, 2026/);
+  assert.equal((await s.call('POST', '/api/assistant', { messages: [] })).status, 400);
+  const off = await boot({ noAi: true });
+  assert.equal((await off.call('GET', '/api/assistant')).data.configured, false);
+  assert.equal((await off.call('POST', '/api/assistant', { messages: [{ role: 'user', content: 'hi' }] })).data.error.code, 'ai_not_configured');
+  off.close();
+});
+
 test('plan validates input and names the bad fields', async () => {
   const bad = await s.call('POST', '/api/plan', { ...plan, nat: 'ZZ', arr: '2026-13-45', extra: 1 });
   assert.equal(bad.status, 400);

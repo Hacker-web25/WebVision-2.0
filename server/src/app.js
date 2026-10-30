@@ -2,7 +2,8 @@ import express from 'express';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 import { RULES, buildPlan, todayISO } from './plan.js';
-import { planInput, tripBody, reminderBody, evidenceBody } from './schemas.js';
+import { planInput, tripBody, reminderBody, evidenceBody, assistantBody } from './schemas.js';
+import { buildMessages, modelFromEnv, parseReply } from './assistant.js';
 import { HttpError, makeReminders } from './reminders.js';
 import { evidenceLetter } from './pdf.js';
 import { safeEqualHex, sha256, token } from './secure.js';
@@ -45,7 +46,7 @@ function parseWithFields(schema, data) {
   throw err;
 }
 
-export function createApp({ db, vault, mailer, now = Date.now, env = process.env, limits = true, fetchRates = liveRates }) {
+export function createApp({ db, vault, mailer, now = Date.now, env = process.env, limits = true, fetchRates = liveRates, callModel = modelFromEnv(env) }) {
   const app = express();
   const reminders = makeReminders({ db, vault, mailer, now });
   const dev = env.NODE_ENV !== 'production' || env.ALLOW_DEV_OUTBOX === '1';
@@ -88,6 +89,18 @@ export function createApp({ db, vault, mailer, now = Date.now, env = process.env
       catch (e) { if (!rates) throw new HttpError(503, 'rates_unavailable', 'Live exchange rates are not available right now.'); }
     }
     res.json(rates.data);
+  });
+
+  /* ---- Assistant: the key stays on the server; replies are reduced to text plus whitelisted actions ---- */
+  app.get('/api/assistant', (req, res) => res.json({ configured: Boolean(callModel) }));
+  app.post('/api/assistant', limiter(60_000, 12), async (req, res) => {
+    if (!callModel) throw new HttpError(503, 'ai_not_configured', 'The assistant is not set up on this server. Add NVIDIA_API_KEY or GEMINI_API_KEY.');
+    const body = parseWithFields(assistantBody, req.body);
+    if (JSON.stringify(body.context).length > 8000) throw new HttpError(400, 'invalid_request', 'The trip summary is too large.');
+    let out;
+    try { out = await callModel(buildMessages(body)); }
+    catch (e) { throw new HttpError(502, 'ai_unavailable', 'The AI service did not answer. Try again in a moment.'); }
+    res.json({ ...parseReply(out.text), provider: out.provider });
   });
 
   /* ---- Entry plan ---- */

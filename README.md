@@ -30,6 +30,15 @@ The official e-Visa site mostly helps after something has gone wrong: a photo is
 | Airport help | Steps for six situations (pending, rejected, missing document, wrong details, payment failed, refused boarding), a document wallet that works offline, an airline-desk checklist, official contacts and the offline arrival pack |
 | In India | Do's and don'ts. Each line is marked as an official rule, with its source, or as general good practice |
 
+### The assistant
+
+The orange **Ask Pravesh** button opens a chat. Add the approval and a passport photo with **+**: they are read on the device, checked, and the dashboard fills in. You can also type, for example "I'm bringing 3 bottles of wine and a new laptop". The assistant answers from the sourced rules and changes the dashboard for you: it adds customs items, sets the visa status, the nights or the plan.
+
+- **Which AI:** NVIDIA build (free API key), with Gemini as a fallback. Set `NVIDIA_API_KEY` (or `GEMINI_API_KEY`) on the server. The key never reaches the page.
+- **What it sees:** only the plan and the check results ("passport number: Fix"). Passport images, names, numbers and birth dates are never sent.
+- **What it can change:** a fixed list of actions, checked on the server. It cannot submit an application or pay.
+- **Without a key:** the chat still reads documents, and says that the AI is not set up.
+
 It is not the Government of India, it takes no payments and it never submits an application. See "What Pravesh never does" on the page.
 
 There is also an 8-slide pitch deck in [`docs/pitch.html`](docs/pitch.html). Download it and open it in a browser; arrow keys move between slides.
@@ -39,7 +48,7 @@ There is also an 8-slide pitch deck in [`docs/pitch.html`](docs/pitch.html). Dow
 ```bash
 npm install
 npm start          # http://localhost:3000
-npm test           # 15 tests, no network needed
+npm test           # 16 tests, no network needed
 ```
 
 Needs Node 22.13 or newer. There is no database to install: data is one SQLite file in `server/data/`.
@@ -68,6 +77,7 @@ server/test/               unit and API tests
 | Endpoint | What it does |
 | --- | --- |
 | `GET /api/health` | Liveness, rules version, mail mode |
+| `POST /api/assistant` | Chat with the assistant. Takes the conversation and a trip summary, returns a reply and whitelisted actions. `GET` says whether it is configured |
 | `GET /api/rates` | Exchange rates against the rupee, fetched by the server and cached for six hours, so the page never calls a third party |
 | `GET /api/rules` | Countries, airports, limits, sources and the date the rules were checked |
 | `POST /api/plan` | Entry plan for a passport, airport, purpose and date: route, documents, dates, warnings, source |
