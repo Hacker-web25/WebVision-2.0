@@ -1,4 +1,9 @@
-# Free web service on Render. The free plan has no persistent disk, so saved trips reset when it restarts.
+# Free web service on Render. The free plan has no persistent disk, so saved trips and the demo
+# inbox reset whenever the service restarts or redeploys — fine for a hackathon demo, not for real use.
+#
+# Zero secrets needed: mail stays in "outbox" mode and is shown at /<service-url>/dev/outbox.
+# To switch to real email later, set MAILER=smtp and SMTP_URL in the Render dashboard and remove
+# ALLOW_DEV_OUTBOX.
 services:
   - type: web
     name: webvision-2-0
@@ -10,11 +15,5 @@ services:
         value: production
       - key: TRUST_PROXY
         value: "1"
-      - key: MAILER
-        value: smtp
-      - key: SMTP_URL
-        sync: false
-      - key: MAIL_FROM
-        sync: false
-      - key: PUBLIC_URL
-        sync: false
+      - key: ALLOW_DEV_OUTBOX
+        value: "1"
