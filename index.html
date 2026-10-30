@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pravesh</title>
+<meta name="description" content="An unofficial companion to India's e-Visa: know your route, fix your photo and passport scan, and pay once.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<style>
+/* Layout: product-performs. Each claim sits beside a working piece of the product at real size.
+   One grid, equal 24–32px outer margins, 160px between sections, one navy field and one stone field. */
+:root{
+  --ground:#ffffff;
+  --surface:#f4f4f2;
+  --surface-2:#e9e8e3;
+  --ink:#1f2b4d;
+  --muted:#565e75;
+  --accent:#f7941d;
+  --accent-ink:#1f2b4d;
+  --field:#101a33;
+  --field-2:#18244a;
+  --field-ink:#ffffff;
+  --field-muted:#b4bcd2;
+  --stone:#e3e1dc;
+  --ok:#17704a; --ok-bg:#e2f0e8;
+  --bad:#a93322; --bad-bg:#f8e5e1;
+  --ui-line:#d8d8d3;
+  --ui-line-2:#c4c5c0;
+  --font:"Hanken Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --t-display:clamp(46px,5.4vw,84px);
+  --t-head:clamp(34px,4.4vw,68px);
+  --t-state:clamp(22px,2vw,30px);
+  --t-lead:clamp(18px,1.35vw,21px);
+  --t-small:14px;
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --gutter:clamp(24px,2.4vw,32px);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scrollbar-color:var(--ui-line-2) var(--ground)}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.5;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip;caret-color:var(--accent)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ground)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3{font-weight:500;text-wrap:balance}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:inherit;text-underline-offset:.22em;text-decoration-thickness:1px}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:2px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tnum{font-variant-numeric:tabular-nums}
+
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1440px;margin-inline:auto;padding-inline:var(--gutter)}
+.section{padding-block:clamp(96px,11vw,168px);scroll-margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(16px,2vw,32px)}
+
+.display{font-size:var(--t-display);line-height:.92;letter-spacing:-.05em}
+.head{font-size:var(--t-head);line-height:.95;letter-spacing:-.045em}
+.statement{font-size:var(--t-state);line-height:1.15;letter-spacing:-.025em;font-weight:500}
+.lead{font-size:var(--t-lead);line-height:1.45;max-width:46ch}
+.small{font-size:var(--t-small);line-height:1.45;color:var(--muted)}
+.line{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.line > span{display:block}
+
+.ico{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 22px;border:0;border-radius:2px;background:var(--ink);color:var(--ground);font-size:16px;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform 160ms var(--ease-out),background-color 200ms ease,opacity 200ms ease}
+.btn:active{transform:scale(.97)}
+.btn .ico{transition:transform 200ms var(--ease-out)}
+.btn-accent{background:var(--accent);color:var(--accent-ink)}
+.btn-ghost{background:var(--surface);color:var(--ink)}
+.frag .btn-ghost{background:var(--ground);box-shadow:inset 0 0 0 1px var(--ui-line)}
+.btn[disabled]{opacity:.38;cursor:not-allowed}
+.btn[disabled]:active{transform:none}
+.link{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:500;text-decoration:none;color:var(--ink)}
+.link .ico{transition:transform 200ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{background:#2c3a63}
+  .btn-accent:hover{background:#ffa53a}
+  .btn-ghost:hover{background:var(--surface-2)}
+  .btn:hover .ico,.link:hover .ico{transform:translateX(3px)}
+  .link:hover{text-decoration:underline}
+}
+
+/* Header */
+.top .wrap{display:flex;align-items:center;gap:24px;height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand b{font-size:22px;font-weight:600;letter-spacing:-.03em}
+.brand svg{width:28px;height:28px;flex:none}
+.brand span{font-size:13px;color:var(--muted);line-height:1.25;max-width:24ch;padding-left:12px;border-left:2px solid var(--surface-2)}
+.top nav{display:flex;gap:28px;margin-left:auto}
+.top nav a{font-size:15px;font-weight:500;text-decoration:none}
+@media (hover:hover){.top nav a:hover{text-decoration:underline}}
+.top .link{font-size:15px}
+@media (max-width:1020px){.top nav{display:none}.top .link{margin-left:auto}}
+@media (max-width:560px){.brand span{display:none}.top .link .txt-long{display:none}}
+
+/* Hero */
+.hero{padding-block:clamp(40px,5vw,72px) clamp(96px,9vw,140px)}
+.hero .grid{align-items:start}
+.hero-copy{grid-column:1/span 5;display:flex;flex-direction:column;gap:32px;padding-top:clamp(8px,3vw,48px);position:sticky;top:24px}
+.hero-copy .lead{color:var(--ink)}
+.hero-acts{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px}
+.facts{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.facts li{display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--muted)}
+.facts li b{font-weight:500;color:var(--ink);min-width:4.6em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hero-stage{grid-column:6/span 7;min-width:0;perspective:1600px}
+@media (max-width:1060px){
+  .hero-copy{grid-column:1/-1;position:static}
+  .hero-stage{grid-column:1/-1;margin-top:48px}
+}
+
+/* Fragments: product UI. Inside [data-ui] the product's own borders, radii and one floating shadow apply. */
+[data-ui]{font-size:14px;line-height:1.45;letter-spacing:0;color:var(--ink)}
+.frag{background:var(--surface);border-radius:12px;overflow:hidden;min-width:0}
+.frag-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding:14px 18px;background:var(--surface-2)}
+.frag-bar h3{font-size:14px;font-weight:600;letter-spacing:-.005em}
+.frag-bar .note{font-size:12.5px;color:var(--muted)}
+.lbl{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-bottom:6px}
+.ctl{width:100%;height:42px;padding:0 12px;background:var(--ground);border:1px solid var(--ui-line);border-radius:7px;font-size:14.5px;transition:border-color 160ms ease,box-shadow 160ms ease;appearance:none;-webkit-appearance:none}
+select.ctl{padding-right:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23565e75' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer}
+.ctl:hover{border-color:var(--ui-line-2)}
+.ctl:focus-visible{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(31,43,77,.14)}
+textarea.ctl{height:auto;padding:10px 12px;resize:vertical}
+input[type=date].ctl,input[type=time].ctl,input[type=datetime-local].ctl{padding-right:10px}
+.seg{display:flex;flex-wrap:wrap;gap:4px;padding:3px;background:var(--surface-2);border-radius:8px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:6px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;user-select:none;transition:background-color 160ms ease,color 160ms ease,box-shadow 160ms ease}
+.seg input:checked + label{background:var(--ground);color:var(--ink);box-shadow:0 1px 2px rgba(16,26,51,.12)}
+.seg input:focus-visible + label{outline:2px solid var(--ink);outline-offset:1px}
+.seg label:active{transform:scale(.97)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{padding:0}
+
+/* Hero plan */
+.plan-body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:18px;padding:18px}
+.plan-form{display:flex;flex-direction:column;gap:16px;min-width:0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.late{display:flex;flex-direction:column;gap:12px;padding:14px;background:var(--ground);border:1px solid var(--ui-line);border-radius:9px}
+.late-head{display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:600;color:var(--bad)}
+.late-head .ico{width:14px;height:14px}
+.late p{font-size:13.5px;line-height:1.4}
+.yn{display:flex;gap:4px;margin-top:6px}
+.yn input{position:absolute;opacity:0;pointer-events:none}
+.yn label{padding:6px 14px;border:1px solid var(--ui-line);border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;transition:background-color 160ms ease,border-color 160ms ease,color 160ms ease}
+.yn input:checked + label{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+.yn input:focus-visible + label{outline:2px solid var(--ink);outline-offset:2px}
+.ticket{position:relative;background:var(--ground);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:18px;min-width:0;transform-style:preserve-3d;will-change:transform;box-shadow:0 18px 40px -22px rgba(16,26,51,.38),0 2px 6px -2px rgba(16,26,51,.10)}
+.t-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.t-kind{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.t-kind i{width:9px;height:9px;border-radius:50%;background:var(--route,var(--accent))}
+.t-title{font-size:clamp(24px,2.1vw,32px);line-height:1.08;letter-spacing:-.03em;font-weight:500;max-width:17ch}
+.t-port{text-align:right;flex:none}
+.t-port b{display:block;font-size:30px;line-height:1;font-weight:500;letter-spacing:-.03em}
+.t-port span{font-size:12px;color:var(--muted)}
+.t-reason{font-size:14.5px;color:var(--muted);max-width:52ch}
+.t-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.t-cols h4{font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.t-docs li{display:flex;flex-direction:column;padding:8px 0;border-top:1px solid var(--ui-line)}
+.t-docs b{font-weight:500;font-size:14px}
+.t-docs span{font-size:12.5px;color:var(--muted)}
+.t-dates li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--ui-line);font-size:14px}
+.t-dates b{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.t-dates b.hot{color:#b05a00}
+.t-note{font-size:13px;background:var(--surface);border-radius:7px;padding:10px 12px}
+.t-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.t-acts .btn{height:40px;font-size:14px;padding:0 14px;border-radius:7px}
+.t-src{font-size:12px;color:var(--muted)}
+.t-src a{color:var(--muted)}
+@media (max-width:720px){.plan-body{grid-template-columns:1fr}}
+@media (max-width:420px){.t-cols{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+
+/* Gap field */
+.field{background:var(--field);color:var(--field-ink)}
+.field .small{color:var(--field-muted)}
+.gap-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);align-items:end;margin-bottom:clamp(48px,6vw,88px)}
+.gap-head .lead{color:var(--field-muted)}
+.ledger{display:flex;flex-direction:column;gap:6px}
+.ledger-cols{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,4fr) minmax(0,4fr);gap:clamp(16px,2vw,32px);padding:0 clamp(18px,2vw,28px) 10px;font-size:14px;color:var(--field-muted)}
+.row{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,4fr) minmax(0,4fr);gap:clamp(16px,2vw,32px);padding:clamp(20px,2.4vw,32px) clamp(18px,2vw,28px);background:var(--field-2);border-radius:4px;align-items:start}
+.row .statement{color:var(--field-ink)}
+.row p{font-size:16px;line-height:1.5;color:var(--field-muted);max-width:42ch}
+.row p.us{color:var(--field-ink)}
+.row .tag{display:none;font-size:13px;color:var(--field-muted);margin-bottom:4px}
+.row.quiet{background:transparent}
+.row.quiet .statement{color:var(--field-muted)}
+@media (max-width:860px){
+  .gap-head{grid-template-columns:1fr}
+  .ledger-cols{display:none}
+  .row{grid-template-columns:1fr;gap:14px}
+  .row .tag{display:block}
+}
+
+/* Documents: pinned story */
+.sec-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);align-items:end;margin-bottom:clamp(48px,6vw,88px)}
+@media (max-width:860px){.sec-head{grid-template-columns:1fr}}
+.story{align-items:start}
+.story-stage{grid-column:1/span 7;position:sticky;top:clamp(16px,6vh,64px);min-width:0}
+.story-steps{grid-column:9/span 4;display:flex;flex-direction:column}
+.step{min-height:78vh;display:flex;flex-direction:column;justify-content:center;gap:16px;opacity:.38;transition:opacity 300ms ease}
+.step.on{opacity:1}
+.step:first-child{min-height:60vh;justify-content:flex-start;padding-top:8vh}
+.step:last-child{min-height:72vh}
+.step p{font-size:17px;max-width:40ch}
+@media (max-width:1060px){
+  .story-stage{grid-column:1/-1;position:static}
+  .story-steps{grid-column:1/-1;margin-top:40px;gap:40px}
+  .step,.step:first-child,.step:last-child{min-height:0;padding-top:0;opacity:1}
+}
+.doc-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;padding:16px}
+@media (max-width:640px){.doc-body{grid-template-columns:1fr}}
+.doc-tabs{display:flex;gap:4px;padding:3px;background:var(--ground);border-radius:8px;border:1px solid var(--ui-line)}
+.doc-tabs input{position:absolute;opacity:0;pointer-events:none}
+.doc-tabs label{padding:6px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:background-color 160ms ease,color 160ms ease}
+.doc-tabs input:checked + label{background:var(--ink);color:var(--ground)}
+.doc-tabs input:focus-visible + label{outline:2px solid var(--ink);outline-offset:2px}
+.stage-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.stage{position:relative;aspect-ratio:1/1;max-width:100%;background:var(--surface-2);border-radius:9px;overflow:hidden}
+.stage.drag{box-shadow:inset 0 0 0 2px var(--ink)}
+.stage .view{position:absolute;inset:0}
+.stage .view > img{position:absolute;inset:7%;width:86%;height:86%;object-fit:contain}
+.stage .pdf-ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px;padding:20px}
+.cropframe{position:absolute;border:2px solid var(--accent);box-shadow:0 0 0 2000px rgba(16,26,51,.45);transition:left 700ms var(--ease-in-out),top 700ms var(--ease-in-out),width 700ms var(--ease-in-out),height 700ms var(--ease-in-out);pointer-events:none}
+.scan{position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent);opacity:0;pointer-events:none;z-index:3}
+.compare{position:absolute;inset:0;--split:50%}
+.compare img{position:absolute;inset:7%;width:86%;height:86%;object-fit:contain}
+.compare .after{clip-path:inset(0 0 0 var(--split))}
+.compare .handle{position:absolute;top:7%;bottom:7%;left:var(--split);width:2px;margin-left:-1px;background:var(--ground);pointer-events:none}
+.compare .knob{position:absolute;top:50%;left:var(--split);width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--ground);display:grid;place-items:center;pointer-events:none;box-shadow:0 4px 12px rgba(16,26,51,.25)}
+.compare .knob svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.compare .tagb,.compare .taga{position:absolute;top:10px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--ground);pointer-events:none}
+.compare .tagb{left:10px}.compare .taga{right:10px;background:var(--accent)}
+.compare input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
+.out-badge{position:absolute;left:10px;bottom:10px;font-size:12px;font-weight:600;padding:4px 9px;border-radius:5px;background:var(--ok);color:#fff;z-index:2}
+.stage-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stage-tools .btn{height:36px;font-size:13.5px;padding:0 12px;border-radius:7px}
+.meta{font-size:12px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.report{display:flex;flex-direction:column;gap:12px;min-width:0}
+.rep-top{display:flex;align-items:baseline;gap:10px}
+.rep-top b{font-size:40px;line-height:1;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.rep-top span{font-size:14px;color:var(--muted)}
+.rep-sub{font-size:13.5px;color:var(--muted)}
+.checks li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:9px 0;border-top:1px solid var(--ui-line);align-items:center}
+.checks li:last-child{border-bottom:1px solid var(--ui-line)}
+.chk-n{font-size:14px;font-weight:500}
+.chk-d{grid-column:1;font-size:12.5px;color:var(--muted)}
+.pill{grid-column:2;grid-row:1/span 2;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.ok .pill{background:var(--ok-bg);color:var(--ok)}
+.bad .pill{background:var(--bad-bg);color:var(--bad)}
+.info .pill{background:var(--surface-2);color:var(--muted)}
+.rep-acts{display:flex;flex-wrap:wrap;gap:8px}
+.rep-acts .btn{height:40px;font-size:14px;padding:0 14px;border-radius:7px}
+
+/* Payment */
+.pay{row-gap:clamp(16px,2vw,24px)}
+.pay-check{grid-column:1/span 6;display:flex;flex-direction:column}
+.pay-check .pane{flex:1}
+.pay-side{grid-column:7/span 6;display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);min-width:0}
+.pay-side > .frag:last-child{flex:1}
+.pay-status,.pay-letter{grid-column:1/-1}
+.status-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;align-items:center}
+@media (max-width:1060px){.pay-check,.pay-side{grid-column:1/-1}.status-grid{grid-template-columns:1fr}}
+.pane{padding:20px;display:flex;flex-direction:column;gap:16px}
+.status-top{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.ring{width:150px;height:150px;flex:none}
+.ring circle{fill:none;stroke-width:8}
+.ring .bgc{stroke:var(--surface-2)}
+.ring .fgc{stroke:var(--accent);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 800ms var(--ease-out)}
+.ring text{fill:var(--ink);font-family:var(--font);font-weight:500}
+.status-copy{display:flex;flex-direction:column;gap:10px;flex:1 1 240px;min-width:0}
+.status-copy .big{font-size:22px;line-height:1.2;letter-spacing:-.02em;font-weight:500}
+.status-copy .big b{color:#b05a00;font-weight:600}
+.timeline-pay{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tp{padding:12px;border-radius:8px;background:var(--ground);border:1px solid var(--ui-line);display:flex;flex-direction:column;gap:4px}
+.tp b{font-size:13.5px;font-weight:600}
+.tp span{font-size:12.5px;color:var(--muted)}
+.tp.now{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+@media (max-width:640px){.timeline-pay{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pips{display:flex;gap:8px}
+.pips i{flex:1;height:44px;border-radius:7px;background:var(--ground);border:1px solid var(--ui-line);display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:600;color:var(--muted);transition:background-color 200ms ease,border-color 200ms ease,color 200ms ease}
+.pips i.used{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.pips.blocked i{background:var(--bad);border-color:var(--bad);color:#fff}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:40px;height:40px;border-radius:7px;border:1px solid var(--ui-line);background:var(--ground);cursor:pointer;display:grid;place-items:center;transition:transform 160ms var(--ease-out),border-color 160ms ease}
+.stepper button:active{transform:scale(.95)}
+.stepper button svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round}
+.stepper span{font-size:14px;font-weight:500;min-width:13ch;text-align:center;font-variant-numeric:tabular-nums}
+.att-msg{font-size:14px;min-height:2.9em}
+.att-msg b{color:var(--bad)}
+.ticks li+li{border-top:1px solid var(--ui-line)}
+.tick{display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px;padding:11px 0;cursor:pointer;align-items:start}
+.tick input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--ink);cursor:pointer}
+.tick span{font-size:14px;line-height:1.4}
+.tick small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.bar{height:4px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width 400ms var(--ease-out)}
+.letter-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;padding:18px}
+@media (max-width:860px){.letter-body{grid-template-columns:1fr}}
+.ev-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-content:start}
+@media (max-width:480px){.ev-form{grid-template-columns:1fr}}
+.paper{background:var(--ground);border-radius:9px;border:1px solid var(--ui-line);padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ev-out{margin:0;font-family:var(--font);font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto}
+.ev-out mark{background:#fde7cc;color:var(--ink);border-radius:3px;padding:0 3px}
+.contacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.contacts{grid-template-columns:1fr}}
+.contact{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;background:var(--ground);border:1px solid var(--ui-line);border-radius:7px;min-width:0}
+.contact div{min-width:0}
+.contact span{display:block;font-size:12px;color:var(--muted)}
+.contact b{font-weight:500;font-size:13.5px;font-variant-numeric:tabular-nums;user-select:all;word-break:break-all}
+.copy{border:0;background:var(--surface-2);border-radius:6px;padding:6px 10px;font-size:12.5px;font-weight:600;cursor:pointer;flex:none;transition:transform 160ms var(--ease-out),background-color 160ms ease}
+.copy:active{transform:scale(.95)}
+
+/* Trip */
+.stone{background:var(--stone)}
+.stone .frag{background:var(--ground)}
+.stone .frag-bar{background:var(--surface)}
+.tl-wrap{padding:22px 22px 8px}
+.tl-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.days{display:flex;align-items:baseline;gap:10px}
+.days b{font-size:clamp(56px,6vw,88px);line-height:.85;font-weight:500;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.days span{font-size:15px;color:var(--muted)}
+.tl{position:relative;height:140px;margin:16px 6px 0}
+.tl-track{position:absolute;left:0;right:0;top:66px;height:4px;border-radius:4px;background:var(--surface-2)}
+.tl-fill{position:absolute;left:0;top:66px;height:4px;border-radius:4px;background:var(--ink);width:var(--fill,0%);transition:width 900ms var(--ease-out)}
+.mk{position:absolute;top:68px;width:0}
+.mk::before{content:"";position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:var(--ground);border:3px solid var(--ink)}
+.mk.accent::before{background:var(--accent);border-color:var(--accent)}
+.mk-l{position:absolute;left:0;transform:translateX(-50%);bottom:18px;white-space:nowrap;text-align:center;display:flex;flex-direction:column}
+.mk.down .mk-l{bottom:auto;top:18px}
+.mk.start .mk-l{transform:none;text-align:left;left:-8px}
+.mk.end .mk-l{transform:translateX(-100%);text-align:right;left:8px}
+.mk-l b{font-size:14px;font-weight:600}
+.mk-l span{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tl-warn{margin:6px 0 14px;font-size:13.5px;background:var(--bad-bg);color:var(--bad);border-radius:7px;padding:10px 12px}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;padding:16px}
+.trav{background:var(--surface);border-radius:9px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;transition:opacity 260ms var(--ease-out),transform 260ms var(--ease-out)}
+@starting-style{.trav{opacity:0;transform:translateY(8px)}}
+.trav-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.trav-top h4{font-size:15px;font-weight:600}
+.trav-top p{font-size:12.5px;color:var(--muted)}
+.mini{width:44px;height:44px;flex:none}
+.mini circle{fill:none;stroke-width:4}
+.mini .bgc{stroke:var(--surface-2)}
+.mini .fgc{stroke:var(--ok);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.mini text{fill:var(--ink);font-family:var(--font);font-size:11px;font-weight:600}
+.trav-steps li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--ui-line);font-size:13.5px}
+.st{font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px}
+.st.done{background:var(--ok-bg);color:var(--ok)}
+.st.warn{background:var(--bad-bg);color:var(--bad)}
+.st.todo{background:var(--surface-2);color:var(--muted)}
+.st.wait{color:var(--muted)}
+.trav-add{border:1.5px dashed var(--ui-line-2);background:transparent;border-radius:9px;min-height:180px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;transition:border-color 160ms ease,color 160ms ease,transform 160ms var(--ease-out)}
+.trav-add:active{transform:scale(.98)}
+@media (hover:hover){.trav-add:hover{border-color:var(--ink);color:var(--ink)}}
+.trip-stack{display:flex;flex-direction:column;gap:clamp(16px,2vw,24px)}
+
+/* Never */
+.never{align-items:start}
+.never-head{grid-column:1/span 5;display:flex;flex-direction:column;gap:24px;position:sticky;top:48px}
+.never-list{grid-column:7/span 6;display:flex;flex-direction:column;gap:clamp(36px,4vw,56px)}
+.never-list li{display:flex;flex-direction:column;gap:10px}
+.never-list p{font-size:17px;max-width:46ch}
+@media (max-width:1060px){.never-head{grid-column:1/-1;position:static}.never-list{grid-column:1/-1;margin-top:48px}}
+.sources{margin-top:clamp(72px,8vw,120px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px clamp(16px,2vw,32px);background:var(--surface);border-radius:4px;padding:clamp(20px,2.4vw,32px)}
+.sources h3{grid-column:1/-1;font-size:17px;font-weight:600}
+.sources a{display:flex;flex-direction:column;gap:2px;text-decoration:none;font-size:15px;font-weight:500}
+.sources a span{font-size:13.5px;font-weight:400;color:var(--muted)}
+@media (hover:hover){.sources a:hover{text-decoration:underline}}
+@media (max-width:860px){.sources{grid-template-columns:1fr}}
+
+/* Footer */
+.foot{padding-block:clamp(72px,8vw,112px) 32px;overflow:hidden}
+.foot-word{font-size:clamp(84px,24vw,380px);line-height:.78;letter-spacing:-.065em;font-weight:500;white-space:nowrap;margin-left:-.04em}
+.foot-row{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:32px;margin-top:clamp(40px,5vw,64px)}
+.foot-row p{font-size:15px;color:var(--field-muted);max-width:62ch}
+.foot-links{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.foot .link{color:var(--field-ink)}
+@media (max-width:760px){.foot-row{grid-template-columns:1fr}}
+
+
+/* Smooth scroll */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+.progress{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:3px;z-index:80;pointer-events:none}
+.progress i{display:block;height:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0)}
+
+/* 3D journey: a pinned film. The canvas holds the stage; the copy column sits on the left. */
+.scene{position:relative;height:520vh;background:var(--field);color:var(--field-ink)}
+.scene-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+#sceneCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene-copy{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center}
+.scene-copy .wrap{width:100%}
+.scene-col{max-width:min(31rem,40vw);display:flex;flex-direction:column;gap:36px;pointer-events:auto}
+.scene-col .head{color:var(--field-ink)}
+.caps{position:relative;min-height:11.5em}
+.cap{position:absolute;inset:0 auto auto 0;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(18px);filter:blur(4px);transition:opacity 420ms ease,transform 560ms var(--ease-out),filter 420ms ease}
+.cap.on{opacity:1;transform:none;filter:blur(0)}
+.cap .statement{color:var(--field-ink)}
+.cap p{font-size:17px;color:var(--field-muted);max-width:38ch}
+.steps-dots{display:flex;gap:8px}
+.steps-dots i{width:28px;height:4px;border-radius:4px;background:var(--field-2);transition:background-color 300ms ease,width 400ms var(--ease-out)}
+.steps-dots i.on{background:var(--accent);width:48px}
+.scene-hint{position:absolute;left:50%;bottom:max(24px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);font-size:14px;color:var(--field-muted);display:flex;align-items:center;gap:8px;transition:opacity 400ms ease}
+.scene-hint .ico{animation:nudge 1.6s var(--ease-in-out) infinite}
+@keyframes nudge{50%{transform:translateY(4px)}}
+@media (max-width:860px){
+  .scene{height:440vh}
+  .scene-copy{align-items:flex-end}
+  .scene-copy .wrap{padding-bottom:max(28px,env(safe-area-inset-bottom,0px));background:var(--field)}
+  .scene-col{max-width:none;gap:18px;padding-top:24px}
+  .caps{min-height:9.5em}
+  .scene-hint{display:none}
+}
+.scene.static{height:auto}
+.scene.static .scene-sticky{position:relative;height:auto;overflow:visible;padding-block:clamp(96px,11vw,168px)}
+.scene.static #sceneCanvas{position:relative;height:min(70vh,640px)}
+.scene.static .scene-copy{position:relative;display:block}
+.scene.static .caps{min-height:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px}
+.scene.static .cap{position:static;opacity:1;transform:none;filter:none}
+.scene.static .scene-col{max-width:none}
+.scene.static .steps-dots,.scene.static .scene-hint{display:none}
+.scene.nogl #sceneCanvas{display:none}
+
+/* Flight path on the trip timeline */
+.flight{padding:4px 22px 0}
+.flight svg{display:block;width:100%;height:auto;overflow:visible}
+.flight .base{stroke:var(--surface-2)}
+.flight .draw{stroke:var(--ink)}
+.flight .city{fill:var(--ink)}
+.flight text{font-family:var(--font);fill:var(--ink)}
+.flight .code{font-size:30px;font-weight:600;letter-spacing:-.02em}
+.flight .name{font-size:18px;fill:var(--muted)}
+.flight .plane{fill:var(--accent)}
+.flight .base,.flight .draw{stroke-width:3}
+@media (max-width:640px){
+  .flight{padding:4px 16px 0}
+  .flight .base,.flight .draw{stroke-width:7}
+  .flight .city{transform-box:fill-box;transform-origin:center;transform:scale(1.8)}
+  .flight .code{font-size:76px;transform:translateY(56px)}
+  .flight .name{display:none}
+  .flight .plane{transform:scale(2.2)}
+}
+
+/* Footer wordmark letters */
+.foot-word{overflow-x:visible;overflow-y:clip;padding-top:.04em}
+@media (max-width:640px){.foot-word{font-size:23vw}}
+.foot-word span{display:inline-block;will-change:transform}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .step{transition:none}
+  *,*::before,*::after{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></symbol>
+    <symbol id="i-out" viewBox="0 0 16 16"><path d="M6 3h7v7M13 3L4 12"/></symbol>
+    <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 3v10M4 9l4 4 4-4"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 16 16"><path d="M8 2.5l6 11H2z"/><path d="M8 7v3M8 11.8v.2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 16 16"><path d="M3 8h10"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 16 16"><path d="M5 4L2 8l3 4M11 4l3 4-3 4"/></symbol>
+  </defs>
+</svg>
+
+<div class="progress" aria-hidden="true"><i id="progBar"></i></div>
+<header class="top band">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Pravesh home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="6" fill="#1f2b4d"/><path d="M8 20V8h7a4 4 0 010 8H8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><circle cx="20.5" cy="20.5" r="2.5" fill="#f7941d"/></svg>
+      <b>Pravesh</b>
+      <span>Unofficial companion to India's e-Visa</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#route">Route</a><a href="#documents">Documents</a><a href="#payment">Payment</a><a href="#trip">Trip</a>
+    </nav>
+    <a class="link" href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener"><span class="txt-long">Official e-Visa site</span><svg class="ico"><use href="#i-out"/></svg></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero band" id="route" aria-labelledby="h1">
+    <div class="wrap grid">
+      <div class="hero-copy">
+        <h1 class="display" id="h1"><span class="line"><span>Arrive in India</span></span><span class="line"><span>ready.</span></span></h1>
+        <p class="lead">Pravesh tells you which way into India fits your passport, fixes your photo and passport scan to the published spec, and keeps your payment safe. Then you apply on the official site, once.</p>
+        <div class="hero-acts">
+          <a class="btn btn-accent" href="#documents">Fix my photo <svg class="ico"><use href="#i-arrow"/></svg></a>
+          <a class="link" href="#never">What Pravesh never does <svg class="ico"><use href="#i-down"/></svg></a>
+        </div>
+        <ul class="facts" aria-label="Figures behind the checks">
+          <li><b>31.74 L</b><span>tourist e-Visas issued, Nov 2024 to Nov 2025</span></li>
+          <li><b>6</b><span>airports give eligible nationals a visa on arrival</span></li>
+          <li><b>72 h</b><span>window to file the e-Arrival Card before landing</span></li>
+        </ul>
+      </div>
+      <div class="hero-stage">
+        <div class="frag" data-ui id="planFrag">
+          <div class="frag-bar"><h3>Entry plan</h3><span class="note">Updates as you change anything</span></div>
+          <div class="plan-body">
+            <form class="plan-form" id="routeForm" novalidate>
+              <div class="two">
+                <div><label class="lbl" for="nat">Passport</label><select class="ctl" id="nat"></select></div>
+                <div><label class="lbl" for="port">Landing at</label><select class="ctl" id="port"></select></div>
+              </div>
+              <fieldset>
+                <legend class="lbl">Purpose</legend>
+                <div class="seg">
+                  <input type="radio" name="purpose" id="p-tourism" value="tourism" checked><label for="p-tourism">Tourism</label>
+                  <input type="radio" name="purpose" id="p-business" value="business"><label for="p-business">Business</label>
+                  <input type="radio" name="purpose" id="p-medical" value="medical"><label for="p-medical">Medical</label>
+                </div>
+              </fieldset>
+              <div class="two">
+                <div><label class="lbl" for="arr">Arrival date</label><input class="ctl" type="date" id="arr"></div>
+                <fieldset id="priorField" hidden><legend class="lbl">Indian visa before?</legend><div class="yn"><input type="radio" name="prior" id="pr-y" value="yes"><label for="pr-y">Yes</label><input type="radio" name="prior" id="pr-n" value="no" checked><label for="pr-n">No</label></div></fieldset>
+              </div>
+              <div class="late">
+                <p class="late-head"><svg class="ico"><use href="#i-alert"/></svg>Asked late on the official form</p>
+                <fieldset><legend><p>Were your parents or grandparents Pakistani nationals, or from an area held by Pakistan?</p></legend>
+                  <div class="yn"><input type="radio" name="pak" id="pak-n" value="no" checked><label for="pak-n">No</label><input type="radio" name="pak" id="pak-y" value="yes"><label for="pak-y">Yes</label></div></fieldset>
+                <fieldset><legend><p>Have you served in the military, police or a security organisation?</p></legend>
+                  <div class="yn"><input type="radio" name="mil" id="mil-n" value="no" checked><label for="mil-n">No</label><input type="radio" name="mil" id="mil-y" value="yes"><label for="mil-y">Yes</label></div></fieldset>
+              </div>
+            </form>
+            <article class="ticket" id="ticket" aria-live="polite"></article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="scene" id="journey" aria-labelledby="sceneTitle">
+    <div class="scene-sticky">
+      <canvas id="sceneCanvas" aria-hidden="true"></canvas>
+      <div class="scene-copy band"><div class="wrap">
+        <div class="scene-col">
+          <h2 class="head" id="sceneTitle">From passport to stamp.</h2>
+          <div class="caps">
+            <div class="cap on"><h3 class="statement">It starts with your passport.</h3><p>The country on the cover decides the route: an e-Visa, a visa on arrival, or a regular visa from an Indian mission.</p></div>
+            <div class="cap"><h3 class="statement">Your photo, fixed before you pay.</h3><p>Cropped square, set on white and compressed under 300 KB, in your browser. Nothing is uploaded.</p></div>
+            <div class="cap"><h3 class="statement">Approval arrives by email.</h3><p>Once the fee is paid and the files pass, the approval comes by email before you fly. Print it and carry it with your passport.</p></div>
+            <div class="cap"><h3 class="statement">Stamped on arrival.</h3><p>The visa is stamped into your passport at the immigration counter. File the e-Arrival Card within 72 hours before landing.</p></div>
+          </div>
+          <div class="steps-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+        </div>
+      </div></div>
+      <p class="scene-hint" id="sceneHint" aria-hidden="true">Scroll to open <svg class="ico"><use href="#i-down"/></svg></p>
+    </div>
+  </section>
+
+  <section class="section field band" aria-labelledby="gapTitle">
+    <div class="wrap">
+      <div class="gap-head">
+        <h2 class="head" id="gapTitle" data-rise>Every rescue starts after a failure.</h2>
+        <p class="lead" data-rise>The official site has tools to re-upload, verify a payment and resume a form. Each one exists because something already went wrong. Pravesh moves the check to before you submit.</p>
+      </div>
+      <div class="ledger" data-rise-group>
+        <div class="ledger-cols" aria-hidden="true"><span>Problem</span><span>On the official site, after it fails</span><span>With Pravesh, before you submit</span></div>
+        <div class="row" data-rise><h3 class="statement">The wrong visa</h3><div><span class="tag">Official site</span><p>A list of eligible countries, a separate visa-on-arrival page and FAQs to cross-check.</p></div><div><span class="tag">Pravesh</span><p class="us">Passport, purpose and airport give one answer, with the two disqualifying questions asked first.</p></div></div>
+        <div class="row" data-rise><h3 class="statement">A rejected photo</h3><div><span class="tag">Official site</span><p>Files are scrutinised after you submit. A re-upload request arrives by email, normally within 24 hours.</p></div><div><span class="tag">Pravesh</span><p class="us">Format, size, shape and background are checked against the spec and fixed in your browser.</p></div></div>
+        <div class="row" data-rise><h3 class="statement">A payment that vanishes</h3><div><span class="tag">Official site</span><p>Verify Payment. Status can take up to 4 hours, and more than three failed attempts block the application.</p></div><div><span class="tag">Pravesh</span><p class="us">A checklist before you pay, the attempt limit in view, and a ready evidence email if it still fails.</p></div></div>
+        <div class="row quiet" data-rise><h3 class="statement">Tracking your status</h3><div><span class="tag">Official site</span><p>Check your Visa Status works well.</p></div><div><span class="tag">Pravesh</span><p>Nothing to add. We send you straight to it.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band" id="documents" aria-labelledby="docTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="head" id="docTitle" data-rise>Fix your photo before you pay.</h2>
+        <p class="lead" data-rise>Drop in your own photo or passport scan, or follow the sample. Files are processed on this page and never uploaded.</p>
+      </div>
+      <div class="grid story">
+        <div class="story-stage">
+          <div class="frag" data-ui>
+            <div class="frag-bar">
+              <div class="doc-tabs" role="radiogroup" aria-label="Document">
+                <input type="radio" name="docmode" id="dm-photo" value="photo" checked><label for="dm-photo">Face photo</label>
+                <input type="radio" name="docmode" id="dm-pass" value="passport"><label for="dm-pass">Passport page</label>
+              </div>
+              <span class="note" id="specShort">JPEG · 10–300 KB · square</span>
+            </div>
+            <div class="doc-body">
+              <div class="stage-col">
+                <div class="stage" id="stage"><div class="view" id="view"></div><div class="scan" id="scan" aria-hidden="true"></div></div>
+                <div class="stage-tools">
+                  <label class="btn btn-ghost" for="fileIn">Use my file</label>
+                  <input type="file" id="fileIn" class="sr" accept="image/*,application/pdf">
+                  <button class="btn btn-ghost" type="button" id="useSample">Sample</button>
+                </div>
+                <span class="meta" id="fileMeta">Or drop a file on the frame</span>
+              </div>
+              <div class="report" aria-live="polite">
+                <div class="rep-top"><b id="repNum">0</b><span id="repOf">checks fail</span></div>
+                <p class="rep-sub" id="repSub">Load a file to begin.</p>
+                <ul class="checks" id="checks"></ul>
+                <div class="rep-acts">
+                  <button class="btn" type="button" id="fixBtn" disabled>Fix automatically</button>
+                  <button class="btn btn-ghost" type="button" id="saveBtn" hidden>Save file</button>
+                  <button class="btn btn-ghost" type="button" id="resetBtn" hidden>Original</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ol class="story-steps">
+          <li class="step" data-state="read"><h3 class="statement">It reads the spec the official site uses.</h3><p>A JPEG between 10 and 300 KB, square, at least 350 pixels a side, on a plain light background. The passport page as a PDF under 300 KB.</p></li>
+          <li class="step" data-state="fix"><h3 class="statement">It fixes what it can, here.</h3><p>A square crop around your face, a white background and compression to size, all inside this page. Your files never leave it.</p></li>
+          <li class="step" data-state="done"><h3 class="statement">You upload once.</h3><p>The official site checks files after you pay and emails you to re-upload. Fixing them first skips that wait. Drag across the photo to compare.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band" id="payment" aria-labelledby="payTitle" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="head" id="payTitle" data-rise>Pay once. Keep the proof.</h2>
+        <p class="lead" data-rise>Payment is where applications stall: money leaves the account and the status still reads unpaid. Know the limits before you pay, and what to do if it happens.</p>
+      </div>
+      <div class="grid pay" data-rise-group>
+        <div class="frag pay-check" data-ui data-rise>
+            <div class="frag-bar"><h3>Before you pay</h3><span class="note" id="tickMsg">0 of 4</span></div>
+            <div class="pane" style="gap:10px">
+              <div class="bar" aria-hidden="true"><i id="tickBar"></i></div>
+              <ul class="ticks" id="ticks">
+                <li><label class="tick"><input type="checkbox" id="t1"><span>Check the fee for your nationality<small>Fees vary by country and visa type.</small></span></label></li>
+                <li><label class="tick"><input type="checkbox" id="t2"><span>Pay from one tab only<small>Two windows can confuse the payment status.</small></span></label></li>
+                <li><label class="tick"><input type="checkbox" id="t3"><span>Allow international online payments<small>Banks often decline the first try as suspected fraud.</small></span></label></li>
+                <li><label class="tick"><input type="checkbox" id="t4"><span>Ignore any "express" e-Visa offer<small>The official site charges no emergency or express fee.</small></span></label></li>
+              </ul>
+            </div>
+          </div>
+        <div class="pay-side">
+          <div class="frag" data-ui data-rise>
+            <div class="frag-bar"><h3>Failed attempts</h3><span class="note">More than 3 blocks the ID</span></div>
+            <div class="pane">
+              <div class="pips" id="pips" aria-hidden="true"><i>1</i><i>2</i><i>3</i></div>
+              <div class="stepper"><button type="button" id="attMinus" aria-label="One fewer failed attempt"><svg><use href="#i-minus"/></svg></button><span id="attCount">0 failed</span><button type="button" id="attPlus" aria-label="One more failed attempt"><svg><use href="#i-plus"/></svg></button></div>
+              <p class="att-msg" id="attMsg" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="frag" data-ui data-rise>
+            <div class="frag-bar"><h3>Payment helpdesks</h3><span class="note">From the official e-Visa home page</span></div>
+            <div class="pane" style="gap:10px"><div class="contacts" aria-label="Helpdesks listed on the official e-Visa page">
+                <div class="contact"><div><span>e-Visa helpdesk</span><b>+91 82 7808 7808</b></div><button class="copy" type="button" data-copy="+91 82 7808 7808">Copy</button></div>
+                <div class="contact"><div><span>e-Visa email</span><b>indian-evisa@gov.in</b></div><button class="copy" type="button" data-copy="indian-evisa@gov.in">Copy</button></div>
+                <div class="contact"><div><span>SBI payments, 24 × 7</span><b>+91-022-65361671</b></div><button class="copy" type="button" data-copy="+91-022-65361671">Copy</button></div>
+                <div class="contact"><div><span>Axis Bank payments, 24 × 7</span><b>+91 1800-419-0073</b></div><button class="copy" type="button" data-copy="+91 1800-419-0073">Copy</button></div>
+              </div>
+              <p class="small" style="font-size:12.5px">Numbers as listed on the official e-Visa home page, checked 30 Oct 2026.</p>
+            </div>
+          </div>
+        </div>
+        <div class="frag pay-status" data-ui data-rise>
+          <div class="frag-bar"><h3>Paid, status still unpaid</h3><span class="note">The 4-hour window</span></div>
+          <div class="pane">
+            <div class="status-grid"><div class="status-top">
+              <svg class="ring" viewBox="0 0 150 150" aria-hidden="true"><circle class="bgc" cx="75" cy="75" r="64"/><circle class="fgc" id="ringFg" cx="75" cy="75" r="64" stroke-dasharray="402.1" stroke-dashoffset="402.1"/><text x="75" y="80" text-anchor="middle" font-size="30" id="ringTxt">0h</text><text x="75" y="100" text-anchor="middle" font-size="11" fill="#565e75" style="fill:var(--muted)">of 4 hours</text></svg>
+              <div class="status-copy">
+                <p class="big" id="clockMsg"></p>
+                <div class="two"><div><label class="lbl" for="paidAt">Paid at, your time</label><input class="ctl" type="time" id="paidAt"></div></div>
+              </div>
+            </div>
+            <div class="timeline-pay" id="payTl">
+              <div class="tp"><b>Don't pay again</b><span>A second try can fail as "already paid" or add to your failed attempts.</span></div>
+              <div class="tp"><b>Wait up to 4 hours</b><span>Status can take that long to update after a debit.</span></div>
+              <div class="tp"><b>Verify Payment</b><span>On the official home page, under Verify Payment / Pay e-Visa Fee.</span></div>
+              <div class="tp"><b>Send the evidence</b><span>Use the email below with your bank reference.</span></div>
+            </div></div>
+          </div>
+        </div>
+        <div class="frag pay-letter" data-ui data-rise>
+          <div class="frag-bar"><h3>Evidence email</h3><span class="note">Written as you type. Nothing is sent from here.</span></div>
+          <div class="letter-body">
+            <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+              <div class="ev-form">
+                <div><label class="lbl" for="evApp">Application ID</label><input class="ctl" id="evApp" autocomplete="off" placeholder="From your confirmation email"></div>
+                <div><label class="lbl" for="evWhen">Paid on</label><input class="ctl" type="datetime-local" id="evWhen"></div>
+                <div><label class="lbl" for="evAmt">Amount debited</label><input class="ctl" id="evAmt" placeholder="e.g. USD 25.62"></div>
+                <div><label class="lbl" for="evGw">Payment gateway</label><select class="ctl" id="evGw"><option>SBI</option><option>Axis Bank</option><option>Razorpay</option><option>PayPal</option><option>Other</option></select></div>
+                <div><label class="lbl" for="evRef">Bank reference</label><input class="ctl" id="evRef" autocomplete="off" placeholder="From your statement"></div>
+                <div><label class="lbl" for="evName">Your name</label><input class="ctl" id="evName" autocomplete="name" placeholder="As on passport"></div>
+              </div>
+              <p class="small" style="font-size:13px">Send it to indian-evisa@gov.in and copy your payment gateway's helpdesk. Keep a screenshot of the debit from your bank app.</p>
+            </div>
+            <div class="paper">
+              <pre class="ev-out" id="evOut"></pre>
+              <div><button class="btn" type="button" id="evCopy" style="height:40px;font-size:14px;border-radius:7px">Copy email</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section stone band" id="trip" aria-labelledby="tripTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="head" id="tripTitle" data-rise>One plan for the whole family.</h2>
+        <p class="lead" data-rise>The visa, the e-Arrival Card and every traveller's documents on one board. Dates follow the entry plan at the top of this page.</p>
+      </div>
+      <div class="trip-stack" data-rise-group>
+        <div class="frag" data-ui data-rise>
+          <div class="frag-bar"><h3>Timeline</h3><span class="note" id="tlRoute"></span></div>
+          <div class="tl-wrap">
+            <div class="tl-top"><div class="days"><b id="daysLeft">0</b><span id="daysTxt">days to arrival</span></div></div>
+            <div class="flight" aria-hidden="true"><svg viewBox="0 0 1000 250" id="flightSvg">
+              <path class="base" d="M70 150 C 330 -20, 670 -20, 930 150" fill="none" stroke-linecap="round"/>
+              <path class="draw" id="flPath" d="M70 150 C 330 -20, 670 -20, 930 150" fill="none" stroke-linecap="round"/>
+              <circle class="city" cx="70" cy="150" r="7"/><circle class="city" cx="930" cy="150" r="7"/>
+              <text class="code" x="70" y="192" id="flFromCode">HND</text><text class="name" x="140" y="192" id="flFrom">Tokyo</text>
+              <text class="code" x="930" y="192" text-anchor="end" id="flToCode">BLR</text><text class="name" x="860" y="192" text-anchor="end" id="flTo">Bengaluru</text>
+              <g id="flPlane"><path class="plane" d="M16 0 L-4 -3 L-9 -14 L-14 -14 L-10 -3 L-16 -3 L-19 -8 L-22 -8 L-20 0 L-22 8 L-19 8 L-16 3 L-10 3 L-14 14 L-9 14 L-4 3 Z"/></g>
+            </svg></div>
+            <div class="tl" id="tl" role="img" aria-label="Trip timeline"></div>
+            <div id="tlWarn"></div>
+          </div>
+        </div>
+        <div class="frag" data-ui data-rise>
+          <div class="frag-bar"><h3>Travellers</h3><span class="note">Example trip: the Lindqvists, Stockholm to Delhi</span></div>
+          <div class="board" id="board"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band" id="never" aria-labelledby="neverTitle">
+    <div class="wrap">
+      <div class="grid never">
+        <div class="never-head">
+          <h2 class="head" id="neverTitle" data-rise>What Pravesh never does.</h2>
+          <p class="lead" data-rise>It is a companion to the official site, built to be trusted with a passport. These limits are part of the design.</p>
+          <a class="btn" href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener" data-rise style="align-self:flex-start">Open the official e-Visa site <svg class="ico"><use href="#i-out"/></svg></a>
+        </div>
+        <ul class="never-list" data-rise-group>
+          <li data-rise><h3 class="statement">Take a payment.</h3><p>There is no fee and no express service. The visa fee is paid only on the official site, and the official site says it charges no emergency fee.</p></li>
+          <li data-rise><h3 class="statement">Upload your files.</h3><p>Photos and passport scans are read and fixed in your browser. There is no server to send them to and no account to create.</p></li>
+          <li data-rise><h3 class="statement">Submit for you.</h3><p>You apply yourself, on indianvisaonline.gov.in. Pravesh prepares the answers, files and dates you will need there.</p></li>
+          <li data-rise><h3 class="statement">State a rule without its source.</h3><p>Each rule links to where it was published and when it was last checked. This build uses a demonstration set of 19 countries.</p></li>
+        </ul>
+      </div>
+      <div class="sources" data-rise>
+        <h3>Sources</h3>
+        <a href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener">Official e-Visa site<span>Application, payment, status</span></a>
+        <a href="https://indianvisaonline.gov.in/visa/visa-on-arrival.html" target="_blank" rel="noopener">Bureau of Immigration<span>Visa on arrival: Japan, South Korea, UAE</span></a>
+        <a href="https://www.outlooktraveller.com/News/travellers-from-japan-south-korea-uae-can-now-get-visa-on-arrival-in-india" target="_blank" rel="noopener">Outlook Traveller<span>The six visa-on-arrival airports</span></a>
+        <a href="https://eoilisbon.gov.in/pages/NQ,," target="_blank" rel="noopener">Embassy of India, Lisbon<span>4-hour payment status, 3-attempt limit</span></a>
+        <a href="https://eoiparis.gov.in/page/e-visa" target="_blank" rel="noopener">Embassy of India, Paris<span>Passport scan: PDF, 10–300 KB</span></a>
+        <a href="https://tourism.gov.in/sites/default/files/2025-12/usq.1412%20for%2011.12.2025.pdf" target="_blank" rel="noopener">Ministry of Tourism<span>31.74 lakh tourist e-Visas issued</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot field band">
+  <div class="wrap">
+    <div class="foot-word" aria-hidden="true" id="footWord"><span>P</span><span>r</span><span>a</span><span>v</span><span>e</span><span>s</span><span>h</span></div>
+    <div class="foot-row">
+      <p>Pravesh is an independent, unofficial preparation tool. It is not affiliated with the Government of India, the Ministry of Home Affairs or the Bureau of Immigration. It does not submit applications or take payments. Always confirm the rules on the official site before you travel.</p>
+      <div class="foot-links">
+        <a class="link" href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener">Apply on the official site <svg class="ico"><use href="#i-out"/></svg></a>
+        <a class="link" href="#top">Back to the entry plan</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const EASE='cubic-bezier(.23,1,.32,1)';
+const DAY=864e5;
+const sod=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x};
+const addDays=(d,n)=>new Date(d.getTime()+n*DAY);
+const fmtD=d=>d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+const fmtSize=b=>b<1048576?Math.max(1,Math.round(b/1024))+' KB':(b/1048576).toFixed(2)+' MB';
+const isoDate=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toBlob=(c,t,q)=>new Promise(r=>c.toBlob(r,t,q));
+const anim=(el,kf,opt)=>{ if(RM||!el||!el.animate) return null; return el.animate(kf,Object.assign({easing:EASE,fill:'backwards'},opt)); };
+
+function flash(btn,label){ if(!btn) return; const o=btn.dataset.label||btn.innerHTML; btn.dataset.label=o; btn.textContent=label; clearTimeout(btn._t); btn._t=setTimeout(()=>{btn.innerHTML=o},1600); }
+function copyText(text,btn){
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}ta.remove();flash(btn,ok?'Copied':'Select to copy')};
+  try{navigator.clipboard.writeText(text).then(()=>flash(btn,'Copied'),fb)}catch(e){fb()}
+}
+async function saveBlob(blob,name,btn){
+  const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);flash(btn,'Saved');
+}
+
+/* ---------- Entry plan ---------- */
+const COUNTRIES=[['JP','Japan','voa','Japanese'],['KR','South Korea','voa','South Korean'],['AE','United Arab Emirates','voa-prior','Emirati'],['US','United States','evisa','American'],['GB','United Kingdom','evisa','British'],['DE','Germany','evisa','German'],['FR','France','evisa','French'],['NL','Netherlands','evisa','Dutch'],['IT','Italy','evisa','Italian'],['ES','Spain','evisa','Spanish'],['SE','Sweden','evisa','Swedish'],['AU','Australia','evisa','Australian'],['NZ','New Zealand','evisa','New Zealand'],['SG','Singapore','evisa','Singaporean'],['BR','Brazil','evisa','Brazilian'],['ZA','South Africa','evisa','South African'],['KE','Kenya','evisa','Kenyan'],['PK','Pakistan','mission','Pakistani'],['XX','Another country','check','']];
+const PORTS=[['DEL','Delhi',1],['BOM','Mumbai',1],['BLR','Bengaluru',1],['MAA','Chennai',1],['CCU','Kolkata',1],['HYD','Hyderabad',1],['GOX','Goa (Mopa)',0],['COK','Kochi',0],['AMD','Ahmedabad',0],['JAI','Jaipur',0]];
+const PURP={tourism:['e-Tourist Visa',null],business:['e-Business Visa',['Business card','A copy, uploaded with the form']],medical:['e-Medical Visa',['Hospital letter','From the hospital in India, on its letterhead']]};
+const COLORS={voa:'#17704a',evisa:'#f7941d',mission:'#a93322',check:'#565e75'};
+const state={nat:'JP',purpose:'tourism',port:'BLR',arr:addDays(sod(new Date()),21),prior:'no',pak:'no',mil:'no'};
+const natSel=$('#nat'),portSel=$('#port'),arrIn=$('#arr');
+natSel.innerHTML=COUNTRIES.map(c=>`<option value="${c[0]}">${esc(c[1])}</option>`).join('');
+portSel.innerHTML=PORTS.map(p=>`<option value="${p[0]}">${esc(p[1])}</option>`).join('');
+natSel.value=state.nat;portSel.value=state.port;arrIn.value=isoDate(state.arr);arrIn.min=isoDate(sod(new Date()));
+
+function routeFor(s){
+  const c=COUNTRIES.find(x=>x[0]===s.nat),port=PORTS.find(p=>p[0]===s.port),k=c[2],dem=c[3];
+  if(k==='mission') return {type:'mission',kind:'Regular visa',title:'Apply through an Indian mission.',reason:'Pakistani passport holders apply for a regular visa through an Indian mission. The e-Visa is not available to them.',c,port};
+  if(s.pak==='yes') return {type:'mission',kind:'Regular visa',title:'Apply through an Indian mission.',reason:'The e-Visa instructions send applicants of Pakistani origin to an Indian mission for a regular visa. If your only link is birth before 1947 in undivided India, ask the mission how to answer.',c,port};
+  if(k==='check') return {type:'check',kind:'Check first',title:'Confirm your country is eligible.',reason:'This demonstration covers 19 countries. Check the official list of e-Visa countries before you start.',c,port};
+  const voa=k==='voa'||(k==='voa-prior'&&s.prior==='yes');
+  if(voa&&port[2]) return {type:'voa',kind:'Visa on arrival',title:'No online application needed.',reason:`${dem} nationals can get a visa on arrival at ${port[1]}, one of six designated airports. It allows up to 60 days and two entries.`,c,port};
+  let reason=`${dem} nationals apply online and receive approval by email before flying.`;
+  if(voa&&!port[2]) reason=`Visa on arrival works at six airports only, and ${port[1]} is not one of them. Apply for an e-Visa instead.`;
+  else if(k==='voa-prior') reason='Emirati nationals get a visa on arrival only after holding an Indian e-Visa or paper visa before. For a first visit, apply online.';
+  return {type:'evisa',kind:'e-Visa',title:`Apply online for an ${PURP[s.purpose][0].replace('e-','e‑')}.`,reason,c,port};
+}
+function docsFor(r,s){
+  if(r.type==='voa') return [['Passport','Valid, with your current details'],['e-Arrival Card','Filed within 72 hours of landing']];
+  if(r.type==='mission') return [['Regular visa form','Through the mission or its visa centre']];
+  if(r.type==='check') return [['Official country list','On indianvisaonline.gov.in']];
+  const d=[['Face photo','JPEG, 10–300 KB, square'],['Passport page','PDF, 10–300 KB']],x=PURP[s.purpose][1]; if(x) d.push(x);
+  d.push(['e-Arrival Card','Filed within 72 hours of landing']); return d;
+}
+function datesFor(r,s){
+  const a=sod(s.arr),o=[];
+  if(r.type==='evisa') o.push(['Apply by',addDays(a,-4),true]);
+  if(r.type==='voa'||r.type==='evisa') o.push(['Arrival Card',addDays(a,-3),false]);
+  o.push(['Land',a,false]); return o;
+}
+function renderTicket(animate){
+  const r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state),t=$('#ticket');
+  t.style.setProperty('--route',COLORS[r.type]);
+  const src=r.type==='voa'?'https://indianvisaonline.gov.in/visa/visa-on-arrival.html':'https://indianvisaonline.gov.in/evisa/tvoa.html';
+  const note=state.mil==='yes'?'<p class="t-note">The form asks for your organisation, rank and place of posting. Past service does not rule you out. Keep the details ready.</p>':(r.type==='voa'?'<p class="t-note">Flying into another airport later? An e-Visa works at all of them.</p>':'');
+  const cta=r.type==='evisa'?'<a class="btn" href="#documents">Check my photo</a>':r.type==='voa'?'<a class="btn" href="#trip">See my dates</a>':'<a class="btn" href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener">Official site</a>';
+  t.innerHTML=`<div class="t-head"><div style="display:flex;flex-direction:column;gap:10px"><span class="t-kind"><i></i>${esc(r.kind)}</span><h3 class="t-title">${esc(r.title)}</h3></div><div class="t-port"><b>${esc(r.port[0])}</b><span>${esc(r.port[1])}</span></div></div>
+  <p class="t-reason">${esc(r.reason)}</p>${note}
+  <div class="t-cols"><div><h4>${r.type==='voa'?'Carry':'You will need'}</h4><ul class="t-docs">${docs.map(d=>`<li><b>${esc(d[0])}</b><span>${esc(d[1])}</span></li>`).join('')}</ul></div>
+  <div><h4>Dates</h4><ul class="t-dates">${dates.map(d=>`<li><span>${esc(d[0])}</span><b class="${d[2]?'hot':''}">${esc(fmtD(d[1]))}</b></li>`).join('')}</ul></div></div>
+  <div class="t-acts">${cta}<button class="btn btn-ghost" type="button" id="copyPlan">Copy checklist</button></div>
+  <p class="t-src">Rule from the <a href="${src}" target="_blank" rel="noopener">official ${r.type==='voa'?'visa-on-arrival page':'e-Visa site'}</a>, checked 30 Oct 2026. Unofficial preview, not a visa.</p>`;
+  $('#copyPlan').addEventListener('click',e=>copyText([`Pravesh entry plan (unofficial)`,`${r.kind}: ${r.title}`,r.reason,'','Documents:',...docs.map(d=>`- ${d[0]}: ${d[1]}`),'','Dates:',...dates.map(d=>`- ${d[0]}: ${fmtD(d[1])}`),'','Apply only at https://indianvisaonline.gov.in'].join('\n'),e.currentTarget));
+  if(animate) Array.from(t.children).forEach((el,i)=>anim(el,[{opacity:.2,filter:'blur(4px)',transform:'translateY(6px)'},{opacity:1,filter:'blur(0)',transform:'none'}],{duration:280,delay:i*30}));
+}
+function readPlan(){
+  const f=$('#routeForm');
+  state.nat=natSel.value;state.port=portSel.value;
+  state.purpose=f.querySelector('[name=purpose]:checked').value;
+  state.prior=f.querySelector('[name=prior]:checked').value;
+  state.pak=f.querySelector('[name=pak]:checked').value;
+  state.mil=f.querySelector('[name=mil]:checked').value;
+  const d=arrIn.value?new Date(arrIn.value+'T00:00:00'):null; if(d&&!isNaN(d)) state.arr=d;
+  $('#priorField').hidden=state.nat!=='AE';
+}
+$('#routeForm').addEventListener('change',()=>{readPlan();renderTicket(true);renderTimeline(true);if(window.__imprint)window.__imprint()});
+$('#routeForm').addEventListener('submit',e=>e.preventDefault());
+readPlan();renderTicket(false);
+
+/* Tilt: a spring follows the pointer over the plan, so the result reads as a document you hold. */
+(function tilt(){
+  const t=$('#ticket'),area=$('#planFrag'); if(RM||!FINE||!t) return;
+  let tx=0,ty=0,x=0,y=0,vx=0,vy=0,run=false;
+  const step=()=>{const k=.08,d=.78;vx=(vx+(tx-x)*k)*d;vy=(vy+(ty-y)*k)*d;x+=vx;y+=vy;t.style.transform=`rotateX(${y.toFixed(3)}deg) rotateY(${x.toFixed(3)}deg)`;if(Math.abs(vx)+Math.abs(vy)+Math.abs(tx-x)+Math.abs(ty-y)>.002)requestAnimationFrame(step);else run=false};
+  const go=()=>{if(!run){run=true;requestAnimationFrame(step)}};
+  area.addEventListener('pointermove',e=>{const r=t.getBoundingClientRect();tx=((e.clientX-r.left)/r.width-.5)*5;ty=-((e.clientY-r.top)/r.height-.5)*4;go()});
+  area.addEventListener('pointerleave',()=>{tx=0;ty=0;go()});
+})();
+
+/* ---------- Documents ---------- */
+const doc={mode:'photo',photo:null,passport:null,showFixed:false,busy:false};
+const stage=$('#stage'),view=$('#view');
+function loadImg(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>res({img:i,url:u});i.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Not an image'))};i.src=u})}
+function pixelStats(img){
+  const W=240,H=Math.max(1,Math.round(img.naturalHeight*W/img.naturalWidth)),c=document.createElement('canvas');c.width=W;c.height=H;
+  const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0,W,H);const d=x.getImageData(0,0,W,H).data,g=new Float32Array(W*H);let s=0,s2=0,n=0;
+  for(let y=0;y<H;y++)for(let xx=0;xx<W;xx++){const i=y*W+xx,k=i*4,l=.2126*d[k]+.7152*d[k+1]+.0722*d[k+2];g[i]=l;if(y<H*.72&&(y<H*.08||xx<W*.07||xx>W*.93)){s+=l;s2+=l*l;n++}}
+  const mean=s/n,std=Math.sqrt(Math.max(0,s2/n-mean*mean));let ls=0,ls2=0,m=0;
+  for(let y=1;y<H-1;y++)for(let xx=1;xx<W-1;xx++){const i=y*W+xx,L=4*g[i]-g[i-1]-g[i+1]-g[i-W]-g[i+W];ls+=L;ls2+=L*L;m++}
+  return {mean,std,lv:ls2/m-(ls/m)*(ls/m)};
+}
+function checksPhoto(blob,img){
+  const kb=blob.size/1024,type=(blob.type||'').toLowerCase(),isJ=type==='image/jpeg';
+  const o=[{n:'Format',w:'JPEG',g:isJ?'JPEG':(type.split('/')[1]||'unknown').toUpperCase(),ok:isJ},{n:'File size',w:'10–300 KB',g:fmtSize(blob.size),ok:kb>=10&&kb<=300}];
+  if(!img){o.push({n:'Image',w:'A photo',g:'Could not be read',ok:false});return o}
+  const w=img.naturalWidth,h=img.naturalHeight,p=pixelStats(img);
+  o.push({n:'Shape',w:'Square',g:`${w} × ${h} px`,ok:w===h},{n:'Resolution',w:'350 px or more',g:`${Math.min(w,h)} px short side`,ok:Math.min(w,h)>=350},
+    {n:'Background',w:'Plain and light',g:p.mean<200?'Too dark or tinted':p.std>18?'Uneven':'Plain and light',ok:p.mean>=200&&p.std<=18},
+    {n:'Focus',w:'Sharp',g:p.lv>=18?'Sharp':'May be blurry',ok:p.lv>=18});
+  return o;
+}
+function checksPassport(blob,img){
+  const kb=blob.size/1024,type=(blob.type||'').toLowerCase(),isP=type==='application/pdf';
+  const o=[{n:'Format',w:'PDF',g:isP?'PDF':(type.split('/')[1]||'unknown').toUpperCase(),ok:isP},{n:'File size',w:'10–300 KB',g:fmtSize(blob.size),ok:kb>=10&&kb<=300}];
+  if(img){const L=Math.max(img.naturalWidth,img.naturalHeight);o.push({n:'Readability',w:'Long side 1000 px or more',g:`${img.naturalWidth} × ${img.naturalHeight} px`,ok:L>=1000})}
+  else if(isP) o.push({n:'Contents',w:'Photo and both lines at the foot readable',g:'Open the PDF and confirm',ok:null});
+  return o;
+}
+async function analyze(blob,name,mode){let li=null;try{li=await loadImg(blob)}catch(e){}const e={blob,name,img:li&&li.img,url:li&&li.url,mode,fixed:null};e.checks=mode==='photo'?checksPhoto(blob,e.img):checksPassport(blob,e.img);return e}
+function showOriginal(e){
+  doc.showFixed=false;
+  view.innerHTML=e.url?`<img src="${e.url}" alt="${e.mode==='photo'?'Your photo':'Your passport page'} as loaded">`:`<div class="pdf-ph">PDF loaded: ${esc(e.name)}</div>`;
+  $('#fileMeta').textContent=`${e.name} · ${fmtSize(e.blob.size)}${e.img?` · ${e.img.naturalWidth} × ${e.img.naturalHeight}`:''}`;
+}
+function renderReport(e,animate){
+  const fixed=doc.showFixed&&e.fixed,checks=fixed?e.fixed.checks:e.checks,scored=checks.filter(c=>c.ok!==null),fails=scored.filter(c=>!c.ok).length;
+  $('#repNum').textContent=fails;
+  $('#repOf').textContent=fails?`of ${scored.length} checks would fail`:'checks fail';
+  $('#repSub').textContent=fails?'These are the issues that send an upload back after you have paid.':fixed?'Every check passes. Save the file and upload it on the official site.':'Every check passes against the published spec.';
+  $('#checks').innerHTML=checks.map(c=>`<li class="${c.ok===null?'info':c.ok?'ok':'bad'}"><span class="chk-n">${esc(c.n)}</span><span class="chk-d">${esc(c.g)} · needs ${esc(c.w)}</span><span class="pill">${c.ok===null?'Check':c.ok?'Pass':'Fix'}</span></li>`).join('');
+  $('#fixBtn').hidden=!!fixed; $('#fixBtn').disabled=!(e.img&&fails>0);
+  $('#saveBtn').hidden=!fixed; $('#resetBtn').hidden=!fixed;
+  if(animate) $$('#checks li').forEach((li,i)=>anim(li,[{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:260,delay:i*40}));
+}
+function scan(){ if(RM) return Promise.resolve(); const s=$('#scan'),h=stage.clientHeight; const a=s.animate([{opacity:1,transform:'translateY(0)'},{opacity:1,transform:`translateY(${h-2}px)`},{opacity:0,transform:`translateY(${h-2}px)`}],{duration:900,easing:'cubic-bezier(.77,0,.175,1)'}); return a.finished.catch(()=>{}); }
+async function ingest(blob,name,animate){const mode=doc.mode,e=await analyze(blob,name,mode);doc[mode]=e;showOriginal(e);if(animate)await scan();renderReport(e,animate);return e}
+
+function drawFace(c){const x=c.getContext('2d'),W=900,H=1200;x.save();x.scale(c.width/W,c.height/H);let g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#b7c0c6');g.addColorStop(1,'#9fa9b0');x.fillStyle=g;x.fillRect(0,0,W,H);
+  g=x.createRadialGradient(W*.7,H*.25,40,W*.7,H*.25,700);g.addColorStop(0,'rgba(255,255,255,.18)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.fillStyle='#2b3550';x.beginPath();x.moveTo(70,H);x.bezierCurveTo(90,950,250,880,450,872);x.bezierCurveTo(650,880,810,950,830,H);x.closePath();x.fill();
+  x.fillStyle='#eef0f1';x.beginPath();x.moveTo(392,880);x.lineTo(450,990);x.lineTo(508,880);x.closePath();x.fill();
+  g=x.createLinearGradient(400,700,500,880);g.addColorStop(0,'#a8735b');g.addColorStop(1,'#bf8c70');x.fillStyle=g;x.fillRect(400,700,100,185);
+  x.fillStyle='#c18a6c';x.beginPath();x.ellipse(302,585,22,40,0,0,Math.PI*2);x.fill();x.beginPath();x.ellipse(598,585,22,40,0,0,Math.PI*2);x.fill();
+  g=x.createRadialGradient(420,520,30,450,560,190);g.addColorStop(0,'#dcab8c');g.addColorStop(.7,'#c99472');g.addColorStop(1,'#b27b5d');x.fillStyle=g;x.beginPath();x.ellipse(450,565,148,190,0,0,Math.PI*2);x.fill();
+  x.fillStyle='#2a201b';x.beginPath();x.moveTo(296,560);x.bezierCurveTo(280,400,360,345,452,345);x.bezierCurveTo(560,345,626,410,606,560);x.bezierCurveTo(596,470,560,430,470,428);x.bezierCurveTo(400,426,330,450,296,560);x.fill();
+  x.fillStyle='#2a201b';x.beginPath();x.ellipse(396,568,12,7,0,0,Math.PI*2);x.fill();x.beginPath();x.ellipse(504,568,12,7,0,0,Math.PI*2);x.fill();
+  x.strokeStyle='#3a2b23';x.lineWidth=6;x.lineCap='round';x.beginPath();x.moveTo(368,536);x.quadraticCurveTo(396,526,424,532);x.stroke();x.beginPath();x.moveTo(476,532);x.quadraticCurveTo(504,526,532,536);x.stroke();
+  x.strokeStyle='rgba(120,74,52,.55)';x.lineWidth=4;x.beginPath();x.moveTo(452,580);x.quadraticCurveTo(440,632,458,642);x.stroke();
+  x.strokeStyle='#8f4f40';x.lineWidth=5;x.beginPath();x.moveTo(414,690);x.quadraticCurveTo(450,702,486,690);x.stroke();
+  x.restore();x.save();const im=x.getImageData(0,0,c.width,c.height),d=im.data;for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*14;d[i]+=n;d[i+1]+=n;d[i+2]+=n}x.putImageData(im,0,0);
+  x.restore();return c}
+async function samplePhoto(){const c=document.createElement('canvas');c.width=900;c.height=1200;drawFace(c);return {blob:await toBlob(c,'image/png'),name:'sample-photo.png'}}
+async function samplePassport(){
+  await (document.fonts?document.fonts.ready:Promise.resolve());
+  const W=2200,H=1540,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#eef1ec');g.addColorStop(1,'#dfe6e4');x.fillStyle=g;x.fillRect(0,0,W,H);
+  for(let k=0;k<64;k++){x.beginPath();for(let px=0;px<=W;px+=6){const y=H*.45+Math.sin(px*.006+k*.21)*(110+k*5)+Math.sin(px*.021+k)*20;px?x.lineTo(px,y):x.moveTo(px,y)}x.strokeStyle=`rgba(31,43,77,${.04+(k%5)*.015})`;x.lineWidth=1.3;x.stroke()}
+  x.fillStyle='#1f2b4d';x.font='600 64px "Hanken Grotesk",sans-serif';x.fillText('UTOPIA',110,140);x.font='400 34px "Hanken Grotesk",sans-serif';x.fillText('PASSPORT · SPECIMEN',110,196);
+  x.fillStyle='#c6cdd2';x.fillRect(110,270,520,660);x.fillStyle='#2b3550';x.beginPath();x.ellipse(370,560,130,160,0,0,Math.PI*2);x.fill();x.beginPath();x.moveTo(170,930);x.bezierCurveTo(190,770,550,770,570,930);x.fill();
+  const F=[['Type','P'],['Code','UTO'],['Passport No.','L898902C3'],['Surname','ERIKSSON'],['Given names','ANNA MARIA'],['Nationality','UTOPIAN'],['Date of birth','12 AUG 1974'],['Sex','F'],['Date of expiry','15 APR 2032']];
+  F.forEach((f,i)=>{const col=i<3?i:(i-3)%2,row=i<3?0:1+Math.floor((i-3)/2),fx=720+col*(i<3?440:660),fy=310+row*150;x.fillStyle='#565e75';x.font='500 28px "Hanken Grotesk",sans-serif';x.fillText(f[0].toUpperCase(),fx,fy);x.fillStyle='#101a33';x.font='600 46px "Hanken Grotesk",sans-serif';x.fillText(f[1],fx,fy+56)});
+  x.save();x.translate(W*.62,H*.5);x.rotate(-.22);x.fillStyle='rgba(169,51,34,.14)';x.font='600 220px "Hanken Grotesk",sans-serif';x.textAlign='center';x.fillText('SPECIMEN',0,60);x.restore();
+  x.fillStyle='rgba(255,255,255,.78)';x.fillRect(0,1090,W,H-1090);x.fillStyle='#101a33';x.font='500 62px ui-monospace,Menlo,Consolas,monospace';x.fillText('P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<',110,1240);x.fillText('L898902C36UTO7408122F3204159ZE184226B<<<<<10',110,1370);
+  const im=x.getImageData(0,0,W,H),d=im.data;for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*10;d[i]+=n;d[i+1]+=n;d[i+2]+=n}x.putImageData(im,0,0);
+  return {blob:await toBlob(c,'image/png'),name:'sample-passport-page.png'};
+}
+function whiten(ctx,n){
+  const im=ctx.getImageData(0,0,n,n),d=im.data;let r=0,g=0,b=0,c=0;const add=(x,y)=>{const k=(y*n+x)*4;r+=d[k];g+=d[k+1];b+=d[k+2];c++};
+  for(let x=0;x<n;x+=2)for(let y=0;y<Math.round(n*.05);y++)add(x,y);
+  for(let y=0;y<Math.round(n*.7);y+=2)for(let x=0;x<Math.round(n*.05);x++){add(x,y);add(n-1-x,y)}
+  r/=c;g/=c;b/=c;const tol=3600,seen=new Uint8Array(n*n),q=new Int32Array(n*n);let qh=0,qt=0;
+  const near=i=>{const k=i*4,dr=d[k]-r,dg=d[k+1]-g,db=d[k+2]-b;return dr*dr+dg*dg+db*db<tol};const push=i=>{if(!seen[i]&&near(i)){seen[i]=1;q[qt++]=i}};const lim=Math.round(n*.92);
+  for(let x=0;x<n;x++)push(x);for(let y=0;y<Math.round(n*.8);y++){push(y*n);push(y*n+n-1)}
+  while(qh<qt){const i=q[qh++],x=i%n,y=(i-x)/n;if(x>0)push(i-1);if(x<n-1)push(i+1);if(y>0)push(i-n);if(y<lim)push(i+n)}
+  for(let i=0;i<n*n;i++)if(seen[i]){const k=i*4;d[k]=d[k+1]=d[k+2]=255}
+  for(let y=1;y<n-1;y++)for(let x=1;x<n-1;x++){const i=y*n+x;if(seen[i])continue;if(seen[i-1]||seen[i+1]||seen[i-n]||seen[i+n]){const k=i*4;d[k]=(d[k]+255)/2;d[k+1]=(d[k+1]+255)/2;d[k+2]=(d[k+2]+255)/2}}
+  ctx.putImageData(im,0,0);
+}
+async function fixPhoto(e){
+  const img=e.img,w=img.naturalWidth,h=img.naturalHeight,side=Math.min(w,h),sx=(w-side)/2,sy=h>w?Math.max(0,(h-side)*.22):0,out=Math.max(350,Math.min(720,side));
+  const c=document.createElement('canvas');c.width=c.height=out;const x=c.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,out,out);x.drawImage(img,sx,sy,side,side,0,0,out,out);
+  const before=await toBlob(c,'image/jpeg',.9),bg=e.checks.find(k=>k.n==='Background');if(bg&&!bg.ok)whiten(x,out);
+  let q=.9,blob=await toBlob(c,'image/jpeg',q);while(blob.size>300*1024&&q>.4){q-=.08;blob=await toBlob(c,'image/jpeg',q)}
+  const li=await loadImg(blob),f={blob,url:li.url,img:li.img,beforeUrl:URL.createObjectURL(before),name:e.name.replace(/\.[^.]+$/,'')+'-pravesh.jpg'};f.checks=checksPhoto(blob,li.img);return f;
+}
+async function fixPassport(e){
+  const J=window.jspdf&&window.jspdf.jsPDF;if(!J)throw new Error('The PDF tool did not load. Check your connection and try again.');
+  const img=e.img,w=img.naturalWidth,h=img.naturalHeight;let scale=Math.min(1,1600/Math.max(w,h)),q=.82,last=null;
+  for(let i=0;i<12;i++){const cw=Math.round(w*scale),ch=Math.round(h*scale),c=document.createElement('canvas');c.width=cw;c.height=ch;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,cw,ch);x.drawImage(img,0,0,cw,ch);
+    const data=c.toDataURL('image/jpeg',q),pw=cw*.75,ph=ch*.75,pdf=new J({orientation:pw>ph?'l':'p',unit:'pt',format:[pw,ph],compress:true});pdf.addImage(data,'JPEG',0,0,pw,ph);
+    const blob=pdf.output('blob');last={blob,canvas:c,cw,ch};if(blob.size<=300*1024&&blob.size>=10*1024)break;if(q>.52)q-=.1;else scale*=.86}
+  const prev=await toBlob(last.canvas,'image/jpeg',.85),li=await loadImg(prev),blob=new Blob([last.blob],{type:'application/pdf'}),kb=blob.size/1024;
+  const f={blob,url:li.url,img:null,name:e.name.replace(/\.[^.]+$/,'')+'-pravesh.pdf'};
+  f.checks=[{n:'Format',w:'PDF',g:'PDF',ok:true},{n:'File size',w:'10–300 KB',g:fmtSize(blob.size),ok:kb>=10&&kb<=300},{n:'Readability',w:'Long side 1000 px or more',g:`${last.cw} × ${last.ch} px`,ok:Math.max(last.cw,last.ch)>=1000}];return f;
+}
+function imgRect(img){const sw=stage.clientWidth,sh=stage.clientHeight,bw=sw*.86,bh=sh*.86,ar=img.naturalWidth/img.naturalHeight;let w=bw,h=bw/ar;if(h>bh){h=bh;w=bh*ar}return {x:(sw-w)/2,y:(sh-h)/2,w,h}}
+function showCompare(e){
+  const f=e.fixed;doc.showFixed=true;
+  if(e.mode==='photo'){
+    view.innerHTML=`<div class="compare" id="cmp" style="--split:100%"><img src="${f.beforeUrl}" alt="Before: original, cropped"><img class="after" src="${f.url}" alt="After: fixed photo"><span class="handle"></span><span class="knob"><svg viewBox="0 0 16 16"><use href="#i-swap"/></svg></span><span class="tagb">Before</span><span class="taga">After</span><input type="range" id="cmpR" min="0" max="100" value="50" aria-label="Compare before and after"></div><span class="out-badge">JPEG · ${fmtSize(f.blob.size)} · ${f.img.naturalWidth} px</span>`;
+    const cmp=$('#cmp'),r=$('#cmpR');r.addEventListener('input',()=>cmp.style.setProperty('--split',r.value+'%'));
+    if(RM){cmp.style.setProperty('--split','50%')}else{const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/900),e2=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;cmp.style.setProperty('--split',(100-50*e2)+'%');if(p<1)requestAnimationFrame(f)})(t0)}
+  }else{
+    view.innerHTML=`<img src="${f.url}" alt="Passport page inside the new PDF"><span class="out-badge">PDF · ${fmtSize(f.blob.size)}</span>`;
+    anim($('#view img'),[{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:400});
+  }
+  $('#fileMeta').textContent=`${f.name} · ${fmtSize(f.blob.size)}, was ${fmtSize(e.blob.size)}`;
+}
+async function runFix(){
+  const e=doc[doc.mode];if(!e||!e.img||doc.busy)return;
+  if(e.fixed){showCompare(e);renderReport(e,false);return}
+  doc.busy=true;$('#fixBtn').disabled=true;
+  try{
+    if(e.mode==='photo'&&!RM){
+      const r=imgRect(e.img),k=r.w/e.img.naturalWidth,fr=document.createElement('div');fr.className='cropframe';Object.assign(fr.style,{left:r.x+'px',top:r.y+'px',width:r.w+'px',height:r.h+'px'});view.appendChild(fr);
+      const w=e.img.naturalWidth,h=e.img.naturalHeight,side=Math.min(w,h),sx=(w-side)/2,sy=h>w?Math.max(0,(h-side)*.22):0;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>Object.assign(fr.style,{left:(r.x+sx*k)+'px',top:(r.y+sy*k)+'px',width:side*k+'px',height:side*k+'px'})));
+      await new Promise(r=>setTimeout(r,760));
+    }
+    const sp=scan();e.fixed=e.mode==='photo'?await fixPhoto(e):await fixPassport(e);await sp;showCompare(e);renderReport(e,true);
+  }catch(err){$('#repSub').textContent=err.message||'This file could not be fixed. Try another.';$('#fixBtn').disabled=false}
+  doc.busy=false;
+}
+$('#fixBtn').addEventListener('click',runFix);
+$('#saveBtn').addEventListener('click',ev=>{const e=doc[doc.mode];if(e&&e.fixed)saveBlob(e.fixed.blob,e.fixed.name,ev.currentTarget)});
+$('#resetBtn').addEventListener('click',()=>{const e=doc[doc.mode];if(!e)return;showOriginal(e);renderReport(e,false);$('#fixBtn').hidden=false;$('#fixBtn').disabled=!(e.img&&e.checks.some(c=>c.ok===false))});
+async function loadSample(animate){const s=doc.mode==='photo'?await samplePhoto():await samplePassport();return ingest(s.blob,s.name,animate)}
+$('#useSample').addEventListener('click',()=>loadSample(true));
+$('#fileIn').addEventListener('change',ev=>{const f=ev.target.files&&ev.target.files[0];if(f)ingest(f,f.name,true);ev.target.value=''});
+['dragenter','dragover'].forEach(t=>stage.addEventListener(t,e=>{e.preventDefault();stage.classList.add('drag')}));
+['dragleave','drop'].forEach(t=>stage.addEventListener(t,e=>{e.preventDefault();stage.classList.remove('drag')}));
+stage.addEventListener('drop',e=>{const f=e.dataTransfer&&e.dataTransfer.files[0];if(f)ingest(f,f.name,true)});
+$$('[name=docmode]').forEach(r=>r.addEventListener('change',()=>{
+  doc.mode=r.value;$('#specShort').textContent=doc.mode==='photo'?'JPEG · 10–300 KB · square':'PDF · 10–300 KB';
+  const e=doc[doc.mode];if(e){if(e.fixed&&doc.showFixed)showCompare(e);else showOriginal(e);renderReport(e,true)}else loadSample(true);
+}));
+const ready=loadSample(false);
+
+/* Pinned story: the three statements drive the document fragment as they scroll past. */
+(function story(){
+  const steps=$$('.step');if(!('IntersectionObserver' in window)){steps.forEach(s=>s.classList.add('on'));return}
+  let cur=null;
+  const apply=async st=>{if(st===cur)return;cur=st;await ready;
+    if(doc.mode!=='photo'){$('#dm-photo').checked=true;doc.mode='photo';$('#specShort').textContent='JPEG · 10–300 KB · square'}
+    const e=doc.photo;if(!e)return;
+    if(st==='read'){if(doc.showFixed||!view.querySelector('img')){showOriginal(e);renderReport(e,true)}}
+    else if(st==='fix'||st==='done'){if(!e.fixed)await runFix();else if(!doc.showFixed){showCompare(e);renderReport(e,false)}}
+  };
+  const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){steps.forEach(s=>s.classList.toggle('on',s===en.target));if(matchMedia('(min-width:1061px)').matches)apply(en.target.dataset.state)}})},{rootMargin:'-45% 0px -45% 0px'});
+  steps.forEach(s=>io.observe(s));
+})();
+
+/* ---------- Payment ---------- */
+function ticks(){const all=$$('#ticks input'),n=all.filter(i=>i.checked).length;$('#tickBar').style.width=(n/all.length*100)+'%';$('#tickMsg').textContent=n===all.length?'Ready to pay':`${n} of ${all.length}`}
+$$('#ticks input').forEach(i=>i.addEventListener('change',ticks));ticks();
+let att=0;
+function renderAtt(){
+  $$('#pips i').forEach((el,i)=>el.classList.toggle('used',i<att));$('#pips').classList.toggle('blocked',att>3);
+  $('#attCount').textContent=att===1?'1 failed':`${att} failed`;
+  $('#attMsg').innerHTML=att===0?'No failed attempts. You are clear to pay.':att===1?'One failed. Check your card allows international payments.':att===2?'Two failed. Use <b>Verify Payment</b> before a third try.':att===3?'<b>Three failed.</b> One more blocks this application. Verify first.':'<b>Application blocked.</b> Start a fresh application.';
+}
+$('#attPlus').addEventListener('click',()=>{att=Math.min(4,att+1);renderAtt()});$('#attMinus').addEventListener('click',()=>{att=Math.max(0,att-1);renderAtt()});renderAtt();
+const paidAt=$('#paidAt');{const d=new Date(Date.now()-80*6e4);paidAt.value=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+function renderClock(){
+  const [hh,mm]=(paidAt.value||'0:0').split(':').map(Number),now=new Date(),p=new Date(now);p.setHours(hh||0,mm||0,0,0);if(p>now)p.setDate(p.getDate()-1);
+  const el=now-p,frac=Math.min(1,el/(4*36e5)),C=402.1,hrs=el/36e5;
+  $('#ringFg').setAttribute('stroke-dashoffset',String(C*(1-frac)));$('#ringTxt').textContent=(hrs<10?hrs.toFixed(1):Math.round(hrs))+'h';
+  const due=new Date(p.getTime()+4*36e5),idx=frac<1?1:2;
+  $('#clockMsg').innerHTML=frac<1?`Check again after <b>${due.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</b>. Until then, don't pay again.`:'Four hours have passed. Use <b>Verify Payment</b>, then send the evidence.';
+  $$('#payTl .tp').forEach((t,i)=>t.classList.toggle('now',i===idx));
+}
+paidAt.addEventListener('input',renderClock);renderClock();setInterval(renderClock,30000);
+{const d=new Date(Date.now()-80*6e4);$('#evWhen').value=`${isoDate(d)}T${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+function renderEv(){
+  const v=id=>$(id).value.trim(),m=(val,ph)=>val?esc(val):`<mark>${ph}</mark>`,when=v('#evWhen')?new Date(v('#evWhen')):null,wt=when&&!isNaN(when)?when.toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'',tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'local time';
+  $('#evOut').innerHTML=`Subject: Fee debited, status not updated. Application ${m(v('#evApp'),'application ID')}\n\nDear e-Visa Helpdesk,\n\nMy e-Visa fee was debited on ${m(wt,'date and time')} (${esc(tz)}), but my application still shows as unpaid after waiting 4 hours.\n\nApplication ID: ${m(v('#evApp'),'application ID')}\nAmount debited: ${m(v('#evAmt'),'amount and currency')}\nPayment gateway: ${esc($('#evGw').value)}\nBank reference: ${m(v('#evRef'),'bank reference')}\n\nI have not paid again, to avoid blocking the application. Please confirm the payment status or tell me the next step.\n\nRegards,\n${m(v('#evName'),'your name')}`;
+}
+['#evApp','#evWhen','#evAmt','#evRef','#evName'].forEach(id=>$(id).addEventListener('input',renderEv));$('#evGw').addEventListener('change',renderEv);renderEv();
+$('#evCopy').addEventListener('click',e=>copyText($('#evOut').textContent,e.currentTarget));
+$$('[data-copy]').forEach(b=>b.addEventListener('click',()=>copyText(b.dataset.copy,b)));
+
+/* ---------- Trip ---------- */
+function renderTimeline(){
+  const r=routeFor(state),today=sod(new Date()),arr=sod(state.arr),days=Math.round((arr-today)/DAY);
+  $('#daysLeft').textContent=Math.max(0,days);$('#daysTxt').textContent=days===1?'day to arrival':'days to arrival';
+  $('#tlRoute').textContent=`${r.c[1]} · ${r.kind} · ${r.port[1]}`;
+  if(window.__flight) window.__flight(r);
+  const end=addDays(arr,2),span=Math.max(DAY,end-today),pct=d=>Math.min(100,Math.max(0,(d-today)/span*100));
+  const mk=[{d:today,l:'Today',k:''}];if(r.type==='evisa')mk.push({d:addDays(arr,-4),l:'Apply by',k:'accent'});if(r.type==='voa'||r.type==='evisa')mk.push({d:addDays(arr,-3),l:'Arrival Card opens',k:''});mk.push({d:arr,l:'Land in India',k:'accent'});
+  const tl=$('#tl');
+  tl.innerHTML=`<div class="tl-track"></div><div class="tl-fill"></div>`+mk.map((m,i)=>{const p=pct(m.d),pos=p<8?'start':p>90?'end':'';return `<div class="mk ${m.k} ${i%2?'down':''} ${pos}" style="left:${p}%"><div class="mk-l"><b>${esc(m.l)}</b><span>${esc(fmtD(m.d))}</span></div></div>`}).join('');
+  const fill=tl.querySelector('.tl-fill');requestAnimationFrame(()=>requestAnimationFrame(()=>fill.style.setProperty('--fill',pct(arr)+'%')));
+  $('#tlWarn').innerHTML=r.type==='evisa'&&addDays(arr,-4)<today?'<p class="tl-warn">Less than 4 days to go. Apply today and expect it to be tight.</p>':'';
+}
+renderTimeline();
+const STEPS=['Entry plan','Photo','Passport PDF','Payment','Arrival Card'],LBL={done:'Done',warn:'Fix',todo:'To do',wait:'Opens later'};
+const trav=[{n:'Anna Lindqvist',m:'Lead applicant · e-Tourist',s:['done','done','done','todo','wait']},{n:'Erik Lindqvist',m:'e-Tourist',s:['done','done','warn','todo','wait']},{n:'Mia Lindqvist',m:'Age 9 · e-Tourist',s:['done','todo','todo','todo','wait']}];
+function renderBoard(){
+  $('#board').innerHTML=trav.map(t=>{const d=t.s.filter(x=>x==='done').length,f=d/STEPS.length,C=106.8;return `<article class="trav"><div class="trav-top"><div><h4>${esc(t.n)}</h4><p>${esc(t.m)}</p></div><svg class="mini" viewBox="0 0 44 44" aria-label="${d} of ${STEPS.length} done"><circle class="bgc" cx="22" cy="22" r="17"/><circle class="fgc" cx="22" cy="22" r="17" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}"/><text x="22" y="26" text-anchor="middle">${d}/${STEPS.length}</text></svg></div><ul class="trav-steps">${t.s.map((x,i)=>`<li><span>${STEPS[i]}</span><span class="st ${x}">${LBL[x]}</span></li>`).join('')}</ul></article>`}).join('')+`<button class="trav-add" type="button" id="addTrav"><svg class="ico"><use href="#i-plus"/></svg>Add a traveller</button>`;
+  $('#addTrav').addEventListener('click',()=>{trav.push({n:`Traveller ${trav.length+1}`,m:'Details not added yet',s:['todo','todo','todo','todo','wait']});renderBoard();$('#addTrav').focus()});
+}
+renderBoard();
+
+
+/* ---------- Flight path: draws as the trip section scrolls in ---------- */
+const HUB={JP:['HND','Tokyo'],KR:['ICN','Seoul'],AE:['DXB','Dubai'],US:['JFK','New York'],GB:['LHR','London'],DE:['FRA','Frankfurt'],FR:['CDG','Paris'],NL:['AMS','Amsterdam'],IT:['FCO','Rome'],ES:['MAD','Madrid'],SE:['ARN','Stockholm'],AU:['SYD','Sydney'],NZ:['AKL','Auckland'],SG:['SIN','Singapore'],BR:['GRU','São Paulo'],ZA:['JNB','Johannesburg'],KE:['NBO','Nairobi'],PK:['ISB','Islamabad'],XX:['···','Your city']};
+const flPath=$('#flPath'),flPlane=$('#flPlane'),flLen=flPath.getTotalLength();
+flPath.style.strokeDasharray=flLen;
+window.__flight=r=>{const h=HUB[r.c[0]]||HUB.XX;$('#flFromCode').textContent=h[0];$('#flFrom').textContent=h[1];$('#flToCode').textContent=r.port[0];$('#flTo').textContent=r.port[1];
+  const nf=$('#flFromCode').getComputedTextLength?$('#flFromCode').getComputedTextLength():60;$('#flFrom').setAttribute('x',70+nf+12);
+  const nt=$('#flToCode').getComputedTextLength?$('#flToCode').getComputedTextLength():60;$('#flTo').setAttribute('x',930-nt-12)};
+window.__flight(routeFor(state));
+function setFlight(p){
+  const e=1-Math.pow(1-p,3),L=flLen*e;flPath.style.strokeDashoffset=flLen-L;
+  const a=flPath.getPointAtLength(Math.max(0.01,L)),b=flPath.getPointAtLength(Math.min(flLen,L+1)),ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  flPlane.setAttribute('transform',`translate(${a.x} ${a.y}) rotate(${ang})`);flPlane.style.opacity=p>0.001?1:0;
+}
+setFlight(RM?1:0);
+
+/* ---------- 3D: from passport to stamp ---------- */
+const journey=(function(){
+  const sec=$('#journey'),canvas=$('#sceneCanvas'),caps=$$('#journey .cap'),dots=$$('#journey .steps-dots i'),hint=$('#sceneHint'),T=window.THREE;
+  let gl=false;try{const tc=document.createElement('canvas');gl=!!(T&&(tc.getContext('webgl')||tc.getContext('experimental-webgl')))}catch(e){}
+  let capIdx=0;const setCap=i=>{if(i===capIdx)return;capIdx=i;caps.forEach((c,k)=>c.classList.toggle('on',k===i));dots.forEach((d,k)=>d.classList.toggle('on',k<=i))};
+  if(!gl){sec.classList.add('static','nogl');return null}
+  if(RM) sec.classList.add('static');
+  const api={ready:false,target:0,cur:0,visible:true};
+  (document.fonts?document.fonts.ready:Promise.resolve()).then(build).catch(()=>{sec.classList.add('static','nogl')});
+
+  function build(){
+  const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.75));renderer.outputEncoding=T.sRGBEncoding;
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.setClearColor(0x000000,0);
+  const ANI=renderer.capabilities.getMaxAnisotropy();
+  const scene=new T.Scene(),camera=new T.PerspectiveCamera(30,1,.1,60);
+  const ctex=(w,h,draw)=>{const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h,c);const t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=ANI;return t};
+  const guil=(x,w,h,col,n)=>{for(let k=0;k<n;k++){x.beginPath();for(let px=0;px<=w;px+=4){const y=h*.5+Math.sin(px*.012+k*.33)*(h*.08+k*5)+Math.sin(px*.041+k)*9;px?x.lineTo(px,y):x.moveTo(px,y)}x.strokeStyle=col;x.lineWidth=1;x.stroke()}};
+  const F='"Hanken Grotesk",sans-serif';
+
+  /* Textures, all drawn for this subject */
+  const coverTex=ctex(512,724,(x,w,h)=>{x.fillStyle='#1c284c';x.fillRect(0,0,w,h);for(let i=0;i<14000;i++){x.fillStyle=`rgba(255,255,255,${Math.random()*.04})`;x.fillRect(Math.random()*w,Math.random()*h,1.4,1.4)}
+    const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,'#b38a3c');g.addColorStop(.45,'#efd48e');g.addColorStop(1,'#a97f34');x.fillStyle=g;x.strokeStyle=g;x.textAlign='center';
+    x.font=`600 30px ${F}`;x.fillText('UTOPIA',w/2,112);const cy=h*.43;x.lineWidth=3.5;x.beginPath();x.arc(w/2,cy,94,0,Math.PI*2);x.stroke();x.lineWidth=2;
+    [.38,.75].forEach(k=>{x.beginPath();x.ellipse(w/2,cy,94*k,94,0,0,Math.PI*2);x.stroke()});[-50,0,50].forEach(d=>{const r=Math.sqrt(94*94-d*d);x.beginPath();x.moveTo(w/2-r,cy+d);x.lineTo(w/2+r,cy+d);x.stroke()});
+    x.font=`600 50px ${F}`;try{x.letterSpacing='10px'}catch(e){}x.fillText('PASSPORT',w/2+5,h*.69);try{x.letterSpacing='0px'}catch(e){}
+    const cx=w/2,cc=h*.86;x.lineWidth=3;x.strokeRect(cx-34,cc-22,68,44);x.beginPath();x.arc(cx,cc,11,0,Math.PI*2);x.stroke();x.beginPath();x.moveTo(cx-34,cc);x.lineTo(cx-11,cc);x.moveTo(cx+11,cc);x.lineTo(cx+34,cc);x.stroke()});
+  const PW=720,PH=1030;
+  const bioTex=ctex(PW,PH,(x,w,h)=>{x.fillStyle='#edf2ec';x.fillRect(0,0,w,h);guil(x,w,h,'rgba(31,113,95,.10)',46);
+    x.fillStyle='#1f2b4d';x.font=`600 30px ${F}`;x.fillText('UTOPIA',50,90);x.font=`400 22px ${F}`;x.fillStyle='#565e75';x.fillText('PASSPORT · PASSEPORT · SPECIMEN',50,124);
+    x.fillStyle='#d6dcdd';x.fillRect(50,170,250,250);x.fillStyle='#9aa4ad';x.font=`500 22px ${F}`;x.textAlign='center';x.fillText('Photo',175,302);x.textAlign='left';
+    const fl=[['Surname','ERIKSSON'],['Given names','ANNA MARIA'],['Nationality','UTOPIAN'],['Date of birth','12 AUG 1974'],['Passport no.','L898902C3'],['Date of expiry','15 APR 2032']];
+    fl.forEach((f,i)=>{const y=190+i*80;x.fillStyle='#565e75';x.font=`500 17px ${F}`;x.fillText(f[0].toUpperCase(),330,y);x.fillStyle='#101a33';x.font=`600 28px ${F}`;x.fillText(f[1],330,y+32)});
+    x.fillStyle='rgba(255,255,255,.85)';x.fillRect(0,860,w,h-860);x.fillStyle='#101a33';x.font='500 23px ui-monospace,Menlo,Consolas,monospace';x.fillText('P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<',36,920);x.fillText('L898902C36UTO7408122F3204159<<<<<<<10',36,966)});
+  const visaTex=ctex(PW,PH,(x,w,h)=>{x.fillStyle='#f4f1e8';x.fillRect(0,0,w,h);guil(x,w,h,'rgba(176,90,0,.07)',40);x.fillStyle='#565e75';x.textAlign='center';x.font=`600 24px ${F}`;try{x.letterSpacing='6px'}catch(e){}x.fillText('VISAS',w/2,80);try{x.letterSpacing='0px'}catch(e){}x.font=`500 22px ${F}`;x.fillText('7',w-50,h-40)});
+  const imprintCanvas=document.createElement('canvas');imprintCanvas.width=imprintCanvas.height=512;const imprintTex=new T.CanvasTexture(imprintCanvas);imprintTex.encoding=T.sRGBEncoding;imprintTex.anisotropy=ANI;
+  function drawImprint(){const x=imprintCanvas.getContext('2d'),w=512,c=w/2,r=routeFor(state),ink='rgba(38,68,160,.92)';x.clearRect(0,0,w,w);x.strokeStyle=ink;x.fillStyle=ink;
+    x.lineWidth=12;x.beginPath();x.arc(c,c,226,0,Math.PI*2);x.stroke();x.lineWidth=4;x.beginPath();x.arc(c,c,186,0,Math.PI*2);x.stroke();
+    const txt=' ARRIVAL · IMMIGRATION · ARRIVAL · IMMIGRATION ·';x.font=`600 26px ${F}`;x.textAlign='center';x.textBaseline='middle';
+    for(let i=0;i<txt.length;i++){const a=-Math.PI/2+i*(Math.PI*2/txt.length);x.save();x.translate(c+Math.cos(a)*206,c+Math.sin(a)*206);x.rotate(a+Math.PI/2);x.fillText(txt[i],0,0);x.restore()}
+    x.font=`600 118px ${F}`;x.fillText(r.port[0],c,c-14);x.font=`600 30px ${F}`;x.fillText(sod(state.arr).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase(),c,c+70);
+    x.font=`500 22px ${F}`;x.fillText(r.type==='voa'?'VISA ON ARRIVAL':'E-VISA',c,c+112);
+    x.globalCompositeOperation='destination-out';for(let i=0;i<900;i++){x.fillStyle=`rgba(0,0,0,${Math.random()*.7})`;const rr=Math.random()*3+.5;x.beginPath();x.arc(Math.random()*w,Math.random()*w,rr,0,Math.PI*2);x.fill()}
+    x.globalCompositeOperation='source-over';imprintTex.needsUpdate=true}
+  drawImprint();
+  const faceC=document.createElement('canvas');faceC.width=600;faceC.height=800;drawFace(faceC);
+  const beforeTex=new T.CanvasTexture(faceC);beforeTex.encoding=T.sRGBEncoding;
+  const sq=document.createElement('canvas');sq.width=sq.height=600;{const x=sq.getContext('2d',{willReadFrequently:true});x.drawImage(faceC,0,(800-600)*.22,600,600,0,0,600,600);whiten(x,600)}
+  const afterTex=new T.CanvasTexture(sq);afterTex.encoding=T.sRGBEncoding;
+  const etaTex=ctex(720,1018,(x,w,h)=>{x.fillStyle='#ffffff';x.fillRect(0,0,w,h);x.fillStyle='#1f2b4d';x.fillRect(0,0,w,150);x.fillStyle='#fff';x.font=`600 44px ${F}`;x.fillText('e-Visa approval',50,82);x.font=`400 21px ${F}`;x.fillStyle='#b4bcd2';x.fillText('Illustration · not a real document',50,122);
+    const fl=[['Name','ERIKSSON, ANNA MARIA'],['Passport','L898902C3'],['Visa','e-Tourist Visa'],['Entries','Double'],['Valid','60 days from arrival']];
+    fl.forEach((f,i)=>{const y=220+i*86;x.fillStyle='#565e75';x.font=`500 19px ${F}`;x.fillText(f[0].toUpperCase(),50,y);x.fillStyle='#101a33';x.font=`600 30px ${F}`;x.fillText(f[1],50,y+36)});
+    x.fillStyle='#e2f0e8';x.fillRect(50,680,230,62);x.fillStyle='#17704a';x.font=`600 30px ${F}`;x.fillText('GRANTED',74,722);
+    let sd=7;const rnd=()=>{sd=(sd*9301+49297)%233280;return sd/233280};const ox=440,oy=640,cs=10;x.fillStyle='#101a33';
+    for(let i=0;i<23;i++)for(let j=0;j<23;j++){const f=(i<7&&j<7)||(i<7&&j>15)||(i>15&&j<7);if(f){const a=i%16,b=j%16;if((a===0||a===6||b===0||b===6)||(a>=2&&a<=4&&b>=2&&b<=4))x.fillRect(ox+j*cs,oy+i*cs,cs,cs)}else if(rnd()>.55)x.fillRect(ox+j*cs,oy+i*cs,cs,cs)}
+    x.fillStyle='#565e75';x.font=`400 21px ${F}`;x.fillText('Print and carry with your passport.',50,930)});
+
+  /* Materials and objects */
+  const std=o=>new T.MeshStandardMaterial(Object.assign({roughness:.75,metalness:0},o));
+  const navy=std({color:0x1c284c,roughness:.62}),paper=std({color:0xf1eee5,roughness:.92});
+  const W=1.25,H=1.76,world=new T.Group(),book=new T.Group();scene.add(world);world.add(book);
+  const shadowed=m=>{m.castShadow=true;m.receiveShadow=true;return m};
+  const back=shadowed(new T.Mesh(new T.BoxGeometry(W,H,.024),navy));back.position.set(W/2,0,.012);
+  const right=shadowed(new T.Mesh(new T.BoxGeometry(W-.05,H-.05,.045),paper));right.position.set(W/2,0,.0465);
+  const bioP=new T.Mesh(new T.PlaneGeometry(W-.07,H-.07),std({map:bioTex,roughness:.9}));bioP.position.set(W/2,0,.0695);bioP.receiveShadow=true;
+  const pivot=new T.Group();
+  const coverMat=std({map:coverTex,roughness:.55,metalness:.12});
+  const cover=shadowed(new T.Mesh(new T.BoxGeometry(W,H,.024),[navy,navy,navy,navy,coverMat,navy]));cover.position.set(W/2,0,.012);
+  const left=shadowed(new T.Mesh(new T.BoxGeometry(W-.05,H-.05,.045),paper));left.position.set(W/2,0,-.0225);
+  const visaP=new T.Mesh(new T.PlaneGeometry(W-.07,H-.07),std({map:visaTex,roughness:.9}));visaP.position.set(W/2,0,-.0455);visaP.rotation.y=Math.PI;visaP.receiveShadow=true;
+  const impMat=new T.MeshBasicMaterial({map:imprintTex,transparent:true,opacity:0,depthWrite:false});
+  const imprint=new T.Mesh(new T.PlaneGeometry(.86,.86),impMat);imprint.position.set(W/2,-.12,-.047);imprint.rotation.set(0,Math.PI,-.22);
+  pivot.add(cover,left,visaP,imprint);book.add(back,right,bioP,pivot);
+  /* photo card */
+  const card=new T.Group();book.add(card);
+  const bMat=std({map:beforeTex,roughness:.9,transparent:true}),aMat=std({map:afterTex,roughness:.9,transparent:true,opacity:0});
+  const before=shadowed(new T.Mesh(new T.PlaneGeometry(.66,.88),bMat)),after=shadowed(new T.Mesh(new T.PlaneGeometry(.66,.66),aMat));after.position.z=.002;card.add(before,after);
+  const frameMat=new T.MeshBasicMaterial({color:0xf7941d,transparent:true,opacity:0}),bars=[0,1,2,3].map(()=>{const m=new T.Mesh(new T.PlaneGeometry(1,1),frameMat);m.position.z=.004;card.add(m);return m});
+  const setFrame=(w,h,cy)=>{const t=.014;bars[0].scale.set(w,t,1);bars[0].position.set(0,cy+h/2,.004);bars[1].scale.set(w,t,1);bars[1].position.set(0,cy-h/2,.004);bars[2].scale.set(t,h,1);bars[2].position.set(-w/2,cy,.004);bars[3].scale.set(t,h,1);bars[3].position.set(w/2,cy,.004)};
+  const SLOT={x:W/2-(W-.07)/2+(175/PW)*(W-.07),y:(H-.07)/2-(295/PH)*(H-.07),s:(250/PW)*(W-.07)};
+  /* approval sheet */
+  const eta=shadowed(new T.Mesh(new T.PlaneGeometry(.95,1.34),std({map:etaTex,roughness:.85,side:T.DoubleSide})));book.add(eta);
+  /* rubber stamp, built along +z so its pad faces the page */
+  const stamp=new T.Group(),sg=new T.Group();stamp.add(sg);sg.rotation.x=Math.PI/2;
+  const wood=std({color:0x8b5a35,roughness:.55}),dark=std({color:0x262c38,roughness:.4,metalness:.3}),ink=std({color:0x2644a0,roughness:.8});
+  const knob=shadowed(new T.Mesh(new T.SphereGeometry(.12,32,24),wood));knob.position.y=.5;
+  const handle=shadowed(new T.Mesh(new T.CylinderGeometry(.065,.09,.36,32),wood));handle.position.y=.28;
+  const base=shadowed(new T.Mesh(new T.CylinderGeometry(.33,.33,.08,48),dark));base.position.y=.07;
+  const pad=shadowed(new T.Mesh(new T.CylinderGeometry(.31,.31,.025,48),ink));pad.position.y=.0125;
+  sg.add(knob,handle,base,pad);book.add(stamp);
+  /* desk and light */
+  const ground=new T.Mesh(new T.PlaneGeometry(40,40),new T.ShadowMaterial({opacity:.38}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;world.add(ground);
+  scene.add(new T.HemisphereLight(0xffffff,0x1a2340,.62));
+  const key=new T.DirectionalLight(0xfff1dc,1.1);key.position.set(-3.5,7,4.5);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.camera.left=-5;key.shadow.camera.right=5;key.shadow.camera.top=5;key.shadow.camera.bottom=-5;key.shadow.radius=6;key.shadow.bias=-.0004;scene.add(key);
+  const rim=new T.DirectionalLight(0x9fb4ff,.45);rim.position.set(5,3,-4);scene.add(rim);
+  window.__imprint=drawImprint;
+
+  /* Choreography: every pose is a pure function of scroll progress p */
+  const cl=(v,a,b)=>Math.min(b,Math.max(a,v)),seg=(p,a,b)=>cl((p-a)/(b-a),0,1),lerp=(a,b,t)=>a+(b-a)*t;
+  const io3=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,eo=t=>1-Math.pow(1-t,3),eo5=t=>1-Math.pow(1-t,5);
+  let wide=true;
+  /* The frame is shifted, not the objects: on wide screens the subject sits right of the copy, on tall screens above it. */
+  function layout(){const w=canvas.clientWidth||1,h=canvas.clientHeight||1;renderer.setSize(w,h,false);camera.aspect=w/h;wide=w/h>1.05;
+    world.scale.setScalar(wide?1:.7);world.position.set(wide?.55:.13,0,0);
+    vw=w;vh=h;frameShift(0)}
+  let vw=1,vh=1;const frameShift=k=>{if(wide)camera.setViewOffset(vw,vh,-vw*.13*(1-k*.7),0,vw,vh);else camera.setViewOffset(vw,vh,0,vh*.2,vw,vh)};
+  layout();if(window.ResizeObserver)new ResizeObserver(layout).observe(canvas);else addEventListener('resize',layout);
+  const camA=new T.Vector3(),camB=new T.Vector3(),look=new T.Vector3();
+  function pose(p,t){
+    const intro=eo(seg(p,0,.12)),open=io3(seg(p,.12,.32));
+    /* passport: stands, turns, then lies down open on the desk */
+    book.rotation.set(lerp(-.32,-Math.PI/2,open),lerp(lerp(-1.05,-.42,intro),0,open),lerp(.07,0,open));
+    book.position.set(lerp(-.35,-W*.15,open),lerp(1.15,0,open)+(1-open)*Math.sin(t*1.1)*.035,lerp(.2,-.1,open));
+    pivot.position.z=lerp(.114,.024,open);pivot.rotation.y=-Math.PI*open;
+    /* photo card: flies in, crops square, drops into the photo slot */
+    const fin=eo(seg(p,.30,.40)),crop=io3(seg(p,.40,.50)),land=io3(seg(p,.51,.60));
+    const hover=wide?new T.Vector3(W*.8,.3,1.0):new T.Vector3(W*.5,.55,1.25),start=wide?new T.Vector3(W+1.9,.9,1.5):new T.Vector3(W*.5,2.6,2.2),slot=new T.Vector3(SLOT.x,SLOT.y,.072);
+    const pos=start.clone().lerp(hover,fin).lerp(slot,land);card.position.copy(pos);
+    card.rotation.set(lerp(.82,0,land),lerp(-.35,0,Math.max(fin*0,land)),lerp(.06,0,land));
+    const s=lerp(1,SLOT.s/.66,land);card.scale.setScalar(fin>0?s*lerp(.85,1,fin):.001);
+    bMat.opacity=fin*(1-crop);aMat.opacity=crop;before.position.y=lerp(0,-(0.88-0.66)/2*.56,crop);
+    const fh=lerp(.88,.66,crop);frameMat.opacity=fin*(crop<1?Math.min(1,crop*4):1)*(1-land);setFrame(.66,fh,0);
+    /* approval sheet: slides out and turns to the reader */
+    const ein=eo5(seg(p,.60,.72));eta.visible=ein>0;
+    if(wide)eta.position.set(lerp(W+2.7,W+.4,ein),lerp(-1.6,-.2,ein),lerp(.25,.6,ein));else eta.position.set(lerp(W*1.6,W*.3,ein),lerp(3.2,1.55,ein),lerp(.25,.45,ein));eta.rotation.set(lerp(.2,.78,ein),lerp(-.6,-.12,ein),lerp(.35,-.05,ein));
+    /* stamp: drops, presses, lifts; the imprint appears on contact */
+    const down=io3(seg(p,.74,.83)),press=seg(p,.83,.86),up=io3(seg(p,.88,.96));
+    const sx=-W/2,sy=-.12;stamp.visible=p>.72;stamp.position.set(sx,sy,lerp(lerp(2.4,.12,down),.075,press)+up*(wide?1.9:3.4));
+    stamp.rotation.z=lerp(-.6,-.22,down);const squash=press>0&&press<1?1-Math.sin(press*Math.PI)*.08:1;sg.scale.set(1,squash,1);
+    impMat.opacity=eo(seg(p,.845,.875));
+    /* camera: settles above the desk, then pushes in on the stamp */
+    const push=io3(seg(p,.86,1));
+    if(wide){camA.set(0,.35+open*3.6,7.2-open*1.6);camB.set(-.9,2.6,3.4);look.set(lerp(.3,.6,open),lerp(.6,0,open),0).lerp(new T.Vector3(-.75,0,-.2),push)}
+    else{camA.set(0,lerp(.5,7.2,open),lerp(9.4,5.4,open));camB.set(-.44,4.4,2.9);look.set(0,lerp(.55,0,open),lerp(0,-.35,open)).lerp(new T.Vector3(-.44,0,-.1),push)}
+    camera.position.copy(camA).lerp(camB,push);frameShift(push);
+    camera.lookAt(look);
+    setCap(p<.28?0:p<.6?1:p<.78?2:3);
+    hint.style.opacity=p<.03?1:0;
+  }
+  api.render=(p,t)=>{pose(p,t);renderer.render(scene,camera)};
+  api.ready=true;
+  if(RM){api.render(.97,0);if(window.ResizeObserver)new ResizeObserver(()=>api.render(.97,0)).observe(canvas)}
+  }
+  if(window.IntersectionObserver)new IntersectionObserver(es=>{api.visible=es[0].isIntersecting},{rootMargin:'200px 0px'}).observe(sec);
+  api.progress=()=>{const r=sec.getBoundingClientRect(),span=r.height-innerHeight;return span>0?cl01(-r.top/span):0};
+  return api;
+})();
+function cl01(v){return Math.min(1,Math.max(0,v))}
+
+/* ---------- Smooth scroll and the one frame loop that drives scroll motion ---------- */
+let lenis=null;
+if(!RM&&window.Lenis){try{lenis=new Lenis({lerp:.09,smoothWheel:true,wheelMultiplier:1})}catch(e){lenis=null}}
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href');if(id==='#')return;const el=id==='#top'?0:document.querySelector(id);if(el===null)return;e.preventDefault();
+  if(lenis)lenis.scrollTo(el,{duration:1.5,easing:t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2});else if(el===0)scrollTo({top:0,behavior:RM?'auto':'smooth'});else el.scrollIntoView({behavior:RM?'auto':'smooth'})});
+const progBar=$('#progBar'),tripSec=$('#trip'),footEl=$('.foot'),footLetters=$$('#footWord span');
+function frame(ms){
+  if(lenis)lenis.raf(ms);
+  const vh=innerHeight,de=document.documentElement,max=de.scrollHeight-vh;progBar.style.transform=`scaleX(${max>0?scrollY/max:0})`;
+  if(journey&&journey.ready&&!RM&&journey.visible){journey.target=journey.progress();journey.cur+=(journey.target-journey.cur)*.12;if(Math.abs(journey.target-journey.cur)<.0004)journey.cur=journey.target;journey.render(journey.cur,ms/1000)}
+  if(!RM){
+    const tr=$('#flightSvg').getBoundingClientRect();if(tr.bottom>-50&&tr.top<vh+50)setFlight(cl01((vh*.92-tr.top)/(vh*.55)));
+    const fr=footEl.getBoundingClientRect();if(fr.top<vh+40){const q=cl01((vh-fr.top)/(fr.height*.9));footLetters.forEach((l,i)=>{const k=cl01((q-i*.055)/.6),e=1-Math.pow(1-k,3);l.style.transform=`translateY(${((1-e)*105).toFixed(2)}%)`})}
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ---------- Motion: hero on load, sections as they approach ---------- */
+if(!RM){
+  $$('.hero h1 .line > span').forEach((s,i)=>anim(s,[{transform:'translateY(105%)'},{transform:'none'}],{duration:900,delay:80+i*90}));
+  [$('.hero .lead'),$('.hero-acts'),$('.facts')].forEach((el,i)=>anim(el,[{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'none'}],{duration:800,delay:260+i*80}));
+  anim($('#planFrag'),[{opacity:0,transform:'translateY(28px) rotateX(6deg)'},{opacity:1,transform:'none'}],{duration:1000,delay:200});
+  anim($('#ticket'),[{opacity:0,transform:'translateY(18px) scale(.98)'},{opacity:1,transform:'none'}],{duration:900,delay:420});
+  if('IntersectionObserver' in window){
+    const vh=innerHeight;
+    const items=$$('[data-rise]').filter(el=>!el.closest('.hero')&&el.getBoundingClientRect().top>vh);
+    const io=new IntersectionObserver(es=>{es.forEach(en=>{if(!en.isIntersecting)return;io.unobserve(en.target);const g=en.target.closest('[data-rise-group]'),sib=g?$$('[data-rise]',g):[en.target],i=Math.max(0,sib.indexOf(en.target));anim(en.target,[{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'none'}],{duration:760,delay:Math.min(i,5)*70})})},{rootMargin:'0px 0px 12% 0px'});
+    items.forEach(el=>io.observe(el));
+  }
+}
+})();
+</script>
+</body>
+</html>
