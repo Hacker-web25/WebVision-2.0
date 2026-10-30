@@ -269,6 +269,24 @@ legend{padding:0}
 .checks li:last-child{border-bottom:1px solid var(--ui-line)}
 .chk-n{font-size:14px;font-weight:500}
 .chk-d{grid-column:1;font-size:12.5px;color:var(--muted)}
+
+.air{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2vw,24px);align-items:start}
+.air-side{display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);min-width:0}
+@media (max-width:860px){.air{grid-template-columns:1fr}}
+.air-form{display:flex;flex-direction:column;gap:12px}
+.cmp-row{display:grid;grid-template-columns:minmax(76px,.7fr) minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center}
+.cmp-row label{font-size:13.5px;font-weight:500}
+.cmp-head{font-size:12.5px;color:var(--muted)}
+.cmp-fixed{font-size:13.5px;color:var(--muted);padding:0 4px}
+.air-tick{display:flex;gap:10px;align-items:center;font-size:14px;margin-top:4px}
+@media (max-width:520px){.cmp-row{grid-template-columns:1fr 1fr}.cmp-row label{grid-column:1/-1}.cmp-head span:first-child{display:none}}
+.checks li.warn .pill{background:#fbefd9;color:#8a4b00}
+.ladder{list-style:none;margin:0;padding:6px 18px 0;counter-reset:l}
+.ladder li{counter-increment:l;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;padding:10px 0;border-top:1px solid var(--ui-line)}
+.ladder li:first-child{border-top:0}
+.ladder li::before{content:counter(l);grid-row:1/span 2;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12.5px;display:grid;place-items:center;margin-top:2px}
+.ladder b{font-size:14px;font-weight:600}.ladder span{font-size:13.5px;color:var(--muted)}
+.air-acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 18px 18px}
 .pill{grid-column:2;grid-row:1/span 2;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
 .ok .pill{background:var(--ok-bg);color:var(--ok)}
 .bad .pill{background:var(--bad-bg);color:var(--bad)}
@@ -521,7 +539,7 @@ html.lenis,html.lenis body{height:auto}
       <span>Unofficial companion to India's e-Visa</span>
     </a>
     <nav aria-label="Sections">
-      <a href="#route">Route</a><a href="#documents">Documents</a><a href="#payment">Payment</a><a href="#trip">Trip</a>
+      <a href="#route">Route</a><a href="#documents">Documents</a><a href="#payment">Payment</a><a href="#trip">Trip</a><a href="#airport">Airport</a>
     </nav>
     <a class="link" href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener"><span class="txt-long">Official e-Visa site</span><svg class="ico"><use href="#i-out"/></svg></a>
   </div>
@@ -799,6 +817,44 @@ html.lenis,html.lenis body{height:auto}
     </div>
   </section>
 
+  <section class="section band" id="airport" aria-labelledby="airTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="head" id="airTitle" data-rise>Check it before you leave for the airport.</h2>
+        <p class="lead" data-rise>Most visa mismatches can be found at home. Type what your approval email says next to what your passport says. Everything is compared in this page and nothing is sent or stored.</p>
+      </div>
+      <div class="air" data-rise-group>
+        <div class="frag" data-ui data-rise>
+          <div class="frag-bar"><h3>Approval vs passport</h3><span class="note">Compared in your browser</span></div>
+          <form class="pane air-form" id="airForm" autocomplete="off" novalidate>
+            <div class="cmp-row cmp-head"><span></span><span>On your approval</span><span>On your passport</span></div>
+            <div class="cmp-row"><label for="aName1">Full name</label><input class="ctl" id="aName1" placeholder="As in the email"><input class="ctl" id="aName2" aria-label="Full name on passport" placeholder="As on passport"></div>
+            <div class="cmp-row"><label for="aNo1">Passport no.</label><input class="ctl" id="aNo1" autocapitalize="characters"><input class="ctl" id="aNo2" aria-label="Passport number on passport" autocapitalize="characters"></div>
+            <div class="cmp-row"><label for="aDob1">Date of birth</label><input class="ctl" type="date" id="aDob1"><input class="ctl" type="date" id="aDob2" aria-label="Date of birth on passport"></div>
+            <div class="cmp-row"><label for="aPort1">Airport</label><select class="ctl" id="aPort1"></select><div class="cmp-fixed" id="aPort2"></div></div>
+            <div class="cmp-row"><label for="aExp">Passport expires</label><input class="ctl" type="date" id="aExp"><div class="cmp-fixed" id="aArrLbl"></div></div>
+            <label class="air-tick"><input type="checkbox" id="aEac"> I have filed the e-Arrival Card</label>
+          </form>
+        </div>
+        <div class="air-side">
+          <div class="frag" data-ui data-rise>
+            <div class="frag-bar"><h3>Result</h3><span class="note" id="airNote"></span></div>
+            <div class="pane report"><ul class="checks" id="airChecks"></ul></div>
+          </div>
+          <div class="frag" data-ui data-rise>
+            <div class="frag-bar"><h3>If something does not match</h3><span class="note">Only the Indian authorities can change a visa</span></div>
+            <ol class="ladder">
+              <li><b>At home</b><span>Write to the e-Visa helpdesk with your application ID and a screenshot. Corrections take time, so do this days before you fly.</span></li>
+              <li><b>At check-in</b><span>Show the approval email and the passport. Ask the airline to confirm they can see your visa status before you pay for anything else.</span></li>
+              <li><b>At Indian immigration</b><span>Stay calm, show both, and ask for the supervisor. The officer makes the final decision.</span></li>
+            </ol>
+            <div class="air-acts"><button class="btn" type="button" id="packSave">Save offline arrival pack</button><span class="small" id="packNote">One file. Opens with no internet, and prints.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section band" id="never" aria-labelledby="neverTitle">
     <div class="wrap">
       <div class="grid never">
@@ -941,9 +997,65 @@ function readPlan(){
   state.time=$('#arrTime').value||'';
   $('#priorField').hidden=state.nat!=='AE';
 }
-$('#routeForm').addEventListener('change',()=>{readPlan();srvPlan=null;renderTicket(true);renderTimeline(true);if(window.__imprint)window.__imprint();syncPlan();saveSoon()});
+$('#routeForm').addEventListener('change',()=>{readPlan();srvPlan=null;renderTicket(true);renderTimeline(true);if(window.__air)window.__air();if(window.__imprint)window.__imprint();syncPlan();saveSoon()});
 $('#routeForm').addEventListener('submit',e=>e.preventDefault());
 readPlan();renderTicket(false);
+
+
+/* ---------- Airport check and offline pack ---------- */
+function curPlan(){
+  let r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state);
+  if(srvPlan){r=Object.assign({},r,{type:srvPlan.type,kind:srvPlan.kind,title:srvPlan.title,reason:srvPlan.reason});docs=srvPlan.docs.map(d=>[d.name,d.detail]);dates=srvPlan.dates.map(d=>[d.label,new Date(d.date+'T00:00:00'),d.hot])}
+  return {r,docs,dates};
+}
+const normName=x=>x.toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean);
+const normNo=x=>x.toUpperCase().replace(/[^A-Z0-9]/g,'');
+const aPort1=$('#aPort1');aPort1.innerHTML=PORTS.map(p=>`<option value="${p[0]}">${esc(p[1])}</option>`).join('');aPort1.value=state.port;
+function airChecks(){
+  const out=[],v=id=>$(id).value.trim(),arr=sod(state.arr);
+  const pair=(name,a,b,cmp)=>{if(!a&&!b){out.push({n:name,st:'todo',g:'Not filled in yet'});return}if(!a||!b){out.push({n:name,st:'todo',g:'Fill in both sides to compare'});return}cmp(a,b)};
+  pair('Name',v('#aName1'),v('#aName2'),(a,b)=>{const x=normName(a),y=normName(b);
+    if(x.join(' ')===y.join(' '))out.push({n:'Name',st:'ok',g:'Matches'});
+    else if(x.slice().sort().join(' ')===y.slice().sort().join(' '))out.push({n:'Name',st:'warn',g:'Same words in a different order. Ask the helpdesk if it needs correcting'});
+    else out.push({n:'Name',st:'bad',g:'Does not match the passport. Write to the helpdesk now'})});
+  pair('Passport number',normNo(v('#aNo1')),normNo(v('#aNo2')),(a,b)=>out.push(a===b?{n:'Passport number',st:'ok',g:'Matches'}:{n:'Passport number',st:'bad',g:'One character differs. Airlines check this against your passport, so fix it before you fly'}));
+  pair('Date of birth',v('#aDob1'),v('#aDob2'),(a,b)=>out.push(a===b?{n:'Date of birth',st:'ok',g:'Matches'}:{n:'Date of birth',st:'bad',g:'Does not match the passport'}));
+  const ap=aPort1.value,pl=PORTS.find(p=>p[0]===state.port),ap1=PORTS.find(p=>p[0]===ap);
+  out.push(ap===state.port?{n:'Airport',st:'ok',g:`Approval and flight both say ${pl[1]}`}:{n:'Airport',st:'warn',g:`Approval says ${ap1[1]}, your plan lands at ${pl[1]}. Carry the approval and expect a question`});
+  const ex=v('#aExp');
+  if(!ex)out.push({n:'Passport validity',st:'todo',g:'Enter the expiry date'});
+  else{const need=new Date(arr);need.setMonth(need.getMonth()+6);const e=new Date(ex+'T00:00:00');
+    out.push(e>=need?{n:'Passport validity',st:'ok',g:`Expires ${fmtD(e)} ${e.getFullYear()}, at least 6 months after landing`}:{n:'Passport validity',st:'bad',g:`Needs to run to ${fmtD(need)} ${need.getFullYear()} (6 months after landing). Renew first`})}
+  const p=curPlan(),card=p.dates.find(d=>d[0]==='Arrival Card');
+  if(card){const n=dayDiff(card[1]);
+    out.push($('#aEac').checked?{n:'e-Arrival Card',st:'ok',g:'Filed'}:n>0?{n:'e-Arrival Card',st:'todo',g:`Opens ${fmtD(card[1])} (${daysLeftTxt(n).replace(' left','')} away)`}:{n:'e-Arrival Card',st:'bad',g:'Window is open. File it today'})}
+  return out;
+}
+const AIR_LBL={ok:'Pass',bad:'Fix',warn:'Check',todo:'To do'};
+function renderAirport(){
+  const pl=PORTS.find(p=>p[0]===state.port);
+  $('#aPort2').textContent='Your plan: '+pl[1];
+  $('#aArrLbl').textContent='Landing '+fmtD(state.arr)+' '+state.arr.getFullYear();
+  const c=airChecks(),okN=c.filter(x=>x.st==='ok').length,bad=c.filter(x=>x.st==='bad').length;
+  $('#airChecks').innerHTML=c.map(x=>`<li class="${x.st==='todo'?'info':x.st}"><span class="chk-n">${esc(x.n)}</span><span class="chk-d">${esc(x.g)}</span><span class="pill">${AIR_LBL[x.st]}</span></li>`).join('');
+  $('#airNote').textContent=bad?`${bad} to fix`:`${okN} of ${c.length} clear`;
+}
+$('#airForm').addEventListener('input',renderAirport);$('#airForm').addEventListener('change',renderAirport);
+renderAirport();window.__air=()=>{aPort1.value=aPort1.value;renderAirport()};
+function buildPack(){
+  const {r,docs,dates}=curPlan(),c=airChecks(),made=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const row=(a,b)=>`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`;
+  const dl=dates.map(d=>row(d[0],`${fmtD(d[1])} ${d[1].getFullYear()}${clockFor(d[0])?' · '+clockFor(d[0]):''}`)).join('');
+  const dc=docs.map(d=>row(d[0],d[1])).join('');
+  const ck=c.map(x=>row(x.n,`${AIR_LBL[x.st]} - ${x.g}`)).join('');
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pravesh arrival pack</title><style>body{font:16px/1.5 system-ui,sans-serif;max-width:720px;margin:0 auto;padding:20px;color:#1f2b4d}h1{font-size:26px;margin:0}h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:26px 0 6px;color:#565e75}table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-top:1px solid #ddd;vertical-align:top}td:first-child{font-weight:600;width:38%}ol{padding-left:20px}p.s{color:#565e75;font-size:13.5px}</style></head><body>
+<h1>${esc(r.title)}</h1><p class="s">${esc(r.kind)} · landing at ${esc(r.port[1])} · pack made ${made}. Unofficial, not a visa. Rules checked 30 Oct 2026.</p>
+<h2>Dates</h2><table>${dl}</table><h2>Carry</h2><table>${dc}</table>
+<h2>Checks when this pack was made</h2><table>${ck}</table>
+<h2>If something does not match</h2><ol><li>Write to the e-Visa helpdesk with your application ID and a screenshot: indian-evisa@gov.in, +91 82 7808 7808.</li><li>At check-in, show the approval email and passport and ask the airline to confirm your visa status.</li><li>At Indian immigration, stay calm, show both and ask for the supervisor. The officer decides.</li></ol>
+<p class="s">Only the Indian authorities can change a visa. Official site: https://indianvisaonline.gov.in</p></body></html>`;
+}
+$('#packSave').addEventListener('click',e=>saveBlob(new Blob([buildPack()],{type:'text/html'}),'pravesh-arrival-pack.html',e.currentTarget));
 
 /* Tilt: a spring follows the pointer over the plan, so the result reads as a document you hold. */
 (function tilt(){
