@@ -1,8 +1,26 @@
 # WebVision 2.0
 
-**Pravesh** is an unofficial pre-flight companion for India's e-Visa. It tells a traveller which way into India fits their passport, fixes the photo and passport scan to the published spec, and keeps proof of payment, so the official application goes through once.
+**Pravesh** is an unofficial pre-flight companion for India's e-Visa.
+
+**Live demo:** https://webvision-2-0.onrender.com (free hosting: the first load after a quiet period can take about 50 seconds)
+
+## The problem
+
+The official e-Visa site mostly helps after something has gone wrong: a photo is rejected after you submit, a payment is debited but still shows as unpaid, and you have to work out the right visa route yourself. Each of those costs time, and more than three failed payment attempts blocks the application.
+
+## What Pravesh does
+
+| Step | What you get |
+| --- | --- |
+| Entry plan | Pick a passport, landing airport, purpose and arrival date. You get the route (e-Visa, visa on arrival or embassy), the documents you need, and a warning if the apply-by date has passed |
+| Photo and passport check | Your file is checked against the published size, format and shape rules and can be fixed in one click. It never leaves your browser |
+| Timeline | Apply-by, e-Arrival Card and landing dates on one line, with optional email reminders |
+| Family board | One page for every traveller's progress. Save it and share it by link |
+| Payment help | A checklist before paying, a failed-attempt counter, a 4-hour wait timer, and a payment-evidence letter you can copy or download as a PDF |
 
 It is not the Government of India, it takes no payments and it never submits an application. See "What Pravesh never does" on the page.
+
+There is also an 8-slide pitch deck in [`docs/pitch.html`](docs/pitch.html). Download it and open it in a browser; arrow keys move between slides.
 
 ## Run it
 
