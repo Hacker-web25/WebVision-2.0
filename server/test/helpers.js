@@ -12,7 +12,8 @@ export async function boot({ start = Date.parse('2026-10-30T06:00:00Z'), limits 
   const vault = makeVault(randomBytes(32));
   const mailer = await makeMailer({ mode: 'outbox', db, now });
   const env = { NODE_ENV: 'test', PUBLIC_URL: 'http://pravesh.test' };
-  const { app, reminders, purgeTrips } = createApp({ db, vault, mailer, now, env, limits });
+  const fetchRates = async () => { if (clock.ratesDown) throw new Error('down'); return { base: 'INR', updated: '2026-10-30T00:00:00.000Z', source: 'test', rates: { USD: 0.0119, EUR: 0.0109 } }; };
+  const { app, reminders, purgeTrips } = createApp({ db, vault, mailer, now, env, limits, fetchRates });
   const server = await new Promise(r => { const s = app.listen(0, '127.0.0.1', () => r(s)); });
   const base = `http://127.0.0.1:${server.address().port}`;
   const call = async (method, path, body, headers = {}) => {

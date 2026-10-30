@@ -19,6 +19,15 @@ test('health, rules and CORS', async () => {
   assert.equal((await s.call('OPTIONS', '/api/plan')).status, 204);
 });
 
+test('exchange rates come from the server and are cached', async () => {
+  const r = await s.call('GET', '/api/rates');
+  assert.equal(r.status, 200); assert.equal(r.data.base, 'INR'); assert.equal(r.data.rates.USD, 0.0119);
+  s.clock.ratesDown = true;
+  const again = await s.call('GET', '/api/rates');
+  assert.equal(again.status, 200, 'a cached answer survives the source going down');
+  s.clock.ratesDown = false;
+});
+
 test('plan validates input and names the bad fields', async () => {
   const bad = await s.call('POST', '/api/plan', { ...plan, nat: 'ZZ', arr: '2026-13-45', extra: 1 });
   assert.equal(bad.status, 400);

@@ -11,14 +11,27 @@ const TRIP_TTL = 180 * 864e5;
 const INDEX = new URL('../../index.html', import.meta.url);
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src https://fonts.gstatic.com",
   "img-src 'self' data: blob:",
-  "connect-src 'self'",
+  "connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://tessdata.projectnaptha.com",
   "worker-src 'self' blob:",
   "object-src 'none'", "base-uri 'none'", "frame-ancestors 'none'",
 ].join('; ');
+
+const CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'KRW', 'AED', 'SEK', 'AUD', 'NZD', 'SGD', 'BRL', 'ZAR', 'KES', 'CAD', 'CHF'];
+
+/** Live INR rates from an open-access source. The page never calls a third party itself. */
+export async function liveRates() {
+  const r = await fetch('https://open.er-api.com/v6/latest/INR', { signal: AbortSignal.timeout(5000) });
+  const j = await r.json();
+  if (j.result !== 'success' || !j.rates) throw new Error('rates source failed');
+  return {
+    base: 'INR', updated: new Date(j.time_last_update_unix * 1000).toISOString(), source: 'exchangerate-api.com open access',
+    rates: Object.fromEntries(CURRENCIES.filter(c => j.rates[c]).map(c => [c, j.rates[c]])),
+  };
+}
 
 const page = (title, body) => `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title>
 <style>body{font:17px/1.5 system-ui,sans-serif;max-width:34rem;margin:15vh auto;padding:0 24px;color:#1f2b4d}a{color:#1f2b4d}</style><h1>${title}</h1>${body}`;
@@ -32,7 +45,7 @@ function parseWithFields(schema, data) {
   throw err;
 }
 
-export function createApp({ db, vault, mailer, now = Date.now, env = process.env, limits = true }) {
+export function createApp({ db, vault, mailer, now = Date.now, env = process.env, limits = true, fetchRates = liveRates }) {
   const app = express();
   const reminders = makeReminders({ db, vault, mailer, now });
   const dev = env.NODE_ENV !== 'production' || env.ALLOW_DEV_OUTBOX === '1';
@@ -65,6 +78,16 @@ export function createApp({ db, vault, mailer, now = Date.now, env = process.env
   app.get('/api/rules', (req, res) => {
     const { version, checkedOn, scope, constants, countries, ports, purposes, gateways, sources, helpdesks } = RULES;
     res.json({ version, checkedOn, scope, constants, countries, ports, purposes: Object.fromEntries(Object.entries(purposes).map(([k, v]) => [k, v.visa])), gateways, sources, helpdesks });
+  });
+
+  /* ---- Exchange rates: cached for six hours; if the source is down the page asks for a rate instead ---- */
+  let rates = null;
+  app.get('/api/rates', async (req, res) => {
+    if (!rates || now() - rates.at > 6 * 36e5) {
+      try { rates = { at: now(), data: await fetchRates() }; }
+      catch (e) { if (!rates) throw new HttpError(503, 'rates_unavailable', 'Live exchange rates are not available right now.'); }
+    }
+    res.json(rates.data);
   });
 
   /* ---- Entry plan ---- */
