@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pravesh — pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#1f2b4d;--field:#101a33;--accent:#f7941d;--muted:#b4bcd2;--bad:#ff8a73;--ok:#6fd3a0;--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--field);color:#fff;font-family:"Hanken Grotesk",system-ui,sans-serif;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6vh 8vw;opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .35s,transform .35s}
+.slide.on{opacity:1;pointer-events:auto;transform:none}
+.kicker{color:var(--accent);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(12px,1.3vw,18px);margin:0 0 2.2vh}
+h1{font-size:clamp(34px,6.4vw,92px);line-height:1.04;margin:0;font-weight:700;letter-spacing:-.02em;max-width:18ch}
+h2{font-size:clamp(28px,4.6vw,64px);line-height:1.08;margin:0 0 3vh;font-weight:700;letter-spacing:-.015em;max-width:22ch}
+p,li{font-size:clamp(16px,2vw,28px);line-height:1.4;color:var(--muted);max-width:44ch;margin:0 0 1.6vh}
+em{color:var(--accent);font-style:normal}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:3vw;margin-top:1vh}
+.card{border:1px solid var(--line);border-radius:14px;padding:2.4vh 2vw;background:rgba(255,255,255,.03)}
+.card h3{margin:0 0 1.2vh;font-size:clamp(14px,1.5vw,20px);letter-spacing:.08em;text-transform:uppercase}
+.card.bad h3{color:var(--bad)}.card.ok h3{color:var(--ok)}
+.card ul{margin:0;padding-left:1.1em}.card li{font-size:clamp(14px,1.7vw,24px);max-width:none;margin-bottom:1vh;color:#e8ebf5}
+table{border-collapse:collapse;width:100%;max-width:1100px}
+th,td{text-align:left;padding:1.3vh 1.2vw;border-bottom:1px solid var(--line);font-size:clamp(13px,1.6vw,22px);vertical-align:top}
+th{color:var(--accent);font-weight:600;font-size:clamp(12px,1.3vw,17px);letter-spacing:.1em;text-transform:uppercase}
+td:nth-child(2){color:var(--bad)}td:nth-child(3){color:var(--ok)}td:first-child{color:#fff;font-weight:600}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;display:flex;gap:1.2vw;color:#e8ebf5;max-width:56ch}
+.steps li::before{content:counter(s);flex:none;width:2em;height:2em;border-radius:50%;background:var(--accent);color:var(--ink);font-weight:700;display:grid;place-items:center;font-size:.8em;margin-top:.1em}
+.big{font-size:clamp(60px,12vw,180px);font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.03em}
+.src{position:absolute;left:8vw;right:8vw;bottom:3vh;font-size:clamp(10px,1.05vw,14px);color:#7f89a6;max-width:none;margin:0}
+.hud{position:fixed;right:2vw;bottom:2.4vh;font-size:13px;color:#7f89a6;z-index:5}
+.bar{position:fixed;left:0;top:0;height:3px;background:var(--accent);transition:width .3s;z-index:5}
+a{color:var(--accent)}
+@media (max-width:700px){.cols{grid-template-columns:1fr}.slide{overflow:auto;justify-content:flex-start;padding-top:8vh}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+
+<!-- 1 hook -->
+<section class="slide">
+  <p class="kicker">Pravesh · pre-flight for India's e-Visa</p>
+  <h1>The official site tells you what went wrong <em>after you've paid.</em></h1>
+</section>
+
+<!-- 2 problem -->
+<section class="slide">
+  <p class="kicker">The problem</p>
+  <h2>A reactive system for a one-shot process.</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Today</h3>
+      <ul><li>Apply, pay, then find out the photo or scan was wrong</li>
+      <li>Rules differ by passport; the route (e-Visa, VoA, mission) is on you to work out</li>
+      <li>Dates you must hit are not laid out anywhere in one place</li></ul></div>
+    <div class="card ok"><h3>With Pravesh</h3>
+      <ul><li>Know your route <em>before</em> you start</li>
+      <li>Photo and scan fixed to the published spec in your browser</li>
+      <li>One timeline: apply-by, arrival card, landing</li></ul></div>
+  </div>
+</section>
+
+<!-- 3 form burial (softened, verified claim) -->
+<section class="slide">
+  <p class="kicker">Look at the form itself</p>
+  <h2>Sensitive questions sit deep in a long form, not up front.</h2>
+  <p>On the official sample form, family nationality and previous-nationality fields appear on page 3, and the six yes/no security declarations only on <em>page 5</em>. By then you've already spent your time.</p>
+  <p class="src">Source: official sample form, indianvisaonline.gov.in/evisa/images/SampleForm.pdf (eTourist category, pages 3 and 5). Business and Conference categories not checked.</p>
+</section>
+
+<!-- 4 solution -->
+<section class="slide">
+  <p class="kicker">Pravesh</p>
+  <h2>Ask once, up front. Get a plan, not a surprise.</h2>
+  <ol class="steps">
+    <li>Passport and trip details in, personalised route out</li>
+    <li>Document checklist for that route</li>
+    <li>Timeline with apply-by, arrival-card and landing dates</li>
+    <li>Save and share the trip; opt-in email reminders</li>
+    <li>Payment evidence PDF kept for the day something goes wrong</li>
+  </ol>
+</section>
+
+<!-- 5 official vs pravesh -->
+<section class="slide">
+  <p class="kicker">Feature by feature</p>
+  <h2>Same journey, fewer ways to fail.</h2>
+  <table>
+    <tr><th>Need</th><th>Official</th><th>Pravesh</th></tr>
+    <tr><td>Which route?</td><td>You work it out</td><td>Computed from your passport</td></tr>
+    <tr><td>Documents</td><td>Scattered PDFs</td><td>One checklist per route</td></tr>
+    <tr><td>Photo / scan</td><td>Rejected after submit</td><td>Fixed to spec before you apply</td></tr>
+    <tr><td>Deadlines</td><td>Not planned for you</td><td>Dated timeline + reminders</td></tr>
+    <tr><td>Payment proof</td><td>Your problem</td><td>Evidence letter PDF</td></tr>
+  </table>
+</section>
+
+<!-- 6 live demo -->
+<section class="slide">
+  <p class="kicker">Live demo</p>
+  <h2>Ninety seconds, on the real deployment.</h2>
+  <ol class="steps">
+    <li>Scroll the 3D globe and passport hero</li>
+    <li>Fill the entry-plan form, see route and checklist</li>
+    <li>Open the timeline, save and share the trip</li>
+    <li>Download the payment evidence PDF</li>
+  </ol>
+  <p class="src">webvision-2-0.onrender.com · free tier: first load can take ~50s, open it before you go on stage.</p>
+</section>
+
+<!-- 7 real backend -->
+<section class="slide">
+  <p class="kicker">Not a mock-up</p>
+  <div class="big">14</div>
+  <h2>passing tests, one backend, really deployed.</h2>
+  <ul style="padding-left:1.1em">
+    <li>Parity test: front-end and back-end rules always agree</li>
+    <li>zod validation, helmet, rate limits</li>
+    <li>Emails encrypted with AES-256-GCM; double opt-in reminders</li>
+    <li>Documents never leave the browser</li>
+  </ul>
+</section>
+
+<!-- 8 close -->
+<section class="slide">
+  <p class="kicker">What Pravesh never does</p>
+  <h2>It is not the Government of India. It takes no payments. It never submits your application.</h2>
+  <p>It just makes sure that when you do apply, you only apply once.</p>
+  <p class="src">Pravesh is an unofficial companion. Rules data carries its source and date checked.</p>
+</section>
+
+<div class="hud" id="hud"></div>
+<script>
+const s=[...document.querySelectorAll('.slide')];let i=0;
+function go(n){i=Math.max(0,Math.min(s.length-1,n));s.forEach((e,k)=>e.classList.toggle('on',k===i));
+  document.getElementById('bar').style.width=((i+1)/s.length*100)+'%';
+  document.getElementById('hud').textContent=(i+1)+' / '+s.length;
+  try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(i+1)}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(i-1)}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(s.length-1)});
+let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50)go(i+(d<0?1:-1));x0=null});
+addEventListener('click',e=>{if(e.target.closest('a'))return;go(i+(e.clientX<innerWidth*.25?-1:1))});
+go((parseInt(location.hash.slice(1))||1)-1);
+</script>
+</body>
+</html>
