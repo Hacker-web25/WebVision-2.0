@@ -370,6 +370,26 @@ legend{padding:0}
 .dd .frag li{padding:9px 0;border-top:1px solid var(--ui-line);font-size:14px;line-height:1.5}
 .dd .frag li:first-child{border-top:0}
 .dd .frag li small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.ai-fab{position:fixed;right:20px;bottom:20px;z-index:60;height:50px;padding:0 20px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;font-size:15px;box-shadow:0 6px 20px rgba(16,26,51,.25);cursor:pointer}
+.ai-panel{position:fixed;right:20px;bottom:82px;z-index:60;width:min(400px,calc(100vw - 32px));height:min(580px,calc(100vh - 120px));display:flex;flex-direction:column;background:var(--ground);border-radius:14px;box-shadow:0 18px 50px rgba(16,26,51,.28);overflow:hidden}
+.ai-panel[hidden]{display:none}
+@media (max-width:520px){.ai-panel{right:16px;left:16px;width:auto;bottom:80px}.ai-fab{right:16px;bottom:16px}}
+.ai-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--field);color:var(--field-ink)}
+.ai-head b{display:block;font-size:15px}.ai-head span{font-size:12px;color:var(--field-muted)}
+.ai-head .x{background:none;border:0;color:var(--field-muted);font:inherit;font-size:13px;cursor:pointer}
+.ai-log{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.ai-m{max-width:88%;padding:9px 12px;border-radius:12px;font-size:14px;line-height:1.45}
+.ai-m.bot{background:var(--ground);align-self:flex-start}
+.ai-m.me{background:var(--ink);color:var(--ground);align-self:flex-end}
+.ai-m.act{align-self:center;background:var(--ok-bg);color:var(--ok);font-size:12.5px;font-weight:500}
+.ai-m.wait{color:var(--muted)}
+.ai-chips{display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0;scrollbar-width:none}
+.chip-q{flex:0 0 auto;border:1px solid var(--ui-line);background:var(--ground);border-radius:999px;padding:6px 10px;font:inherit;font-size:12.5px;cursor:pointer}
+.ai-form{display:flex;gap:6px;padding:10px 12px 4px}
+.ai-form .btn{height:42px;font-size:14px;border-radius:7px;padding:0 14px}
+.ai-att{position:relative;flex:0 0 42px;height:42px;display:grid;place-items:center;border:1px solid var(--ui-line);border-radius:7px;font-size:22px;cursor:pointer}
+.ai-att input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ai-fine{font-size:11.5px;color:var(--muted);margin:0;padding:2px 12px 10px}
 .pill{grid-column:2;grid-row:1/span 2;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
 .ok .pill{background:var(--ok-bg);color:var(--ok)}
 .bad .pill{background:var(--bad-bg);color:var(--bad)}
@@ -1927,6 +1947,76 @@ function refreshDash(){
 }
 window.__air=refreshDash;
 refreshDash();renderWallet();showTab(TABS.includes(dash.tab)?dash.tab:'over');
+
+/* ---------- Assistant: chat that reads documents on the device and drives the dashboard ---------- */
+(function assistant(){
+  document.body.insertAdjacentHTML('beforeend',`<button class="ai-fab" type="button" id="aiFab" aria-expanded="false" aria-controls="aiPanel">Ask Pravesh</button>
+  <section class="ai-panel" id="aiPanel" hidden aria-label="Pravesh assistant">
+    <div class="ai-head"><div><b>Pravesh assistant</b><span id="aiMode">Checking…</span></div><button type="button" class="x" id="aiClose" aria-label="Close">Close</button></div>
+    <div class="ai-log" id="aiLog" role="log" aria-live="polite"></div>
+    <div class="ai-chips" id="aiChips"></div>
+    <form class="ai-form" id="aiForm"><label class="ai-att" title="Add the approval email (PDF or screenshot) or a passport photo">+<input type="file" id="aiFile" accept="image/*,application/pdf"></label><input class="ctl" id="aiIn" autocomplete="off" placeholder="Ask, or add your documents"><button class="btn" type="submit">Send</button></form>
+    <p class="ai-fine">Documents are read on this device. Only check results and your plan go to the AI, never your passport details. It cannot submit or pay: you apply on the official site.</p>
+  </section>`);
+  const log=$('#aiLog'),hist=[];let ready=false;
+  const add=(who,html)=>{log.insertAdjacentHTML('beforeend',`<div class="ai-m ${who}">${html}</div>`);log.scrollTop=log.scrollHeight};
+  const open=o=>{$('#aiPanel').hidden=!o;$('#aiFab').setAttribute('aria-expanded',o);if(o)$('#aiIn').focus()};
+  $('#aiFab').addEventListener('click',()=>open($('#aiPanel').hidden));$('#aiClose').addEventListener('click',()=>open(false));
+  api('/api/assistant').then(r=>{ready=!!(r.ok&&r.data.configured);
+    $('#aiMode').textContent=ready?'AI on · answers from sourced rules':'AI not set up on this server · documents still work';
+    add('bot',esc("Hi. Add your approval email and a passport photo with the + button, and I'll check them and fill your dashboard. You can also tell me what you're carrying, or ask about your visa."))});
+  const CHIPS=['What do I do next?','I am bringing 3 bottles of wine and a new laptop','Can I visit Ladakh on my e-Visa?','My visa was rejected. What now?'];
+  $('#aiChips').innerHTML=CHIPS.map(c=>`<button type="button" class="chip-q">${esc(c)}</button>`).join('');
+  $('#aiChips').addEventListener('click',e=>{const b=e.target.closest('.chip-q');if(b){$('#aiIn').value=b.textContent;$('#aiForm').requestSubmit()}});
+
+  function context(){
+    const {r,dates}=curPlan(),c=customs();
+    return {today:isoDate(new Date()),plan:{nat:state.nat,port:state.port,purpose:state.purpose,arrival:isoDate(state.arr),route:r.type,visa:r.kind,dates:dates.map(d=>[d[0],isoDate(d[1])])},
+      visaStatus:$('#vStatus').value,visaHeld:$('#vCat').value,departure:$('#vDep').value,approvalChecks:airChecks().map(x=>({check:x.n,result:AIR_LBL[x.st],detail:x.g})),
+      customs:{arriveAs:c.type,allowance:c.allow,countedValue:c.counted,overAllowance:c.excess,declare:c.declare,items:dash.items.map(i=>({kind:i.k,qty:i.q,value:i.v}))},
+      nights:dash.nights,budgetInr:lastCost===null?null:Math.round(lastCost)};
+  }
+  function act(list){
+    const done=[];let plan=false;
+    for(const a of list){
+      if(a.type==='addItem'){dash.items.push({k:a.kind,q:a.qty,v:a.value});done.push(`Added ${ITEMS[a.kind][0].toLowerCase()} to customs`)}
+      else if(a.type==='setStatus'){$('#vStatus').value=a.value;dash.status=a.value;done.push(`Visa status: ${ST_LBL[a.value]}`)}
+      else if(a.type==='setNights'){dash.nights=a.value;$('#kNights').value=a.value;done.push(`Budget set to ${a.value} nights`)}
+      else if(a.type==='setVisa'){$('#vCat').value=a.value;dash.vcat=a.value;done.push(`Visa type: ${$('#vCat').selectedOptions[0].text}`)}
+      else if(a.type==='setPlan'){if(a.nat)natSel.value=a.nat;if(a.port)portSel.value=a.port;if(a.purpose){const el=$('#p-'+a.purpose);if(el)el.checked=true}if(a.arr)arrIn.value=a.arr;plan=true;done.push('Updated your entry plan')}
+      else if(a.type==='goTab'){showTab(a.value);$('#dash').scrollIntoView({behavior:'smooth'})}
+    }
+    saveDash();
+    if(plan)$('#routeForm').dispatchEvent(new Event('change',{bubbles:true}));else refreshDash();
+    if(done.length)add('act',done.map(esc).join('<br>'));
+  }
+  async function ask(text){
+    hist.push({role:'user',content:text});add('me',esc(text));
+    if(!ready){add('bot','The AI is not set up on this server, so I can only read documents here. The person running it adds a free NVIDIA_API_KEY in the host settings.');return}
+    add('bot wait','Thinking…');
+    const r=await api('/api/assistant',{method:'POST',timeout:30000,body:{messages:hist.slice(-12),context:context()}});
+    log.querySelector('.wait')?.remove();
+    if(!r.ok){add('bot',esc(r.data?.error?.message||'The assistant did not answer. Try again.'));hist.pop();return}
+    hist.push({role:'assistant',content:r.data.reply});add('bot',esc(r.data.reply).replace(/\n/g,'<br>'));act(r.data.actions||[]);
+  }
+  $('#aiForm').addEventListener('submit',e=>{e.preventDefault();const t=$('#aiIn').value.trim();if(!t)return;$('#aiIn').value='';ask(t)});
+
+  async function attach(f){
+    add('me',esc('Added '+f.name));add('bot wait','Reading it on this device…');
+    try{
+      let kind='';
+      if(f.type==='application/pdf'){applyApproval(readApproval(await pdfText(f)));kind='approval'}
+      else{const m=readMRZ(await ocrMRZ(f));
+        if(m){fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);refreshDash();kind=m.ok.every(Boolean)?'passport':'passport, but a check digit did not add up'}
+        else{const t=await ocr(f);$('#impText').value=t.trim();applyApproval(readApproval(t));kind='approval'}}
+      log.querySelector('.wait')?.remove();
+      const c=airChecks(),bad=c.filter(x=>x.st==='bad'),todo=c.filter(x=>x.st==='todo');
+      add('bot',`Read your ${esc(kind)}. ${bad.length?`<b>${bad.length} to fix:</b><br>${bad.map(x=>esc(x.n+': '+x.g)).join('<br>')}`:todo.length?`Still to compare: ${esc(todo.map(x=>x.n.toLowerCase()).join(', '))}. Add the ${kind==='approval'?'passport photo':'approval email'} next.`:'Everything matches.'}`);
+      showTab('visa');
+    }catch(err){log.querySelector('.wait')?.remove();add('bot',esc(err.message||'Could not read that file.'))}
+  }
+  $('#aiFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)attach(f)});
+})();
 const planBody=()=>({nat:state.nat,port:state.port,purpose:state.purpose,arr:isoDate(state.arr),prior:state.prior,pak:state.pak,mil:state.mil});
 const downBody=()=>Object.assign(planBody(),{tzOffsetMinutes:-new Date().getTimezoneOffset()});
 const planNote=$('#planNote'),NOTE0=planNote.textContent;

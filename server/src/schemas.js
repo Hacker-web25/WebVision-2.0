@@ -40,3 +40,10 @@ export const evidenceBody = z.strictObject({
   paidAt: z.string().datetime({ offset: true }),
   tz: z.string().trim().max(64).default('local time'),
 });
+
+const msg = z.strictObject({ role: z.enum(['user', 'assistant']), content: z.string().trim().min(1).max(2000) });
+// The page sends check results and plan details only. Passport names, numbers and dates are never sent.
+export const assistantBody = z.strictObject({
+  messages: z.array(msg).min(1).max(16),
+  context: z.record(z.string(), z.unknown()).default({}),
+});

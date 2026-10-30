@@ -5,15 +5,15 @@ import { makeVault } from '../src/secure.js';
 import { randomBytes } from 'node:crypto';
 
 /** A real server on a random port, an in-memory database and a clock the test controls. */
-export async function boot({ start = Date.parse('2026-10-30T06:00:00Z'), limits = false } = {}) {
-  const clock = { t: start };
+export async function boot({ start = Date.parse('2026-10-30T06:00:00Z'), limits = false, noAi = false } = {}) {
+  const clock = { t: start, noAi };
   const now = () => clock.t;
   const db = openDb(':memory:');
   const vault = makeVault(randomBytes(32));
   const mailer = await makeMailer({ mode: 'outbox', db, now });
   const env = { NODE_ENV: 'test', PUBLIC_URL: 'http://pravesh.test' };
   const fetchRates = async () => { if (clock.ratesDown) throw new Error('down'); return { base: 'INR', updated: '2026-10-30T00:00:00.000Z', source: 'test', rates: { USD: 0.0119, EUR: 0.0109 } }; };
-  const { app, reminders, purgeTrips } = createApp({ db, vault, mailer, now, env, limits, fetchRates });
+  const { app, reminders, purgeTrips } = createApp({ db, vault, mailer, now, env, limits, fetchRates, callModel: clock.noAi ? null : async msgs => { clock.lastPrompt = msgs; return { text: clock.aiText ?? '{"reply":"ok","actions":[]}', provider: 'test' }; } });
   const server = await new Promise(r => { const s = app.listen(0, '127.0.0.1', () => r(s)); });
   const base = `http://127.0.0.1:${server.address().port}`;
   const call = async (method, path, body, headers = {}) => {
