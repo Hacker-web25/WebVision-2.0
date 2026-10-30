@@ -90,11 +90,11 @@ export function modelFromEnv(env) {
     for (const p of providers) {
       try {
         const r = await fetch(p.url, {
-          method: 'POST', signal: AbortSignal.timeout(25000),
+          method: 'POST', signal: AbortSignal.timeout(60000),
           headers: { 'content-type': 'application/json', authorization: `Bearer ${p.key}` },
           body: JSON.stringify({ model: p.model, messages, temperature: 0.2, max_tokens: 700 }),
         });
-        if (!r.ok) throw new Error(`${p.name} answered ${r.status}`);
+        if (!r.ok) throw new Error(`${p.name} answered ${r.status}: ${(await r.text()).slice(0, 300)}`);
         const j = await r.json();
         return { text: j.choices?.[0]?.message?.content ?? '', provider: p.name };
       } catch (e) { last = e; }

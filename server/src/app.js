@@ -99,7 +99,7 @@ export function createApp({ db, vault, mailer, now = Date.now, env = process.env
     if (JSON.stringify(body.context).length > 8000) throw new HttpError(400, 'invalid_request', 'The trip summary is too large.');
     let out;
     try { out = await callModel(buildMessages(body)); }
-    catch (e) { throw new HttpError(502, 'ai_unavailable', 'The AI service did not answer. Try again in a moment.'); }
+    catch (e) { console.error('assistant failed:', e.message); throw new HttpError(502, 'ai_unavailable', 'The AI service did not answer. Try again in a moment.'); }
     res.json({ ...parseReply(out.text), provider: out.provider });
   });
 
