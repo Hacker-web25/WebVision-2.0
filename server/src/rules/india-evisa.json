@@ -1,0 +1,64 @@
+{
+  "version": "2026.10.30",
+  "checkedOn": "2026-10-30",
+  "scope": "Demonstration set of 19 passports and 10 airports. Always confirm on the official site before you travel.",
+  "constants": {
+    "voaStayDays": 60,
+    "voaEntries": 2,
+    "voaAirportCount": 6,
+    "arrivalCardHours": 72,
+    "applyBeforeDays": 4,
+    "arrivalCardOpensDaysBefore": 3,
+    "paymentRecheckHours": 4,
+    "maxFailedPayments": 3,
+    "fileKb": { "min": 10, "max": 300 }
+  },
+  "countries": [
+    { "code": "JP", "name": "Japan", "regime": "voa", "demonym": "Japanese" },
+    { "code": "KR", "name": "South Korea", "regime": "voa", "demonym": "South Korean" },
+    { "code": "AE", "name": "United Arab Emirates", "regime": "voa-prior", "demonym": "Emirati" },
+    { "code": "US", "name": "United States", "regime": "evisa", "demonym": "American" },
+    { "code": "GB", "name": "United Kingdom", "regime": "evisa", "demonym": "British" },
+    { "code": "DE", "name": "Germany", "regime": "evisa", "demonym": "German" },
+    { "code": "FR", "name": "France", "regime": "evisa", "demonym": "French" },
+    { "code": "NL", "name": "Netherlands", "regime": "evisa", "demonym": "Dutch" },
+    { "code": "IT", "name": "Italy", "regime": "evisa", "demonym": "Italian" },
+    { "code": "ES", "name": "Spain", "regime": "evisa", "demonym": "Spanish" },
+    { "code": "SE", "name": "Sweden", "regime": "evisa", "demonym": "Swedish" },
+    { "code": "AU", "name": "Australia", "regime": "evisa", "demonym": "Australian" },
+    { "code": "NZ", "name": "New Zealand", "regime": "evisa", "demonym": "New Zealand" },
+    { "code": "SG", "name": "Singapore", "regime": "evisa", "demonym": "Singaporean" },
+    { "code": "BR", "name": "Brazil", "regime": "evisa", "demonym": "Brazilian" },
+    { "code": "ZA", "name": "South Africa", "regime": "evisa", "demonym": "South African" },
+    { "code": "KE", "name": "Kenya", "regime": "evisa", "demonym": "Kenyan" },
+    { "code": "PK", "name": "Pakistan", "regime": "mission", "demonym": "Pakistani" },
+    { "code": "XX", "name": "Another country", "regime": "check", "demonym": "" }
+  ],
+  "ports": [
+    { "code": "DEL", "name": "Delhi", "voa": true },
+    { "code": "BOM", "name": "Mumbai", "voa": true },
+    { "code": "BLR", "name": "Bengaluru", "voa": true },
+    { "code": "MAA", "name": "Chennai", "voa": true },
+    { "code": "CCU", "name": "Kolkata", "voa": true },
+    { "code": "HYD", "name": "Hyderabad", "voa": true },
+    { "code": "GOX", "name": "Goa (Mopa)", "voa": false },
+    { "code": "COK", "name": "Kochi", "voa": false },
+    { "code": "AMD", "name": "Ahmedabad", "voa": false },
+    { "code": "JAI", "name": "Jaipur", "voa": false }
+  ],
+  "purposes": {
+    "tourism": { "visa": "e-Tourist Visa", "extraDoc": null },
+    "business": { "visa": "e-Business Visa", "extraDoc": { "name": "Business card", "detail": "A copy, uploaded with the form" } },
+    "medical": { "visa": "e-Medical Visa", "extraDoc": { "name": "Hospital letter", "detail": "From the hospital in India, on its letterhead" } }
+  },
+  "gateways": ["SBI", "Axis Bank", "Razorpay", "PayPal", "Other"],
+  "sources": {
+    "evisa": { "label": "Official e-Visa site", "url": "https://indianvisaonline.gov.in/evisa/tvoa.html" },
+    "voa": { "label": "Official visa-on-arrival page", "url": "https://indianvisaonline.gov.in/visa/visa-on-arrival.html" }
+  },
+  "helpdesks": [
+    { "name": "e-Visa helpdesk", "email": "indian-evisa@gov.in", "phone": "+91 82 7808 7808" },
+    { "name": "SBI ePay", "phone": "+91-022-65361671" },
+    { "name": "Axis Bank", "phone": "+91 1800-419-0073" }
+  ]
+}

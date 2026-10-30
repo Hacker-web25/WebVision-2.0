@@ -1,0 +1,20 @@
+# Free web service on Render. The free plan has no persistent disk, so saved trips reset when it restarts.
+services:
+  - type: web
+    name: webvision-2-0
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: MAILER
+        value: smtp
+      - key: SMTP_URL
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: PUBLIC_URL
+        sync: false

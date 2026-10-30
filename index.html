@@ -371,6 +371,20 @@ legend{padding:0}
 .st.warn{background:var(--bad-bg);color:var(--bad)}
 .st.todo{background:var(--surface-2);color:var(--muted)}
 .st.wait{color:var(--muted)}
+.st[role=button]{cursor:pointer;transition:transform 140ms var(--ease-out)}
+.st[role=button]:active{transform:scale(.95)}
+.trav-top h4{border-radius:4px;outline:none;cursor:text}
+.trav-top h4:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.bar-act{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px}
+.bar-act .btn{height:34px;font-size:13px;border-radius:7px;padding-inline:12px}
+.remind{display:flex;flex-direction:column;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--ui-line)}
+.remind-row{display:flex;gap:8px}
+.remind-row .ctl{flex:1;min-width:0}
+.remind-row .btn{height:42px;font-size:14px;border-radius:7px;flex:none}
+.remind .msg{font-size:13px;color:var(--muted);min-height:1.45em}
+.remind .msg.err{color:var(--bad)}
+.remind .msg a{color:inherit}
+.ev-acts{display:flex;flex-wrap:wrap;gap:8px}
 .trav-add{border:1.5px dashed var(--ui-line-2);background:transparent;border-radius:9px;min-height:180px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;transition:border-color 160ms ease,color 160ms ease,transform 160ms var(--ease-out)}
 .trav-add:active{transform:scale(.98)}
 @media (hover:hover){.trav-add:hover{border-color:var(--ink);color:var(--ink)}}
@@ -536,7 +550,7 @@ html.lenis,html.lenis body{height:auto}
       </div>
       <div class="route-stage" data-rise>
         <div class="frag" data-ui id="planFrag">
-          <div class="frag-bar"><h3>Entry plan</h3><span class="note">Updates as you change anything</span></div>
+          <div class="frag-bar"><h3>Entry plan</h3><span class="note" id="planNote">Updates as you change anything</span></div>
           <div class="plan-body">
             <form class="plan-form" id="routeForm" novalidate>
               <div class="two">
@@ -701,6 +715,11 @@ html.lenis,html.lenis body{height:auto}
               <div class="status-copy">
                 <p class="big" id="clockMsg"></p>
                 <div class="two"><div><label class="lbl" for="paidAt">Paid at, your time</label><input class="ctl" type="time" id="paidAt"></div></div>
+                <form class="remind" id="payRemind" novalidate style="margin-top:4px;padding-top:0;border-top:0">
+                  <label class="lbl" for="payEmail">Email me when the four hours are up</label>
+                  <div class="remind-row"><input class="ctl" id="payEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"><button class="btn" type="submit">Remind me</button></div>
+                  <p class="msg" id="payMsg" aria-live="polite"></p>
+                </form>
               </div>
             </div>
             <div class="timeline-pay" id="payTl">
@@ -727,7 +746,7 @@ html.lenis,html.lenis body{height:auto}
             </div>
             <div class="paper">
               <pre class="ev-out" id="evOut"></pre>
-              <div><button class="btn" type="button" id="evCopy" style="height:40px;font-size:14px;border-radius:7px">Copy email</button></div>
+              <div class="ev-acts"><button class="btn" type="button" id="evCopy" style="height:40px;font-size:14px;border-radius:7px">Copy email</button><button class="btn btn-ghost" type="button" id="evPdf" style="height:40px;font-size:14px;border-radius:7px">Download PDF</button></div>
             </div>
           </div>
         </div>
@@ -756,10 +775,15 @@ html.lenis,html.lenis body{height:auto}
             </svg></div>
             <div class="tl" id="tl" role="img" aria-label="Trip timeline"></div>
             <div id="tlWarn"></div>
+            <form class="remind" id="remindForm" novalidate>
+              <label class="lbl" for="remindEmail">Email me these dates</label>
+              <div class="remind-row"><input class="ctl" id="remindEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"><button class="btn" type="submit">Remind me</button></div>
+              <p class="msg" id="remindMsg" aria-live="polite">One email to confirm, then a reminder before each date. Your address is deleted after the last one.</p>
+            </form>
           </div>
         </div>
         <div class="frag" data-ui data-rise>
-          <div class="frag-bar"><h3>Travellers</h3><span class="note">Example trip: the Lindqvists, Stockholm to Delhi</span></div>
+          <div class="frag-bar"><h3>Travellers</h3><div class="bar-act"><span class="note" id="boardNote">Example trip: the Lindqvists, Stockholm to Delhi</span><button class="btn btn-ghost" type="button" id="saveTrip">Save and share</button></div></div>
           <div class="board" id="board"></div>
         </div>
       </div>
@@ -873,8 +897,10 @@ function datesFor(r,s){
   if(r.type==='voa'||r.type==='evisa') o.push(['Arrival Card',addDays(a,-3),false]);
   o.push(['Land',a,false]); return o;
 }
+let srvPlan=null;
 function renderTicket(animate){
-  const r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state),t=$('#ticket');
+  let r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state);const t=$('#ticket');
+  if(srvPlan){r=Object.assign({},r,{type:srvPlan.type,kind:srvPlan.kind,title:srvPlan.title,reason:srvPlan.reason});docs=srvPlan.docs.map(d=>[d.name,d.detail]);dates=srvPlan.dates.map(d=>[d.label,new Date(d.date+'T00:00:00'),d.hot])}
   t.style.setProperty('--route',COLORS[r.type]);
   const src=r.type==='voa'?'https://indianvisaonline.gov.in/visa/visa-on-arrival.html':'https://indianvisaonline.gov.in/evisa/tvoa.html';
   const note=state.mil==='yes'?'<p class="t-note">The form asks for your organisation, rank and place of posting. Past service does not rule you out. Keep the details ready.</p>':(r.type==='voa'?'<p class="t-note">Flying into another airport later? An e-Visa works at all of them.</p>':'');
@@ -898,7 +924,7 @@ function readPlan(){
   const d=arrIn.value?new Date(arrIn.value+'T00:00:00'):null; if(d&&!isNaN(d)) state.arr=d;
   $('#priorField').hidden=state.nat!=='AE';
 }
-$('#routeForm').addEventListener('change',()=>{readPlan();renderTicket(true);renderTimeline(true);if(window.__imprint)window.__imprint()});
+$('#routeForm').addEventListener('change',()=>{readPlan();srvPlan=null;renderTicket(true);renderTimeline(true);if(window.__imprint)window.__imprint();syncPlan();saveSoon()});
 $('#routeForm').addEventListener('submit',e=>e.preventDefault());
 readPlan();renderTicket(false);
 
@@ -1121,11 +1147,120 @@ renderTimeline();
 const STEPS=['Entry plan','Photo','Passport PDF','Payment','Arrival Card'],LBL={done:'Done',warn:'Fix',todo:'To do',wait:'Opens later'};
 const trav=[{n:'Anna Lindqvist',m:'Lead applicant · e-Tourist',s:['done','done','done','todo','wait']},{n:'Erik Lindqvist',m:'e-Tourist',s:['done','done','warn','todo','wait']},{n:'Mia Lindqvist',m:'Age 9 · e-Tourist',s:['done','todo','todo','todo','wait']}];
 function renderBoard(){
-  $('#board').innerHTML=trav.map(t=>{const d=t.s.filter(x=>x==='done').length,f=d/STEPS.length,C=106.8;return `<article class="trav"><div class="trav-top"><div><h4>${esc(t.n)}</h4><p>${esc(t.m)}</p></div><svg class="mini" viewBox="0 0 44 44" aria-label="${d} of ${STEPS.length} done"><circle class="bgc" cx="22" cy="22" r="17"/><circle class="fgc" cx="22" cy="22" r="17" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}"/><text x="22" y="26" text-anchor="middle">${d}/${STEPS.length}</text></svg></div><ul class="trav-steps">${t.s.map((x,i)=>`<li><span>${STEPS[i]}</span><span class="st ${x}">${LBL[x]}</span></li>`).join('')}</ul></article>`}).join('')+`<button class="trav-add" type="button" id="addTrav"><svg class="ico"><use href="#i-plus"/></svg>Add a traveller</button>`;
-  $('#addTrav').addEventListener('click',()=>{trav.push({n:`Traveller ${trav.length+1}`,m:'Details not added yet',s:['todo','todo','todo','todo','wait']});renderBoard();$('#addTrav').focus()});
+  $('#board').innerHTML=trav.map(t=>{const d=t.s.filter(x=>x==='done').length,f=d/STEPS.length,C=106.8;return `<article class="trav"><div class="trav-top"><div><h4 contenteditable="true" spellcheck="false" role="textbox" aria-label="Traveller name" data-i="${trav.indexOf(t)}">${esc(t.n)}</h4><p>${esc(t.m)}</p></div><svg class="mini" viewBox="0 0 44 44" aria-label="${d} of ${STEPS.length} done"><circle class="bgc" cx="22" cy="22" r="17"/><circle class="fgc" cx="22" cy="22" r="17" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}"/><text x="22" y="26" text-anchor="middle">${d}/${STEPS.length}</text></svg></div><ul class="trav-steps">${t.s.map((x,i)=>`<li><span>${STEPS[i]}</span><span class="st ${x}"${x==='wait'?'':` role="button" tabindex="0" data-i="${trav.indexOf(t)}" data-j="${i}"`}>${LBL[x]}</span></li>`).join('')}</ul></article>`}).join('')+`<button class="trav-add" type="button" id="addTrav"><svg class="ico"><use href="#i-plus"/></svg>Add a traveller</button>`;
+  $('#addTrav').addEventListener('click',()=>{if(trav.length>=10)return;trav.push({n:`Traveller ${trav.length+1}`,m:'Details not added yet',s:['todo','todo','todo','todo','wait']});renderBoard();$('#addTrav').focus();saveSoon()});
 }
 renderBoard();
 
+
+/* ---------- Server: the API behind the page. Every call has a local fallback, so the page also works as a single file. ---------- */
+const API=((document.querySelector('meta[name="pravesh-api"]')||{}).content)||(location.protocol==='file:'?'http://localhost:3000':'');
+async function api(path,o={}){
+  const c=new AbortController(),to=setTimeout(()=>c.abort(),o.timeout||6000);
+  try{
+    const res=await fetch(API+path,{method:o.method||'GET',headers:Object.assign(o.body?{'content-type':'application/json'}:{},o.headers||{}),body:o.body?JSON.stringify(o.body):undefined,signal:c.signal});
+    const ct=res.headers.get('content-type')||'';
+    const data=ct.includes('json')?await res.json():(o.blob&&res.ok?await res.blob():null);
+    return {ok:res.ok,status:res.status,data};
+  }catch(e){return {ok:false,status:0,data:null}}finally{clearTimeout(to)}
+}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const planBody=()=>({nat:state.nat,port:state.port,purpose:state.purpose,arr:isoDate(state.arr),prior:state.prior,pak:state.pak,mil:state.mil});
+const downBody=()=>Object.assign(planBody(),{tzOffsetMinutes:-new Date().getTimezoneOffset()});
+const planNote=$('#planNote'),NOTE0=planNote.textContent;
+let planSeq=0;
+async function syncPlan(){
+  const seq=++planSeq,res=await api('/api/plan',{method:'POST',body:downBody()});
+  if(seq!==planSeq) return;
+  if(!res.ok){planNote.textContent=NOTE0;return}
+  const s=res.data;planNote.textContent=`Live rules · checked ${new Date(s.checkedOn+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}`;
+  const r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state);
+  const same=s.type===r.type&&s.title===r.title&&s.reason===r.reason&&JSON.stringify(s.docs.map(d=>[d.name,d.detail]))===JSON.stringify(docs)&&JSON.stringify(s.dates.map(d=>[d.label,d.date]))===JSON.stringify(dates.map(d=>[d[0],isoDate(d[1])]));
+  if(!same){srvPlan=s;renderTicket(false)}
+}
+syncPlan();
+
+/* Trips: the board saves to a link anyone can open, and only this browser holds the key to edit it. */
+const trip={id:null,token:null},boardNote=$('#boardNote'),saveBtn=$('#saveTrip');
+const tripBody=()=>({plan:planBody(),travellers:trav.map(t=>({n:t.n,m:t.m,s:t.s}))});
+function setNote(t){boardNote.textContent=t}
+async function ensureTrip(){
+  if(trip.id&&trip.token) return {ok:true,id:trip.id};
+  const r=await api('/api/trips',{method:'POST',body:tripBody()});
+  if(!r.ok) return {ok:false,status:r.status};
+  trip.id=r.data.id;trip.token=r.data.editToken;store.set('pravesh.trip.'+trip.id,trip.token);
+  history.replaceState(null,'','?trip='+trip.id);return {ok:true,id:trip.id,link:r.data.link};
+}
+saveBtn.addEventListener('click',async()=>{
+  const had=!!(trip.id&&trip.token);
+  if(had){const r=await api('/api/trips/'+trip.id,{method:'PUT',headers:{'x-edit-token':trip.token},body:tripBody()});if(!r.ok){setNote('Could not save. Is the server running?');return}}
+  else{trip.id=trip.token=null;const r=await ensureTrip();if(!r.ok){setNote(r.status===0?'Saving needs the Pravesh server. Run npm start.':'Could not save this trip.');return}}
+  const link=(API||location.origin)+'/?trip='+trip.id;
+  copyText(link,saveBtn);setNote('Saved. Link copied. Anyone with it can read the board.');
+});
+let saveT=null;
+function saveSoon(){
+  if(!(trip.id&&trip.token)) return;clearTimeout(saveT);
+  saveT=setTimeout(async()=>{const r=await api('/api/trips/'+trip.id,{method:'PUT',headers:{'x-edit-token':trip.token},body:tripBody()});setNote(r.ok?'Saved':'Not saved. Is the server running?')},700);
+}
+const NEXT={todo:'done',done:'warn',warn:'todo'};
+$('#board').addEventListener('click',e=>{
+  const b=e.target.closest('.st[role=button]');if(!b) return;
+  const t=trav[+b.dataset.i];t.s[+b.dataset.j]=NEXT[t.s[+b.dataset.j]];renderBoard();saveSoon();
+});
+$('#board').addEventListener('keydown',e=>{
+  if(e.target.matches&&e.target.matches('h4[contenteditable]')&&e.key==='Enter'){e.preventDefault();e.target.blur()}
+  else if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('.st[role=button]')){e.preventDefault();e.target.click()}
+});
+$('#board').addEventListener('focusout',e=>{
+  const h=e.target.closest&&e.target.closest('h4[contenteditable]');if(!h) return;
+  const v=h.textContent.trim().slice(0,40),t=trav[+h.dataset.i];
+  if(v&&v!==t.n){t.n=v;saveSoon()}else h.textContent=t.n;
+});
+(async function openSaved(){
+  const id=new URLSearchParams(location.search).get('trip');if(!id) return;
+  const r=await api('/api/trips/'+encodeURIComponent(id));
+  if(!r.ok){setNote(r.status===404?'That trip link has expired or does not exist.':'Could not load the trip. Is the server running?');return}
+  const p=r.data.plan,f=$('#routeForm');
+  natSel.value=p.nat;portSel.value=p.port;arrIn.value=p.arr;
+  ['purpose','prior','pak','mil'].forEach(k=>{const el=f.querySelector(`[name=${k}][value=${p[k]}]`);if(el)el.checked=true});
+  readPlan();srvPlan=null;renderTicket(false);renderTimeline();if(window.__imprint)window.__imprint();syncPlan();
+  trav.splice(0,trav.length,...r.data.travellers);renderBoard();
+  trip.id=id;trip.token=store.get('pravesh.trip.'+id);
+  setNote(trip.token?'Saved trip. Changes save as you make them.':'Shared trip. Save and share makes your own copy.');
+  if(!trip.token) saveBtn.textContent='Make my copy';
+  setTimeout(()=>$('#trip').scrollIntoView({behavior:RM?'auto':'smooth'}),700);
+})();
+
+/* Reminders: one confirmation email, then a mail before each date. */
+async function remindFlow(kind,form,input,msg){
+  const email=input.value.trim(),say=(t,err)=>{msg.className='msg'+(err?' err':'');msg.textContent=t};
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){say('Enter a valid email address.',true);return}
+  const btn=form.querySelector('button');btn.disabled=true;say('Sending…');
+  try{
+    let body;
+    if(kind==='dates'){const t=await ensureTrip();if(!t.ok){say(t.status===0?'Reminders need the Pravesh server. Run npm start in the project folder.':'Could not save the trip first.',true);return}body={kind,email,tripId:t.id,tzOffsetMinutes:-new Date().getTimezoneOffset()}}
+    else{const [hh,mm]=(paidAt.value||'0:0').split(':').map(Number),n=new Date(),p=new Date(n);p.setHours(hh||0,mm||0,0,0);if(p>n)p.setDate(p.getDate()-1);body={kind,email,paidAt:p.toISOString()}}
+    const r=await api('/api/reminders',{method:'POST',body});
+    if(r.status===202){
+      const n=r.data.scheduled.length,demo=r.data.delivery==='outbox';
+      msg.className='msg';msg.innerHTML=`Check your inbox to confirm. ${n} reminder${n>1?'s':''} ready.`+(demo?` Demo mode: <a href="${esc(API||'')}/dev/outbox" target="_blank" rel="noopener">open the demo inbox</a>.`:'');
+    }else if(r.status===422)say(kind==='payment'?'Four hours are already up. Use Verify Payment on the official site now.':'Those dates have already passed.',true);
+    else if(r.status===429)say('Too many requests for this address today. Try again tomorrow.',true);
+    else if(r.status===0)say('Reminders need the Pravesh server. Run npm start in the project folder.',true);
+    else say('Could not set the reminder. Check the address and try again.',true);
+  }finally{btn.disabled=false}
+}
+$('#remindForm').addEventListener('submit',e=>{e.preventDefault();remindFlow('dates',e.currentTarget,$('#remindEmail'),$('#remindMsg'))});
+$('#payRemind').addEventListener('submit',e=>{e.preventDefault();remindFlow('payment',e.currentTarget,$('#payEmail'),$('#payMsg'))});
+
+/* Evidence letter as a PDF. The server renders it and keeps nothing. */
+$('#evPdf').addEventListener('click',async e=>{
+  const btn=e.currentTarget,v=id=>$(id).value.trim(),when=v('#evWhen')?new Date(v('#evWhen')):null;
+  if(!v('#evApp')||!v('#evAmt')||!v('#evRef')||!v('#evName')||!when||isNaN(when)){flash(btn,'Fill every field first');return}
+  const r=await api('/api/evidence/letter.pdf',{method:'POST',blob:true,body:{app:v('#evApp'),amount:v('#evAmt'),ref:v('#evRef'),name:v('#evName'),gateway:$('#evGw').value,paidAt:when.toISOString(),tz:Intl.DateTimeFormat().resolvedOptions().timeZone||'local time'}});
+  if(r.ok&&r.data) saveBlob(r.data,'payment-evidence.pdf',btn);else flash(btn,r.status===0?'Needs the server':'Could not make the PDF');
+});
 
 /* ---------- Flight path: draws as the trip section scrolls in ---------- */
 const HUB={JP:['HND','Tokyo'],KR:['ICN','Seoul'],AE:['DXB','Dubai'],US:['JFK','New York'],GB:['LHR','London'],DE:['FRA','Frankfurt'],FR:['CDG','Paris'],NL:['AMS','Amsterdam'],IT:['FCO','Rome'],ES:['MAD','Madrid'],SE:['ARN','Stockholm'],AU:['SYD','Sydney'],NZ:['AKL','Auckland'],SG:['SIN','Singapore'],BR:['GRU','São Paulo'],ZA:['JNB','Johannesburg'],KE:['NBO','Nairobi'],PK:['ISB','Islamabad'],XX:['···','Your city']};
