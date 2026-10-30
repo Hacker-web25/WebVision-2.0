@@ -287,6 +287,89 @@ legend{padding:0}
 .ladder li::before{content:counter(l);grid-row:1/span 2;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12.5px;display:grid;place-items:center;margin-top:2px}
 .ladder b{font-size:14px;font-weight:600}.ladder span{font-size:13.5px;color:var(--muted)}
 .air-acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 18px 18px}
+
+.dash{display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px)}
+.dash-sum{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:baseline;padding:16px 18px;background:var(--surface);border-radius:12px}
+.dash-sum b{font-size:clamp(18px,1.8vw,22px);font-weight:600;letter-spacing:-.01em}
+.dash-sum span{font-size:13.5px;color:var(--muted)}
+.dash-sum .hot{color:var(--bad);font-weight:600}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--surface-2);border-radius:10px;overflow-x:auto;scrollbar-width:none;position:sticky;top:64px;z-index:4}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;border:0;background:none;padding:10px 14px;border-radius:7px;font:inherit;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--ground);color:var(--ink);box-shadow:0 1px 2px rgba(16,26,51,.12)}
+.tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.pan{display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px)}
+.pan[hidden]{display:none}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{display:flex;flex-direction:column;gap:4px;padding:16px;background:var(--surface);border-radius:12px;border:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.card:hover{background:var(--surface-2)}
+.card small{font-size:12.5px;color:var(--muted)}
+.card b{font-size:clamp(20px,2vw,26px);font-weight:600;letter-spacing:-.015em;line-height:1.15}
+.card span{font-size:13px;color:var(--muted)}
+.card.bad b{color:var(--bad)}.card.ok b{color:var(--ok)}
+.ready{padding:4px 18px 14px}
+.import{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+@media (max-width:760px){.import{grid-template-columns:1fr}}
+.imp-col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.imp-h{font-size:14px;font-weight:600;margin:0}
+.area{height:auto;padding:10px 12px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.45}
+.imp-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.imp-acts .btn,.file-btn{height:40px;font-size:14px;border-radius:7px;padding:0 16px}
+.file-btn{position:relative;overflow:hidden;cursor:pointer}
+.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.imp-status{font-size:13.5px;margin:4px 0 0;color:var(--muted);min-height:1.4em}
+.imp-status.ok{color:var(--ok)}.imp-status.bad{color:var(--bad)}
+.ctl.filled{background:#fff8ec;border-color:#f2c27a}
+.stay{display:flex;flex-direction:column;gap:12px}
+.next{font-size:14px;line-height:1.5;padding:12px 14px;background:var(--ground);border-radius:8px;border:1px solid var(--ui-line)}
+.next b{display:block;margin-bottom:4px}
+.next ul{margin:6px 0 0;padding-left:18px}
+.next.bad{border-color:#e7b3a9;background:var(--bad-bg)}
+.next.ok{border-color:#a9d3bc;background:var(--ok-bg)}
+.rules-note{font-size:13px;color:var(--muted);margin:0}
+.rules-note.new{color:var(--bad);font-weight:500}
+.item-add{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,.8fr) minmax(0,1fr) auto;gap:8px}
+.item-add .btn{height:42px;font-size:14px;border-radius:7px}
+@media (max-width:520px){.item-add{grid-template-columns:1fr 1fr}}
+.items{list-style:none;margin:0;padding:0}
+.items li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--ui-line);font-size:14px}
+.items li:last-child{border-bottom:1px solid var(--ui-line)}
+.items li span{color:var(--muted);font-size:13px}
+.items li .x{border:0;background:none;color:var(--muted);cursor:pointer;font:inherit;font-size:13px;padding:4px 6px;border-radius:5px}
+.items li .x:hover{background:var(--surface-2);color:var(--ink)}
+.items li a{color:var(--ink);font-weight:500}
+.duty{font-size:14px;padding:12px 14px;background:var(--ground);border-radius:8px;border:1px solid var(--ui-line);display:grid;grid-template-columns:1fr auto;gap:4px 12px}
+.duty b{font-variant-numeric:tabular-nums;text-align:right}
+.duty .tot{font-weight:600;border-top:1px solid var(--ui-line);padding-top:6px}
+.cost-rows{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:8px 10px;align-items:center}
+.cost-rows label{font-size:13.5px}
+.cost-rows label span{display:block;font-size:12px;color:var(--muted)}
+.ktab{width:100%;border-collapse:collapse;font-size:14px}
+.ktab td{padding:8px 0;border-top:1px solid var(--ui-line);font-variant-numeric:tabular-nums}
+.ktab td+td{text-align:right;padding-left:12px}
+.ktab tr.tot td{font-weight:600;font-size:16px;border-top:2px solid var(--ink)}
+.ktab th{font-size:12.5px;color:var(--muted);font-weight:500;text-align:right;padding-bottom:6px}.ktab th:first-child{text-align:left}
+.conv{display:flex;flex-direction:column;gap:8px;padding-top:6px}
+.sit label{flex:1 1 160px}
+.sit-out{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.sit-out{grid-template-columns:1fr}}
+.sit-out ol,.sit-out ul{margin:6px 0 0;padding-left:20px;font-size:14px;line-height:1.55}
+.sit-out li+li{margin-top:5px}
+.ticks-s{list-style:none;margin:0;padding:0}
+.ticks-s li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--ui-line);font-size:14px}
+.ticks-s li:first-child{border-top:0}
+.ticks-s input{margin-top:3px}
+.ticks-s small{display:block;color:var(--muted);font-size:12.5px}
+.legend{margin:0}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;margin-right:4px;white-space:nowrap}
+.tag.rule{background:#e3e8f4;color:var(--ink)}.tag.tip{background:var(--surface-2);color:var(--muted)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.dd{grid-template-columns:1fr}}
+.dd .frag ul{list-style:none;margin:0;padding:4px 18px 12px}
+.dd .frag li{padding:9px 0;border-top:1px solid var(--ui-line);font-size:14px;line-height:1.5}
+.dd .frag li:first-child{border-top:0}
+.dd .frag li small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .pill{grid-column:2;grid-row:1/span 2;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
 .ok .pill{background:var(--ok-bg);color:var(--ok)}
 .bad .pill{background:var(--bad-bg);color:var(--bad)}
@@ -539,7 +622,7 @@ html.lenis,html.lenis body{height:auto}
       <span>Unofficial companion to India's e-Visa</span>
     </a>
     <nav aria-label="Sections">
-      <a href="#route">Route</a><a href="#documents">Documents</a><a href="#payment">Payment</a><a href="#trip">Trip</a><a href="#airport">Airport</a>
+      <a href="#route">Route</a><a href="#documents">Documents</a><a href="#payment">Payment</a><a href="#trip">Trip</a><a href="#dash">Dashboard</a>
     </nav>
     <a class="link" href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener"><span class="txt-long">Official e-Visa site</span><svg class="ico"><use href="#i-out"/></svg></a>
   </div>
@@ -817,39 +900,241 @@ html.lenis,html.lenis body{height:auto}
     </div>
   </section>
 
-  <section class="section band" id="airport" aria-labelledby="airTitle">
+  <section class="section band" id="dash" aria-labelledby="dashTitle">
     <div class="wrap">
       <div class="sec-head">
-        <h2 class="head" id="airTitle" data-rise>Check it before you leave for the airport.</h2>
-        <p class="lead" data-rise>Most visa mismatches can be found at home. Type what your approval email says next to what your passport says. Everything is compared in this page and nothing is sent or stored.</p>
+        <h2 class="head" id="dashTitle" data-rise>Your whole journey, one dashboard.</h2>
+        <p class="lead" data-rise>Everything after the entry plan: the visa itself, customs, the money, the airport and the first days in India. It follows the plan at the top of this page and keeps what you enter on this device only.</p>
       </div>
-      <div class="air" data-rise-group>
-        <div class="frag" data-ui data-rise>
-          <div class="frag-bar"><h3>Approval vs passport</h3><span class="note">Compared in your browser</span></div>
-          <form class="pane air-form" id="airForm" autocomplete="off" novalidate>
-            <div class="cmp-row cmp-head"><span></span><span>On your approval</span><span>On your passport</span></div>
-            <div class="cmp-row"><label for="aName1">Full name</label><input class="ctl" id="aName1" placeholder="As in the email"><input class="ctl" id="aName2" aria-label="Full name on passport" placeholder="As on passport"></div>
-            <div class="cmp-row"><label for="aNo1">Passport no.</label><input class="ctl" id="aNo1" autocapitalize="characters"><input class="ctl" id="aNo2" aria-label="Passport number on passport" autocapitalize="characters"></div>
-            <div class="cmp-row"><label for="aDob1">Date of birth</label><input class="ctl" type="date" id="aDob1"><input class="ctl" type="date" id="aDob2" aria-label="Date of birth on passport"></div>
-            <div class="cmp-row"><label for="aPort1">Airport</label><select class="ctl" id="aPort1"></select><div class="cmp-fixed" id="aPort2"></div></div>
-            <div class="cmp-row"><label for="aExp">Passport expires</label><input class="ctl" type="date" id="aExp"><div class="cmp-fixed" id="aArrLbl"></div></div>
-            <label class="air-tick"><input type="checkbox" id="aEac"> I have filed the e-Arrival Card</label>
-          </form>
+      <div class="dash" data-rise>
+        <div class="dash-sum" id="dashSum"></div>
+        <div class="tabs" role="tablist" aria-label="Dashboard">
+          <button role="tab" type="button" id="tab-over" aria-controls="pan-over" aria-selected="true">Overview</button>
+          <button role="tab" type="button" id="tab-visa" aria-controls="pan-visa" aria-selected="false">Visa</button>
+          <button role="tab" type="button" id="tab-cust" aria-controls="pan-cust" aria-selected="false">Customs</button>
+          <button role="tab" type="button" id="tab-cost" aria-controls="pan-cost" aria-selected="false">Costs</button>
+          <button role="tab" type="button" id="tab-help" aria-controls="pan-help" aria-selected="false">Airport help</button>
+          <button role="tab" type="button" id="tab-india" aria-controls="pan-india" aria-selected="false">In India</button>
         </div>
-        <div class="air-side">
-          <div class="frag" data-ui data-rise>
-            <div class="frag-bar"><h3>Result</h3><span class="note" id="airNote"></span></div>
-            <div class="pane report"><ul class="checks" id="airChecks"></ul></div>
+
+        <!-- Overview -->
+        <div class="pan" role="tabpanel" id="pan-over" aria-labelledby="tab-over">
+          <div class="cards" id="overCards"></div>
+          <div class="frag">
+            <div class="frag-bar"><h3>Ready to fly</h3><span class="note" id="readyNote"></span></div>
+            <ul class="checks ready" id="readyList"></ul>
           </div>
-          <div class="frag" data-ui data-rise>
-            <div class="frag-bar"><h3>If something does not match</h3><span class="note">Only the Indian authorities can change a visa</span></div>
-            <ol class="ladder">
-              <li><b>At home</b><span>Write to the e-Visa helpdesk with your application ID and a screenshot. Corrections take time, so do this days before you fly.</span></li>
-              <li><b>At check-in</b><span>Show the approval email and the passport. Ask the airline to confirm they can see your visa status before you pay for anything else.</span></li>
-              <li><b>At Indian immigration</b><span>Stay calm, show both, and ask for the supervisor. The officer makes the final decision.</span></li>
-            </ol>
-            <div class="air-acts"><button class="btn" type="button" id="packSave">Save offline arrival pack</button><span class="small" id="packNote">One file. Opens with no internet, and prints.</span></div>
+        </div>
+
+        <!-- Visa -->
+        <div class="pan" role="tabpanel" id="pan-visa" aria-labelledby="tab-visa" hidden>
+          <div class="frag">
+            <div class="frag-bar"><h3>Read my documents instead of typing</h3><span class="note">Read on this device. Nothing is uploaded.</span></div>
+            <div class="pane import">
+              <div class="imp-col">
+                <p class="imp-h">Your approval</p>
+                <p class="small">Paste the approval email, or drop a screenshot or the PDF.</p>
+                <textarea class="ctl area" id="impText" rows="5" placeholder="Paste the e-Visa approval email here"></textarea>
+                <div class="imp-acts">
+                  <button class="btn" type="button" id="impRead">Read text</button>
+                  <label class="btn btn-ghost file-btn">Screenshot or PDF<input type="file" id="impFile" accept="image/*,application/pdf"></label>
+                  <button class="btn btn-ghost" type="button" id="impSample">Sample</button>
+                </div>
+              </div>
+              <div class="imp-col">
+                <p class="imp-h">Your passport</p>
+                <p class="small">A photo of the photo page. Pravesh reads the two machine-readable lines at the bottom and checks their check digits.</p>
+                <div class="imp-acts">
+                  <label class="btn btn-ghost file-btn">Passport photo<input type="file" id="mrzFile" accept="image/*"></label>
+                  <button class="btn btn-ghost" type="button" id="mrzSample">Sample passport</button>
+                </div>
+                <p class="imp-status" id="impStatus" role="status" aria-live="polite"></p>
+              </div>
+            </div>
           </div>
+
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>Approval vs passport</h3><span class="note">Compared in your browser</span></div>
+              <form class="pane air-form" id="airForm" autocomplete="off" novalidate>
+                <div class="cmp-row cmp-head"><span></span><span>On your approval</span><span>On your passport</span></div>
+                <div class="cmp-row"><label for="aName1">Full name</label><input class="ctl" id="aName1" placeholder="As in the email"><input class="ctl" id="aName2" aria-label="Full name on passport" placeholder="As on passport"></div>
+                <div class="cmp-row"><label for="aNo1">Passport no.</label><input class="ctl" id="aNo1" autocapitalize="characters"><input class="ctl" id="aNo2" aria-label="Passport number on passport" autocapitalize="characters"></div>
+                <div class="cmp-row"><label for="aDob1">Date of birth</label><input class="ctl" type="date" id="aDob1"><input class="ctl" type="date" id="aDob2" aria-label="Date of birth on passport"></div>
+                <div class="cmp-row"><label for="aPort1">Airport</label><select class="ctl" id="aPort1"></select><div class="cmp-fixed" id="aPort2"></div></div>
+                <div class="cmp-row"><label for="aExp">Passport expires</label><div class="cmp-fixed" id="aArrLbl"></div><input class="ctl" type="date" id="aExp" aria-label="Passport expiry date"></div>
+                <label class="air-tick"><input type="checkbox" id="aEac"> I have filed the e-Arrival Card</label>
+              </form>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>Mismatches</h3><span class="note" id="airNote"></span></div>
+              <div class="pane report"><ul class="checks" id="airChecks"></ul></div>
+            </div>
+          </div>
+
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>Validity and permitted stay</h3><span class="note">From the official e-Visa page</span></div>
+              <div class="pane stay">
+                <div class="two">
+                  <div><label class="lbl" for="vCat">Visa you hold</label><select class="ctl" id="vCat">
+                    <option value="voa">Visa on arrival</option><option value="t30">e-Tourist, 30 days</option><option value="t1y">e-Tourist, 1 year</option><option value="t5y">e-Tourist, 5 years</option>
+                    <option value="b1">e-Business, 1 year</option><option value="med">e-Medical</option></select></div>
+                  <div><label class="lbl" for="vGrant">Granted on</label><input class="ctl" type="date" id="vGrant"></div>
+                  <div><label class="lbl" for="vArr">First arrival</label><input class="ctl" type="date" id="vArr"></div>
+                  <div><label class="lbl" for="vDep">Planned departure</label><input class="ctl" type="date" id="vDep"></div>
+                </div>
+                <ul class="t-dates" id="stayOut"></ul>
+                <p class="t-fine" id="stayNote"></p>
+              </div>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>Application status</h3><a class="note" href="https://indianvisaonline.gov.in/evisa/" target="_blank" rel="noopener">Official status check</a></div>
+              <div class="pane stay">
+                <div class="two">
+                  <div><label class="lbl" for="vStatus">Where it stands</label><select class="ctl" id="vStatus">
+                    <option value="none">Not applied yet</option><option value="sub">Submitted, not paid</option><option value="paid">Paid, under process</option>
+                    <option value="ok">Granted</option><option value="no">Rejected</option></select></div>
+                  <div><label class="lbl" for="vApp">Application ID</label><input class="ctl" id="vApp" autocomplete="off" placeholder="From the confirmation email"></div>
+                </div>
+                <div class="next" id="statusNext"></div>
+              </div>
+            </div>
+          </div>
+          <p class="rules-note" id="rulesNote"></p>
+        </div>
+
+        <!-- Customs -->
+        <div class="pan" role="tabpanel" id="pan-cust" aria-labelledby="tab-cust" hidden>
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>What are you carrying?</h3><span class="note">Baggage Rules, 2026</span></div>
+              <div class="pane stay">
+                <div><span class="lbl">You arrive as</span>
+                  <div class="seg" id="cType">
+                    <input type="radio" name="ctype" id="ct-t" value="tourist" checked><label for="ct-t">Foreign tourist</label>
+                    <input type="radio" name="ctype" id="ct-n" value="nontourist"><label for="ct-n">Foreigner, other visa</label>
+                    <input type="radio" name="ctype" id="ct-r" value="resident"><label for="ct-r">Resident or Indian origin</label>
+                  </div></div>
+                <div class="two">
+                  <label class="air-tick"><input type="checkbox" id="cAdult" checked> 18 or older</label>
+                  <label class="air-tick"><input type="checkbox" id="cAbroad"> Lived abroad more than a year</label>
+                </div>
+                <div class="item-add">
+                  <select class="ctl" id="iKind" aria-label="Item"></select>
+                  <input class="ctl" type="number" min="0" step="any" id="iQty" aria-label="Quantity" placeholder="Qty">
+                  <input class="ctl" type="number" min="0" step="any" id="iVal" aria-label="Value in rupees" placeholder="Value ₹">
+                  <button class="btn" type="button" id="iAdd">Add</button>
+                </div>
+                <p class="small" id="iHint"></p>
+                <ul class="items" id="iList"></ul>
+              </div>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>Your customs checklist</h3><span class="note" id="cNote"></span></div>
+              <div class="pane stay">
+                <ul class="checks" id="cOut"></ul>
+                <div class="duty" id="cDuty"></div>
+                <div class="two"><div><label class="lbl" for="cRate">Duty rate for the estimate, %</label><input class="ctl" type="number" min="0" max="200" step="0.1" id="cRate" value="38.5"></div>
+                <p class="t-fine" style="align-self:end">38.5% was the usual baggage rate under the 2016 rules. Not confirmed for 2026: customs sets the real figure.</p></div>
+                <button class="btn btn-ghost" type="button" id="cSave">Save checklist</button>
+              </div>
+            </div>
+          </div>
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>Cash and currency</h3><span class="note">FEMA currency regulations, 2015</span></div>
+              <div class="pane stay">
+                <div class="two">
+                  <div><label class="lbl" for="cCash">Foreign banknotes, in USD</label><input class="ctl" type="number" min="0" id="cCash" placeholder="0"></div>
+                  <div><label class="lbl" for="cOther">Plus travellers' cheques etc., in USD</label><input class="ctl" type="number" min="0" id="cOther" placeholder="0"></div>
+                </div>
+                <div class="next" id="cCur"></div>
+              </div>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>Airline baggage is not customs</h3></div>
+              <div class="pane stay small">
+                <p>Your airline sets how many bags and kilograms you may check in. That is on your ticket. Customs counts the value of what is inside, against the allowance on the left. A bag can be within the airline limit and still owe duty, or the other way round.</p>
+                <p>Keep receipts for anything new and expensive. Use the red channel if anything on your list says declare.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Costs -->
+        <div class="pan" role="tabpanel" id="pan-cost" aria-labelledby="tab-cost" hidden>
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>Trip budget</h3><span class="note">Starting values are illustrative. Change them.</span></div>
+              <div class="pane stay">
+                <div class="two">
+                  <div><label class="lbl" for="kCur">Your currency</label><select class="ctl" id="kCur"></select></div>
+                  <div><label class="lbl" for="kNights">Nights in India</label><input class="ctl" type="number" min="1" id="kNights" value="14"></div>
+                </div>
+                <div class="cost-rows" id="kRows"></div>
+                <p class="t-fine" id="kRate"></p>
+              </div>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>Total</h3><span class="note" id="kTotNote"></span></div>
+              <div class="pane stay">
+                <table class="ktab" id="kTab"></table>
+                <div class="conv">
+                  <p class="imp-h">Quick converter</p>
+                  <div class="two"><input class="ctl" type="number" min="0" id="cvIn" value="1000" aria-label="Amount in rupees"><div class="cmp-fixed" id="cvOut"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Airport help -->
+        <div class="pan" role="tabpanel" id="pan-help" aria-labelledby="tab-help" hidden>
+          <div class="frag">
+            <div class="frag-bar"><h3>What is happening?</h3><span class="note">Real next steps. No one can promise a visa.</span></div>
+            <div class="pane stay">
+              <div class="seg sit" id="sitSeg"></div>
+              <div class="sit-out" id="sitOut"></div>
+            </div>
+          </div>
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>Document wallet</h3><span class="note">Kept on this device. Works offline.</span></div>
+              <div class="pane stay">
+                <div class="imp-acts">
+                  <select class="ctl" id="wKind" aria-label="Document type" style="max-width:220px"><option>e-Visa approval</option><option>Passport copy</option><option>Payment receipt</option><option>Flight ticket</option><option>Insurance</option><option>Hotel booking</option><option>Other</option></select>
+                  <label class="btn file-btn">Add file<input type="file" id="wFile"></label>
+                </div>
+                <ul class="items" id="wList"></ul>
+              </div>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>Before the airline desk</h3><span class="note" id="alNote"></span></div>
+              <div class="pane stay"><ul class="ticks-s" id="alList"></ul></div>
+            </div>
+          </div>
+          <div class="air">
+            <div class="frag">
+              <div class="frag-bar"><h3>Contacts</h3><span class="note">Official numbers, with where each came from</span></div>
+              <div class="pane stay"><ul class="items" id="ctList"></ul></div>
+            </div>
+            <div class="frag">
+              <div class="frag-bar"><h3>If something does not match</h3><span class="note">Only the Indian authorities can change a visa</span></div>
+              <ol class="ladder">
+                <li><b>At home</b><span>Write to the e-Visa helpdesk with your application ID and a screenshot. Corrections take time, so do this days before you fly.</span></li>
+                <li><b>At check-in</b><span>Show the approval email and the passport. Ask the airline to confirm they can see your visa status before you pay for anything else.</span></li>
+                <li><b>At Indian immigration</b><span>Stay calm, show both, and ask for the supervisor. The officer makes the final decision.</span></li>
+              </ol>
+              <div class="air-acts"><button class="btn" type="button" id="packSave">Save offline arrival pack</button><span class="small">One file. Opens with no internet, and prints.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- In India -->
+        <div class="pan" role="tabpanel" id="pan-india" aria-labelledby="tab-india" hidden>
+          <p class="small legend"><span class="tag rule">Official rule</span> comes from a government source named on the line. <span class="tag tip">Good practice</span> is general travel advice, not law.</p>
+          <div class="dd" id="ddGrid"></div>
         </div>
       </div>
     </div>
@@ -981,7 +1266,7 @@ function renderTicket(animate){
   <p class="t-reason">${esc(r.reason)}</p>${note}
   <div class="t-cols"><div><h4>${r.type==='voa'?'Carry':'You will need'}</h4><ul class="t-docs">${docs.map(d=>`<li><b>${esc(d[0])}</b><span>${esc(d[1])}</span></li>`).join('')}</ul></div>
   <div><h4>Dates</h4><ul class="t-dates">${dates.map(d=>{const n=dayDiff(d[1]),c=clockFor(d[0]);return `<li><span>${esc(d[0])}</span><b class="${d[2]?'hot':''}${n>=0&&n<=2&&d[0]!=='Land'?' soon':''}">${esc(fmtD(d[1]))}${c?' · '+esc(c):''}<small>${esc(subFor(d[0],d[1]))}</small></b></li>`}).join('')}</ul>${r.type==='evisa'?'<p class="t-fine">Apply by is the last day that still leaves the required 4 days before landing. Aim to apply earlier in the day.</p>':''}</div></div>
-  <div class="t-acts">${cta}<button class="btn btn-ghost" type="button" id="copyPlan">Copy checklist</button></div>
+  <div class="t-acts">${cta}<a class="btn btn-ghost" href="#dash">Open dashboard</a><button class="btn btn-ghost" type="button" id="copyPlan">Copy checklist</button></div>
   <p class="t-src">Rule from the <a href="${src}" target="_blank" rel="noopener">official ${r.type==='voa'?'visa-on-arrival page':'e-Visa site'}</a>, checked 30 Oct 2026. Unofficial preview, not a visa.</p>`;
   $('#copyPlan').addEventListener('click',e=>copyText([`Pravesh entry plan (unofficial)`,`${r.kind}: ${r.title}`,r.reason,'','Documents:',...docs.map(d=>`- ${d[0]}: ${d[1]}`),'','Dates:',...dates.map(d=>`- ${d[0]}: ${fmtD(d[1])}${clockFor(d[0])?' '+clockFor(d[0]):''} (${subFor(d[0],d[1])})`),'','Apply only at https://indianvisaonline.gov.in'].join('\n'),e.currentTarget));
   if(animate) Array.from(t.children).forEach((el,i)=>anim(el,[{opacity:.2,filter:'blur(4px)',transform:'translateY(6px)'},{opacity:1,filter:'blur(0)',transform:'none'}],{duration:280,delay:i*30}));
@@ -1002,60 +1287,6 @@ $('#routeForm').addEventListener('submit',e=>e.preventDefault());
 readPlan();renderTicket(false);
 
 
-/* ---------- Airport check and offline pack ---------- */
-function curPlan(){
-  let r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state);
-  if(srvPlan){r=Object.assign({},r,{type:srvPlan.type,kind:srvPlan.kind,title:srvPlan.title,reason:srvPlan.reason});docs=srvPlan.docs.map(d=>[d.name,d.detail]);dates=srvPlan.dates.map(d=>[d.label,new Date(d.date+'T00:00:00'),d.hot])}
-  return {r,docs,dates};
-}
-const normName=x=>x.toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean);
-const normNo=x=>x.toUpperCase().replace(/[^A-Z0-9]/g,'');
-const aPort1=$('#aPort1');aPort1.innerHTML=PORTS.map(p=>`<option value="${p[0]}">${esc(p[1])}</option>`).join('');aPort1.value=state.port;
-function airChecks(){
-  const out=[],v=id=>$(id).value.trim(),arr=sod(state.arr);
-  const pair=(name,a,b,cmp)=>{if(!a&&!b){out.push({n:name,st:'todo',g:'Not filled in yet'});return}if(!a||!b){out.push({n:name,st:'todo',g:'Fill in both sides to compare'});return}cmp(a,b)};
-  pair('Name',v('#aName1'),v('#aName2'),(a,b)=>{const x=normName(a),y=normName(b);
-    if(x.join(' ')===y.join(' '))out.push({n:'Name',st:'ok',g:'Matches'});
-    else if(x.slice().sort().join(' ')===y.slice().sort().join(' '))out.push({n:'Name',st:'warn',g:'Same words in a different order. Ask the helpdesk if it needs correcting'});
-    else out.push({n:'Name',st:'bad',g:'Does not match the passport. Write to the helpdesk now'})});
-  pair('Passport number',normNo(v('#aNo1')),normNo(v('#aNo2')),(a,b)=>out.push(a===b?{n:'Passport number',st:'ok',g:'Matches'}:{n:'Passport number',st:'bad',g:'One character differs. Airlines check this against your passport, so fix it before you fly'}));
-  pair('Date of birth',v('#aDob1'),v('#aDob2'),(a,b)=>out.push(a===b?{n:'Date of birth',st:'ok',g:'Matches'}:{n:'Date of birth',st:'bad',g:'Does not match the passport'}));
-  const ap=aPort1.value,pl=PORTS.find(p=>p[0]===state.port),ap1=PORTS.find(p=>p[0]===ap);
-  out.push(ap===state.port?{n:'Airport',st:'ok',g:`Approval and flight both say ${pl[1]}`}:{n:'Airport',st:'warn',g:`Approval says ${ap1[1]}, your plan lands at ${pl[1]}. Carry the approval and expect a question`});
-  const ex=v('#aExp');
-  if(!ex)out.push({n:'Passport validity',st:'todo',g:'Enter the expiry date'});
-  else{const need=new Date(arr);need.setMonth(need.getMonth()+6);const e=new Date(ex+'T00:00:00');
-    out.push(e>=need?{n:'Passport validity',st:'ok',g:`Expires ${fmtD(e)} ${e.getFullYear()}, at least 6 months after landing`}:{n:'Passport validity',st:'bad',g:`Needs to run to ${fmtD(need)} ${need.getFullYear()} (6 months after landing). Renew first`})}
-  const p=curPlan(),card=p.dates.find(d=>d[0]==='Arrival Card');
-  if(card){const n=dayDiff(card[1]);
-    out.push($('#aEac').checked?{n:'e-Arrival Card',st:'ok',g:'Filed'}:n>0?{n:'e-Arrival Card',st:'todo',g:`Opens ${fmtD(card[1])} (${daysLeftTxt(n).replace(' left','')} away)`}:{n:'e-Arrival Card',st:'bad',g:'Window is open. File it today'})}
-  return out;
-}
-const AIR_LBL={ok:'Pass',bad:'Fix',warn:'Check',todo:'To do'};
-function renderAirport(){
-  const pl=PORTS.find(p=>p[0]===state.port);
-  $('#aPort2').textContent='Your plan: '+pl[1];
-  $('#aArrLbl').textContent='Landing '+fmtD(state.arr)+' '+state.arr.getFullYear();
-  const c=airChecks(),okN=c.filter(x=>x.st==='ok').length,bad=c.filter(x=>x.st==='bad').length;
-  $('#airChecks').innerHTML=c.map(x=>`<li class="${x.st==='todo'?'info':x.st}"><span class="chk-n">${esc(x.n)}</span><span class="chk-d">${esc(x.g)}</span><span class="pill">${AIR_LBL[x.st]}</span></li>`).join('');
-  $('#airNote').textContent=bad?`${bad} to fix`:`${okN} of ${c.length} clear`;
-}
-$('#airForm').addEventListener('input',renderAirport);$('#airForm').addEventListener('change',renderAirport);
-renderAirport();window.__air=()=>{aPort1.value=aPort1.value;renderAirport()};
-function buildPack(){
-  const {r,docs,dates}=curPlan(),c=airChecks(),made=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-  const row=(a,b)=>`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`;
-  const dl=dates.map(d=>row(d[0],`${fmtD(d[1])} ${d[1].getFullYear()}${clockFor(d[0])?' · '+clockFor(d[0]):''}`)).join('');
-  const dc=docs.map(d=>row(d[0],d[1])).join('');
-  const ck=c.map(x=>row(x.n,`${AIR_LBL[x.st]} - ${x.g}`)).join('');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pravesh arrival pack</title><style>body{font:16px/1.5 system-ui,sans-serif;max-width:720px;margin:0 auto;padding:20px;color:#1f2b4d}h1{font-size:26px;margin:0}h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:26px 0 6px;color:#565e75}table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-top:1px solid #ddd;vertical-align:top}td:first-child{font-weight:600;width:38%}ol{padding-left:20px}p.s{color:#565e75;font-size:13.5px}</style></head><body>
-<h1>${esc(r.title)}</h1><p class="s">${esc(r.kind)} · landing at ${esc(r.port[1])} · pack made ${made}. Unofficial, not a visa. Rules checked 30 Oct 2026.</p>
-<h2>Dates</h2><table>${dl}</table><h2>Carry</h2><table>${dc}</table>
-<h2>Checks when this pack was made</h2><table>${ck}</table>
-<h2>If something does not match</h2><ol><li>Write to the e-Visa helpdesk with your application ID and a screenshot: indian-evisa@gov.in, +91 82 7808 7808.</li><li>At check-in, show the approval email and passport and ask the airline to confirm your visa status.</li><li>At Indian immigration, stay calm, show both and ask for the supervisor. The officer decides.</li></ol>
-<p class="s">Only the Indian authorities can change a visa. Official site: https://indianvisaonline.gov.in</p></body></html>`;
-}
-$('#packSave').addEventListener('click',e=>saveBlob(new Blob([buildPack()],{type:'text/html'}),'pravesh-arrival-pack.html',e.currentTarget));
 
 /* Tilt: a spring follows the pointer over the plan, so the result reads as a document you hold. */
 (function tilt(){
@@ -1140,7 +1371,7 @@ async function samplePassport(){
   const F=[['Type','P'],['Code','UTO'],['Passport No.','L898902C3'],['Surname','ERIKSSON'],['Given names','ANNA MARIA'],['Nationality','UTOPIAN'],['Date of birth','12 AUG 1974'],['Sex','F'],['Date of expiry','15 APR 2032']];
   F.forEach((f,i)=>{const col=i<3?i:(i-3)%2,row=i<3?0:1+Math.floor((i-3)/2),fx=720+col*(i<3?440:660),fy=310+row*150;x.fillStyle='#565e75';x.font='500 28px "Hanken Grotesk",sans-serif';x.fillText(f[0].toUpperCase(),fx,fy);x.fillStyle='#101a33';x.font='600 46px "Hanken Grotesk",sans-serif';x.fillText(f[1],fx,fy+56)});
   x.save();x.translate(W*.62,H*.5);x.rotate(-.22);x.fillStyle='rgba(169,51,34,.14)';x.font='600 220px "Hanken Grotesk",sans-serif';x.textAlign='center';x.fillText('SPECIMEN',0,60);x.restore();
-  x.fillStyle='rgba(255,255,255,.78)';x.fillRect(0,1090,W,H-1090);x.fillStyle='#101a33';x.font='500 62px ui-monospace,Menlo,Consolas,monospace';x.fillText('P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<',110,1240);x.fillText('L898902C36UTO7408122F3204159ZE184226B<<<<<10',110,1370);
+  x.fillStyle='rgba(255,255,255,.78)';x.fillRect(0,1090,W,H-1090);x.fillStyle='#101a33';x.font='500 62px ui-monospace,Menlo,Consolas,monospace';x.fillText('P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<',110,1240);x.fillText('L898902C36UTO7408122F3204153ZE184226B<<<<<16',110,1370);
   const im=x.getImageData(0,0,W,H),d=im.data;for(let i=0;i<d.length;i+=4){const n=(Math.random()-.5)*10;d[i]+=n;d[i+1]+=n;d[i+2]+=n}x.putImageData(im,0,0);
   return {blob:await toBlob(c,'image/png'),name:'sample-passport-page.png'};
 }
@@ -1298,6 +1529,404 @@ async function api(path,o={}){
   }catch(e){return {ok:false,status:0,data:null}}finally{clearTimeout(to)}
 }
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------- Dashboard: the whole journey after the entry plan ---------- */
+function curPlan(){
+  let r=routeFor(state),docs=docsFor(r,state),dates=datesFor(r,state);
+  if(srvPlan){r=Object.assign({},r,{type:srvPlan.type,kind:srvPlan.kind,title:srvPlan.title,reason:srvPlan.reason});docs=srvPlan.docs.map(d=>[d.name,d.detail]);dates=srvPlan.dates.map(d=>[d.label,new Date(d.date+'T00:00:00'),d.hot])}
+  return {r,docs,dates};
+}
+const DASH_KEY='pravesh.dash.v1';
+const dash=Object.assign({tab:'over',items:[],ctype:null,adult:true,abroad:false,rate:38.5,cash:'',other:'',cur:null,costs:{},manual:{},nights:14,status:'none',app:'',vcat:null,grant:'',dep:'',sit:'pending',al:{},packSaved:false},(()=>{try{return JSON.parse(store.get(DASH_KEY)||'{}')}catch(e){return {}}})());
+const saveDash=()=>store.set(DASH_KEY,JSON.stringify(dash));
+const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const parseD=s=>s?new Date(s+'T00:00:00'):null;
+const fmtY=d=>fmtD(d)+' '+d.getFullYear();
+const mkISO=(y,mo,d)=>{const x=new Date(+y,+mo,+d);return isNaN(x)||x.getMonth()!==+mo||x.getFullYear()!==+y?null:isoDate(x)};
+const loadScript=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Could not load a reader. Check the connection.'));document.head.appendChild(s)});
+
+/* Tabs */
+const TABS=['over','visa','cust','cost','help','india'];
+function showTab(t,focus){
+  TABS.forEach(k=>{const on=k===t;$('#tab-'+k).setAttribute('aria-selected',on);$('#tab-'+k).tabIndex=on?0:-1;$('#pan-'+k).hidden=!on});
+  dash.tab=t;saveDash();if(focus)$('#tab-'+t).focus();
+}
+TABS.forEach(k=>$('#tab-'+k).addEventListener('click',()=>showTab(k)));
+$('.tabs').addEventListener('keydown',e=>{const i=TABS.indexOf(dash.tab),n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showTab(TABS[(i+n+TABS.length)%TABS.length],true)}});
+
+/* ---- Visa: approval vs passport ---- */
+const normName=x=>x.toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(Boolean);
+const normNo=x=>x.toUpperCase().replace(/[^A-Z0-9]/g,'');
+const aPort1=$('#aPort1');aPort1.innerHTML=PORTS.map(p=>`<option value="${p[0]}">${esc(p[1])}</option>`).join('');aPort1.value=state.port;
+function airChecks(){
+  const out=[],v=id=>$(id).value.trim();
+  const pair=(name,a,b,cmp)=>{if(!a&&!b){out.push({n:name,st:'todo',g:'Not filled in yet'});return}if(!a||!b){out.push({n:name,st:'todo',g:'Fill in both sides to compare'});return}cmp(a,b)};
+  pair('Name',v('#aName1'),v('#aName2'),(a,b)=>{const x=normName(a),y=normName(b);
+    if(x.join(' ')===y.join(' '))out.push({n:'Name',st:'ok',g:'Matches'});
+    else if(x.slice().sort().join(' ')===y.slice().sort().join(' '))out.push({n:'Name',st:'warn',g:'Same words in a different order. Ask the helpdesk if it needs correcting'});
+    else out.push({n:'Name',st:'bad',g:'Does not match the passport. Write to the helpdesk now'})});
+  pair('Passport number',normNo(v('#aNo1')),normNo(v('#aNo2')),(a,b)=>out.push(a===b?{n:'Passport number',st:'ok',g:'Matches'}:{n:'Passport number',st:'bad',g:'Differs from the passport. The e-Visa is issued against this number, so fix it before you fly'}));
+  pair('Date of birth',v('#aDob1'),v('#aDob2'),(a,b)=>out.push(a===b?{n:'Date of birth',st:'ok',g:'Matches'}:{n:'Date of birth',st:'bad',g:'Does not match the passport'}));
+  const ap=aPort1.value,pl=PORTS.find(p=>p[0]===state.port),ap1=PORTS.find(p=>p[0]===ap);
+  out.push(ap===state.port?{n:'Airport',st:'ok',g:`Approval and flight both say ${pl[1]}`}:{n:'Airport',st:'warn',g:`Approval says ${ap1[1]}, your plan lands at ${pl[1]}. Carry the approval and expect a question`});
+  const ex=v('#aExp');
+  if(!ex)out.push({n:'Passport validity',st:'todo',g:'Enter the expiry date'});
+  else{const need=sod(new Date());need.setMonth(need.getMonth()+6);const e=parseD(ex);
+    out.push(e>=need?{n:'Passport validity',st:'ok',g:`Expires ${fmtY(e)}, more than 6 months from today`}:{n:'Passport validity',st:'bad',g:`The official rule is 6 months' validity when you apply, so it must run to ${fmtY(need)}. Renew first`})}
+  const card=curPlan().dates.find(d=>d[0]==='Arrival Card');
+  if(card){const n=dayDiff(card[1]);
+    out.push($('#aEac').checked?{n:'e-Arrival Card',st:'ok',g:'Filed'}:n>0?{n:'e-Arrival Card',st:'todo',g:`Opens ${fmtD(card[1])}, ${n} day${n===1?'':'s'} away`}:{n:'e-Arrival Card',st:'bad',g:'The window is open. File it today'})}
+  return out;
+}
+const AIR_LBL={ok:'Pass',bad:'Fix',warn:'Check',todo:'To do'};
+const checkLi=x=>`<li class="${x.st==='todo'?'info':x.st}"><span class="chk-n">${esc(x.n)}</span><span class="chk-d">${esc(x.g)}</span><span class="pill">${AIR_LBL[x.st]}</span></li>`;
+function renderAirport(){
+  const pl=PORTS.find(p=>p[0]===state.port);
+  $('#aPort2').textContent='Your plan: '+pl[1];
+  $('#aArrLbl').textContent='Needs 6 months when you apply';
+  const c=airChecks(),okN=c.filter(x=>x.st==='ok').length,bad=c.filter(x=>x.st==='bad').length;
+  $('#airChecks').innerHTML=c.map(checkLi).join('');
+  $('#airNote').textContent=bad?`${bad} to fix`:`${okN} of ${c.length} clear`;
+}
+
+/* ---- Reading documents: approval text, PDF, screenshot, passport MRZ. All on this device. ---- */
+const say=(t,k)=>{const s=$('#impStatus');s.textContent=t;s.className='imp-status'+(k?' '+k:'')};
+const MON={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
+function toISO(s){
+  s=s.toUpperCase();let m=s.match(/(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);if(m)return mkISO(m[1],m[2]-1,m[3]);
+  m=s.match(/(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/);if(m)return mkISO(m[3],m[2]-1,m[1]);
+  m=s.match(/(\d{1,2})[-\/ ]*([A-Z]{3})[A-Z]*[-\/ ,]*(\d{4})/);if(m&&m[2] in MON)return mkISO(m[3],MON[m[2]],m[1]);
+  return null;
+}
+const PORT_RX={DEL:/DELHI|\bDEL\b/,BOM:/MUMBAI|BOMBAY|\bBOM\b/,BLR:/BENGALURU|BANGALORE|\bBLR\b/,MAA:/CHENNAI|MADRAS|\bMAA\b/,CCU:/KOLKATA|CALCUTTA|\bCCU\b/,HYD:/HYDERABAD|\bHYD\b/,GOX:/GOA|MOPA|\bGOX\b/,COK:/KOCHI|COCHIN|\bCOK\b/,AMD:/AHMEDABAD|\bAMD\b/,JAI:/JAIPUR|\bJAI\b/};
+const FIELDS=[['app',/application\s*(?:id|no\.?|number)|reference\s*(?:no\.?|number)/i],['passport',/passport\s*(?:no\.?|number)/i],['dob',/date\s*of\s*birth|\bd\.?o\.?b\b|birth\s*date/i],
+  ['port',/port\s*of\s*(?:arrival|entry)|(?:arrival|entry)\s*(?:port|airport)|airport\s*of\s*arrival/i],['type',/visa\s*(?:type|category|sub\s*-?\s*type)|type\s*of\s*visa/i],
+  ['grant',/date\s*of\s*(?:grant|issue)|(?:grant|issue)d?\s*(?:on|date)/i],['valid',/valid(?:ity)?\s*(?:up\s*to|upto|until|till)|expiry\s*date|date\s*of\s*expiry/i],
+  ['name',/(?:applicant'?s?\s*|full\s*)?name(?!\s*of\s*(?:father|mother|spouse|husband))/i]];
+function readApproval(text){
+  const lines=text.split(/\r?\n/).map(l=>l.trim()),f={};
+  lines.forEach((l,i)=>{for(const [k,rx] of FIELDS){if(f[k])continue;const m=l.match(rx);if(!m)continue;
+    let val=l.slice(m.index+m[0].length).replace(/^[\s:–\-|=]+/,'').trim();
+    if(!val){for(let j=i+1;j<lines.length&&j<i+3;j++)if(lines[j]){val=lines[j];break}}
+    if(val){f[k]=val;break}}});
+  const out={};
+  if(f.name)out.name=f.name.replace(/[^A-Za-z .'-]/g,' ').replace(/\s+/g,' ').trim();
+  if(f.passport){const m=f.passport.toUpperCase().match(/[A-Z0-9]{6,12}/);if(m)out.no=m[0]}
+  if(f.dob)out.dob=toISO(f.dob);
+  if(f.port){const u=f.port.toUpperCase();out.port=Object.keys(PORT_RX).find(k=>PORT_RX[k].test(u))||null}
+  if(f.grant)out.grant=toISO(f.grant);
+  if(f.app){const m=f.app.match(/[A-Za-z0-9]{6,20}/);if(m)out.app=m[0]}
+  const t=(f.type||'')+' '+text.slice(0,600);
+  out.cat=/5\s*year|five\s*year/i.test(t)?'t5y':/1\s*year|one\s*year|365/i.test(t)&&/touris/i.test(t)?'t1y':/business/i.test(t)?'b1':/medical/i.test(t)?'med':/30\s*days|one\s*month|touris/i.test(t)?'t30':null;
+  if(/\bgranted\b/i.test(text)&&!/not\s+granted/i.test(text))out.granted=true;
+  return out;
+}
+function fill(id,val){if(!val)return 0;const el=$(id);el.value=val;el.classList.add('filled');return 1}
+function applyApproval(o){
+  let n=fill('#aName1',o.name)+fill('#aNo1',o.no)+fill('#aDob1',o.dob);
+  if(o.port){aPort1.value=o.port;aPort1.classList.add('filled');n++}
+  if(o.grant){$('#vGrant').value=o.grant;dash.grant=o.grant;n++}
+  if(o.cat){$('#vCat').value=o.cat;dash.vcat=o.cat;n++}
+  if(o.app){$('#vApp').value=o.app;dash.app=o.app;n++}
+  if(o.granted){$('#vStatus').value='ok';dash.status='ok'}
+  saveDash();refreshDash();
+  say(n?`Read ${n} details from the approval. They are highlighted: check each one against the email.`:'Could not find the approval details in that. Paste the text of the email, or type them in.',n?'ok':'bad');
+}
+const MRZW=[7,3,1],mrzVal=c=>c==='<'?0:/\d/.test(c)?+c:c.charCodeAt(0)-55;
+const mrzCheck=s=>[...s].reduce((t,c,i)=>t+mrzVal(c)*MRZW[i%3],0)%10;
+function readMRZ(text){
+  const fixN=s=>s.replace(/O/g,'0').replace(/[IL]/g,'1').replace(/S/g,'5').replace(/B/g,'8').replace(/Z/g,'2').replace(/G/g,'6');
+  const lines=text.toUpperCase().split(/\n/).map(l=>l.replace(/\s+/g,'').replace(/[«‹]/g,'<').replace(/[^A-Z0-9<]/g,'')).filter(l=>l.length>=28);
+  for(let i=0;i<lines.length-1;i++){
+    let a=lines[i],b=lines[i+1];if(!/^P/.test(a)||!a.includes('<<'))continue;
+    a=(a+'<'.repeat(44)).slice(0,44);b=(b+'<'.repeat(44)).slice(0,44);
+    const parts=a.slice(5).replace(/(?:<|[KLC](?=[KLC<]*$)){3,}$/,'').split('<<').filter(Boolean),sur=(parts[0]||'').replace(/</g,' ').trim(),giv=parts.slice(1).join(' ').replace(/</g,' ').replace(/\s+/g,' ').trim();
+    const no=b.slice(0,9),dob=fixN(b.slice(13,19)),exp=fixN(b.slice(21,27));
+    const ok=[mrzCheck(no)===+fixN(b[9]),mrzCheck(dob)===+fixN(b[19]),mrzCheck(exp)===+fixN(b[27])];
+    const yy=(s,fut)=>{const y=+s.slice(0,2),now=new Date().getFullYear()%100;return fut?2000+y:(y>now?1900+y:2000+y)};
+    return {name:(giv+' '+sur).trim(),no:no.replace(/</g,''),dob:mkISO(yy(dob),+dob.slice(2,4)-1,+dob.slice(4,6)),exp:mkISO(yy(exp,true),+exp.slice(2,4)-1,+exp.slice(4,6)),ok};
+  }
+  return null;
+}
+let tessP=null;
+async function ocr(blob){
+  if(!window.Tesseract){say('Loading the text reader. The first time takes a few seconds.');tessP=tessP||loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');await tessP}
+  const r=await Tesseract.recognize(blob,'eng',{logger:m=>{if(m.status==='recognizing text')say(`Reading the image… ${Math.round(m.progress*100)}%`)}});
+  return r.data.text;
+}
+async function pdfText(file){
+  if(!window.pdfjsLib){say('Loading the PDF reader…');await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+    try{const t=await (await fetch('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js')).text();pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([t],{type:'text/javascript'}))}catch(e){}}
+  const doc=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;let out='';
+  for(let i=1;i<=Math.min(doc.numPages,4);i++){const tc=await (await doc.getPage(i)).getTextContent();out+=tc.items.map(it=>it.str+(it.hasEOL?'\n':' ')).join('')+'\n'}
+  if(out.replace(/\s/g,'').length<20){const pg=await doc.getPage(1),vp=pg.getViewport({scale:2}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;out=await ocr(await toBlob(c,'image/png'))}
+  return out;
+}
+async function ocrMRZ(blob){
+  if(!window.Tesseract){say('Loading the text reader. The first time takes a few seconds.');tessP=tessP||loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');await tessP}
+  const img=await createImageBitmap(blob),h=Math.round(img.height*.34),sc=Math.max(1,1800/img.width),c=document.createElement('canvas');
+  c.width=Math.round(img.width*sc);c.height=Math.round(h*sc);c.getContext('2d').drawImage(img,0,img.height-h,img.width,h,0,0,c.width,c.height);
+  const w=await Tesseract.createWorker('eng',1,{logger:m=>{if(m.status==='recognizing text')say(`Reading the passport… ${Math.round(m.progress*100)}%`)}});
+  try{await w.setParameters({tessedit_char_whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<'});return (await w.recognize(c)).data.text}finally{w.terminate()}
+}
+async function readPassport(blob){
+  try{let m=readMRZ(await ocrMRZ(blob));if(!m)m=readMRZ(await ocr(blob));
+    if(!m){say('Could not find the two machine-readable lines. Take the photo straight on, with the bottom of the page in view.','bad');return}
+    fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);refreshDash();
+    const bad=['passport number','date of birth','expiry date'].filter((x,i)=>!m.ok[i]);
+    say(bad.length?`Read the passport, but the check digit for the ${bad.join(' and ')} did not add up. Check those fields by eye.`:'Read the passport. All three check digits add up.',bad.length?'bad':'ok');
+  }catch(e){say(e.message||'Could not read that image.','bad')}
+}
+$('#impRead').addEventListener('click',()=>applyApproval(readApproval($('#impText').value)));
+$('#impFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const t=f.type==='application/pdf'?await pdfText(f):await ocr(f);$('#impText').value=t.trim();applyApproval(readApproval(t))}catch(err){say(err.message||'Could not read that file.','bad')}});
+$('#mrzFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)readPassport(f)});
+$('#mrzSample').addEventListener('click',async()=>readPassport((await samplePassport()).blob));
+$('#impSample').addEventListener('click',()=>{
+  const g=addDays(sod(new Date()),-2),p=PORTS.find(x=>x[0]===state.port),d=x=>String(x.getDate()).padStart(2,'0')+'/'+String(x.getMonth()+1).padStart(2,'0')+'/'+x.getFullYear();
+  $('#impText').value=`SAMPLE ONLY. NOT A REAL VISA.\nSubject: e-Visa application status: GRANTED\n\nApplication ID: SAMPLE7Q2X91\nApplicant Name: ANNA MARIA ERIKSSON\nPassport Number: L898902C8\nDate of Birth: 12/08/1974\nNationality: UTOPIA\nVisa Type: e-Tourist Visa (1 Year)\nPort of Arrival: ${p[1].toUpperCase()}\nDate of Grant: ${d(g)}\n\nThis sample has one deliberate typo for the demo.`;
+  applyApproval(readApproval($('#impText').value));
+});
+$$('#airForm .ctl').forEach(el=>el.addEventListener('input',()=>el.classList.remove('filled')));
+
+/* ---- Visa: validity and stay ---- */
+const LONG_STAY=['US','GB','CA','JP'];
+function renderStay(){
+  const cat=$('#vCat').value,g=parseD($('#vGrant').value),a=sod(state.arr),dp=parseD($('#vDep').value),rows=[],cont=LONG_STAY.includes(state.nat)?180:90;
+  $('#vArr').value=isoDate(a);
+  const stay=dp?Math.round((dp-a)/DAY)+1:null;
+  const leave=(n,why)=>{const end=addDays(a,n-1);rows.push(['Leave India by',fmtY(end),false,why]);if(dp&&dp>end)rows.push(['Your departure',fmtY(dp),true,`${stay} days is over the limit`])};
+  let note='';
+  if(cat==='voa'){leave(60,'up to 60 days, two entries');note='Visa on arrival, as in the rules on this site: up to 60 days and two entries, at the six designated airports only.'}
+  else if(cat==='t30'){leave(30,'30 days from first arrival');note='Official: valid 30 days from the date of first arrival, multiple entry, non-extendable and non-convertible. Counted here with arrival as day 1.'}
+  else if(cat==='t1y'||cat==='t5y'){
+    if(g){const end=cat==='t1y'?addDays(g,364):new Date(g.getFullYear()+5,g.getMonth(),g.getDate()-1);rows.push(['Valid for entry until',fmtY(end),dp&&dp>end])}else rows.push(['Valid for entry until','Enter the grant date',false]);
+    leave(cont,`${cont} days continuous stay for your passport`);
+    if(stay&&stay>180)rows.push(['Calendar year',`${stay} days`,true,'over 180 days in one calendar year']);
+    note=`Official: ${cat==='t1y'?'one year':'five years'} from the grant date, multiple entry. Each visit up to ${cont} days for your passport (180 for the US, UK, Canada and Japan, 90 for others), and no more than 180 days in a calendar year.`}
+  else if(cat==='b1'){if(g)rows.push(['Valid for entry until',fmtY(addDays(g,364)),dp&&dp>addDays(g,364)]);leave(180,'180 days continuous stay');note='Official: one year from the grant date, multiple entry, continuous stay of up to 180 days per visit.'}
+  else note='The official e-Visa page gives two different figures for the e-Medical Visa: one year from arrival in its table, 60 days in its FAQ. Pravesh will not guess. Check the official page before you plan the stay.';
+  if(stay)rows.unshift(['Planned stay',`${stay} day${stay===1?'':'s'}`,false]);
+  $('#stayOut').innerHTML=rows.map(r=>`<li><span>${esc(r[0])}</span><b class="${r[2]?'soon':''}">${esc(r[1])}${r[3]?`<small>${esc(r[3])}</small>`:''}</b></li>`).join('');
+  $('#stayNote').textContent=note;
+  return rows.some(r=>r[2]);
+}
+
+/* ---- Visa: status and next step ---- */
+const ST_LBL={none:'Not applied',sub:'Not paid',paid:'Under process',ok:'Granted',no:'Rejected'};
+function renderStatus(){
+  const s=$('#vStatus').value,{r,dates}=curPlan(),ab=dates.find(d=>d[0]==='Apply by'),card=dates.find(d=>d[0]==='Arrival Card'),id=$('#vApp').value.trim();
+  const box=$('#statusNext');box.className='next'+(s==='ok'?' ok':s==='no'?' bad':'');
+  const H={
+    none:r.type==='voa'?'<b>No application needed for your route.</b>Your passport gets a visa on arrival at this airport. Carry the documents in your plan.'
+      :`<b>Apply on the official site only.</b>${ab?`Apply by ${esc(fmtD(ab[1]))}, ${esc(daysLeftTxt(dayDiff(ab[1])).toLowerCase())}. `:''}The fee is non-refundable once paid, and there is a bank charge of 3% on top.`,
+    sub:'<b>Saved, but not paid.</b>Pay from one tab only. More than 3 failed payment attempts blocks the application. The Payment section of this page has the checklist and the attempt counter.',
+    paid:`<b>Paid. Wait for the email.</b>Check the status on the official site${id?` with application ID ${esc(id)}`:''}. After a debit, the status can take up to 4 hours to update. Do not pay again before then.`,
+    ok:`<b>Granted.</b>Run the approval check above, save the approval in the Airport help wallet${card?`, and file the e-Arrival Card from ${esc(fmtD(card[1]))}`:''}.`,
+    no:'<b>Rejected. What you can do:</b><ul><li>The fee is not refunded. The official page says it pays for processing, whatever the result.</li><li>Read the email for anything you can correct, and check the details with the comparison above.</li><li>Applying again is a new application with a new fee.</li><li>If the trip is close, ask the nearest Indian mission about a regular visa.</li><li>Do not book anything non-refundable until you hold a grant, and ignore any site that promises approval.</li></ul>'};
+  box.innerHTML=H[s];
+}
+
+/* ---- Rules version: tells the traveller when the rules changed since the last visit ---- */
+(async()=>{
+  const r=await api('/api/health'),v=r.ok&&r.data.rulesVersion,seen=store.get('pravesh.rulesSeen'),el=$('#rulesNote');
+  if(!v){el.textContent='Rules checked against the official site on 30 Oct 2026.';return}
+  if(seen&&seen!==v){el.className='rules-note new';el.textContent=`The rules changed since your last visit (${seen} to ${v}). Check your plan again.`}
+  else el.textContent=`Rules version ${v}, checked against the official site on 30 Oct 2026. If they change, this line will tell you on your next visit.`;
+  store.set('pravesh.rulesSeen',v);
+})();
+
+/* ---- Customs (Baggage Rules, 2026) ---- */
+const ITEMS={elec:['Phone, camera or other electronics','value'],laptop:['New laptop or notepad','value'],gift:['Gifts and other new goods','value'],jewel:['Jewellery','grams + value'],
+  alc:['Alcohol or wine','litres'],cig:['Cigarettes','sticks'],cigar:['Cigars','cigars'],tob:['Tobacco','grams'],gold:['Gold or silver, not as jewellery','value'],tv:['Television','value'],
+  used:['Used personal effects','value'],arms:['Firearm or cartridges','quantity'],drone:['Drone','quantity'],satph:['Satellite phone','quantity'],meds:['Prescription medicines','quantity']};
+$('#iKind').innerHTML=Object.entries(ITEMS).map(([k,v])=>`<option value="${k}">${esc(v[0])}</option>`).join('');
+const iHint=()=>{$('#iHint').textContent='Enter: '+ITEMS[$('#iKind').value][1]+'. Values in rupees.'};
+$('#iKind').addEventListener('change',iHint);iHint();
+$('#iAdd').addEventListener('click',()=>{dash.items.push({k:$('#iKind').value,q:+$('#iQty').value||0,v:+$('#iVal').value||0});$('#iQty').value='';$('#iVal').value='';saveDash();refreshDash()});
+$('#iList').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;dash.items.splice(+b.dataset.rm,1);saveDash();refreshDash()});
+function custType(){return dash.ctype||(state.purpose==='tourism'?'tourist':'nontourist')}
+function customs(){
+  const type=custType(),allow=type==='tourist'?25000:75000,rows=[];let counted=0,laptops=0;
+  const sum=k=>dash.items.filter(i=>i.k===k).reduce((t,i)=>t+i.q,0);
+  dash.items.forEach(i=>{const n=ITEMS[i.k][0];
+    switch(i.k){
+      case 'used':rows.push({n,st:'ok',g:'Used personal effects for daily needs are free'});break;
+      case 'laptop':{const free=dash.adult?Math.max(0,1-laptops):0,q=Math.max(1,i.q||1);laptops+=q;const pay=i.v*Math.max(0,q-free)/q;counted+=pay;
+        rows.push(free?{n,st:'ok',g:'One new laptop or notepad is free for anyone 18 or older'+(q>1?'; the rest count towards the allowance':'')}:{n,st:'warn',g:'Counts towards the free allowance'});break}
+      case 'jewel':{const eli=type==='resident'&&dash.abroad,g=i.q||0;
+        if(eli&&g<=20)rows.push({n,st:'ok',g:'Up to 20 g is free after a year abroad (40 g for a female passenger)'});
+        else if(eli&&g<=40)rows.push({n,st:'warn',g:'Free only for a female passenger (up to 40 g). Otherwise 20 g'});
+        else{counted+=i.v;rows.push({n,st:'warn',g:'Counts towards the free allowance'})}break}
+      case 'alc':case 'cig':case 'cigar':case 'tob':break;
+      case 'gold':case 'tv':counted+=0;rows.push({n,st:'bad',g:'Outside the free allowance under Annexure-I. Declare it'});break;
+      case 'arms':rows.push({n,st:'bad',g:'Outside the free allowance and needs a licence. Declare it and check the rules before you fly'});break;
+      case 'drone':case 'satph':rows.push({n,st:'bad',g:'Restricted in India. Check for permission before you fly and declare it. Not confirmed by Pravesh from an official source'});break;
+      case 'meds':rows.push({n,st:'warn',g:'Good practice: carry the prescription and keep them in their original packs'});break;
+      default:counted+=i.v;rows.push({n,st:'warn',g:`Counts towards the free allowance (${inr(i.v)})`});
+    }});
+  const lim=[['alc',2,'2 litres of alcohol or wine'],['cig',100,'100 cigarettes'],['cigar',25,'25 cigars'],['tob',125,'125 g of tobacco']];
+  lim.forEach(([k,max,txt])=>{const q=sum(k);if(!q)return;rows.push(q>max?{n:ITEMS[k][0],st:'bad',g:`${q} is over ${txt}. The excess is outside the free allowance: declare it`}:{n:ITEMS[k][0],st:'ok',g:`Within ${txt}`})});
+  const excess=Math.max(0,counted-allow),duty=excess*(+$('#cRate').value||0)/100;
+  return {type,allow,rows,counted,excess,duty,declare:excess>0||rows.some(r=>r.st==='bad')};
+}
+function renderCustoms(){
+  const c=customs(),T={tourist:'foreign tourist',nontourist:'foreigner on a non-tourist visa',resident:'resident or tourist of Indian origin'};
+  $('#ct-'+c.type[0]).checked=true;$('#cAdult').checked=dash.adult;$('#cAbroad').checked=dash.abroad;
+  $('#iList').innerHTML=dash.items.length?dash.items.map((i,k)=>`<li><div>${esc(ITEMS[i.k][0])} <span>${i.q?esc(ITEMS[i.k][1]==='value'?'× '+i.q:i.q+' '+ITEMS[i.k][1].split(' ')[0]):''}${i.v?' · '+inr(i.v):''}</span></div><button class="x" type="button" data-rm="${k}">Remove</button></li>`).join(''):'<li><span>Nothing added yet. Add what you are bringing: gifts, electronics, alcohol, cigarettes.</span></li>';
+  $('#cOut').innerHTML=c.rows.length?c.rows.map(checkLi).join(''):checkLi({n:'Free allowance',st:'todo',g:`${inr(c.allow)} for a ${T[c.type]} arriving by air. Add items on the left`});
+  $('#cDuty').innerHTML=`<span>Counted towards the allowance</span><b>${inr(c.counted)}</b><span>Your free allowance, as a ${esc(T[c.type])}</span><b>${inr(c.allow)}</b><span>Over the allowance</span><b>${inr(c.excess)}</b><span class="tot">Estimated duty</span><b class="tot">${inr(c.duty)}</b>`;
+  $('#cNote').textContent=c.declare?'Declare: use the red channel':'Nothing to declare so far';
+  const cash=+$('#cCash').value||0,oth=+$('#cOther').value||0,dec=cash>5000||cash+oth>10000,box=$('#cCur');
+  box.className='next'+(cash+oth?dec?' bad':' ok':'');
+  box.innerHTML=(dec?'<b>Declare it on a Currency Declaration Form.</b>':'<b>'+(cash+oth?'No currency declaration needed at these amounts.':'Enter what you carry.')+'</b>')+'Declaration applies when foreign banknotes are over USD 5,000, or banknotes and travellers\' cheques together are over USD 10,000. These figures are from the FEMA currency regulations, 2015, and the RBI\'s declaration form. Pravesh could not open the regulation itself, so confirm before carrying large sums. Rules for carrying Indian rupees are different: check before you carry any.';
+  return c;
+}
+$('#cType').addEventListener('change',e=>{dash.ctype=e.target.value;saveDash();refreshDash()});
+['#cAdult','#cAbroad'].forEach(id=>$(id).addEventListener('change',()=>{dash.adult=$('#cAdult').checked;dash.abroad=$('#cAbroad').checked;saveDash();refreshDash()}));
+['#cRate','#cCash','#cOther'].forEach(id=>$(id).addEventListener('input',()=>{dash.rate=$('#cRate').value;dash.cash=$('#cCash').value;dash.other=$('#cOther').value;saveDash();refreshDash()}));
+$('#cSave').addEventListener('click',e=>{const c=customs(),lines=['Pravesh customs checklist (unofficial). Baggage Rules, 2026.','',`Free allowance: ${inr(c.allow)}`,`Counted: ${inr(c.counted)}  Over: ${inr(c.excess)}  Estimated duty at ${$('#cRate').value}%: ${inr(c.duty)}`,'',...c.rows.map(r=>`[${AIR_LBL[r.st]}] ${r.n}: ${r.g}`),'',c.declare?'Use the red channel and declare.':'Nothing to declare on this list.','Customs officers make the final assessment.'];
+  saveBlob(new Blob([lines.join('\n')],{type:'text/plain'}),'pravesh-customs-checklist.txt',e.currentTarget)});
+
+/* ---- Costs ---- */
+const CUR_OF={JP:'JPY',KR:'KRW',AE:'AED',US:'USD',GB:'GBP',DE:'EUR',FR:'EUR',NL:'EUR',IT:'EUR',ES:'EUR',SE:'SEK',AU:'AUD',NZ:'NZD',SG:'SGD',BR:'BRL',ZA:'ZAR',KE:'KES'};
+const CURS=['USD','EUR','GBP','JPY','KRW','AED','SEK','AUD','NZD','SGD','BRL','ZAR','KES','CAD','CHF'];
+$('#kCur').innerHTML=CURS.map(c=>`<option>${c}</option>`).join('');
+const COSTS=[['visa','Government e-Visa fee','In USD, from the official fee table',0,'usd',1],['agent','Agent or service fee','In USD. Not needed: the official site charges no express fee',0,'usd',1],
+  ['transfer','Airport to first stay','One way',1200,'inr',1],['sim','SIM card and data','For the trip',500,'inr',1],['ins','Travel insurance','For the trip',2500,'inr',1],
+  ['hotel','Accommodation','Per night',3000,'inr','n'],['local','Local transport','Per day',600,'inr','n'],['daily','Food and daily spend','Per day',1500,'inr','n']];
+let rates=null;
+api('/api/rates').then(r=>{if(r.ok&&r.data&&r.data.rates){rates=r.data;refreshDash()}});
+$('#kRows').innerHTML=COSTS.map(c=>`<label for="k-${c[0]}">${esc(c[1])}<span>${esc(c[2])}</span></label><input class="ctl" type="number" min="0" step="any" id="k-${c[0]}">`).join('');
+COSTS.forEach(c=>{const el=$('#k-'+c[0]);el.value=dash.costs[c[0]]??c[3];el.addEventListener('input',()=>{dash.costs[c[0]]=el.value;saveDash();refreshDash()})});
+$('#kNights').value=dash.nights;$('#kNights').addEventListener('input',()=>{dash.nights=Math.max(1,+$('#kNights').value||1);saveDash();refreshDash()});
+$('#kCur').addEventListener('change',()=>{dash.cur=$('#kCur').value;saveDash();refreshDash()});
+$('#cvIn').addEventListener('input',()=>refreshDash());
+function perInr(cur){if(cur==='INR')return 1;if(rates&&rates.rates[cur])return rates.rates[cur];const m=+dash.manual[cur];return m>0?1/m:null}
+function renderCosts(duty){
+  const cur=dash.cur||CUR_OF[state.nat]||'USD';$('#kCur').value=cur;
+  const pu=perInr('USD'),pc=perInr(cur),n=dash.nights,rows=[];
+  COSTS.forEach(c=>{const v=+($('#k-'+c[0]).value)||0;let x=c[4]==='usd'?(pu?v/pu:null):v;if(x!==null&&c[5]==='n')x*=n;rows.push([c[1]+(c[5]==='n'?` × ${n}`:''),x]);
+    if(c[0]==='visa'&&v&&pu)rows.push(['Bank charge, 3% of the fee',v*.03/pu])});
+  rows.push(['Customs duty, from the Customs tab',duty]);
+  const ok=rows.every(r=>r[1]!==null),tot=rows.reduce((t,r)=>t+(r[1]||0),0),home=x=>pc&&x!==null?(x*pc).toLocaleString('en-GB',{style:'currency',currency:cur,maximumFractionDigits:cur==='JPY'||cur==='KRW'?0:2}):'–';
+  $('#kTab').innerHTML=`<tr><th>Item</th><th>INR</th><th>${cur}</th></tr>`+rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]===null?'needs a rate':inr(r[1])}</td><td>${home(r[1])}</td></tr>`).join('')+`<tr class="tot"><td>Total</td><td>${inr(tot)}</td><td>${home(tot)}</td></tr>`;
+  $('#kTotNote').textContent=+$('#k-visa').value?'Illustrative, not a quote':'Add the visa fee for a full total';
+  const rp=$('#kRate');
+  if(rates&&rates.rates[cur])rp.textContent=`1 ${cur} = ₹${(1/rates.rates[cur]).toFixed(2)}. Live rate from ${rates.source}, updated ${new Date(rates.updated).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}.`;
+  else if(cur!=='INR'&&!rp.querySelector('input')){rp.innerHTML=`Live rates are not available here. Rupees for 1 ${cur}: <input class="ctl" type="number" min="0" step="any" id="kMan" style="width:120px;height:32px;display:inline-block" value="${esc(dash.manual[cur]||'')}">`;$('#kMan').addEventListener('input',e=>{dash.manual[cur]=e.target.value;saveDash();refreshDash()})}
+  const cv=+$('#cvIn').value||0;$('#cvOut').textContent=pc?`₹${cv.toLocaleString('en-IN')} = ${home(cv)}`:'Needs a rate';
+  return ok?tot:null;
+}
+
+/* ---- Airport help ---- */
+const SIT={
+  pending:['Visa still pending',['Check the status on the official site with your application ID.','Write to the e-Visa helpdesk with the application ID and your flight date.','Ask the airline about moving to a later flight. Airlines normally will not board you without a granted e-Visa.'],['Do not pay for a second application or an "express" service. The official site charges no express fee.','Do not fly hoping to sort it out on arrival, unless your passport gets a visa on arrival at that airport.']],
+  rejected:['Visa rejected',['Read the email for anything that can be corrected.','If you must travel soon, contact the nearest Indian mission about a regular visa.','Talk to the airline about changing or cancelling the flight.'],['Do not expect the e-Visa fee back. The official page says it is non-refundable.','Do not use a site that promises approval.']],
+  missing:['Missing a document',['Open the document wallet below. The approval, passport copy and receipts are stored on this device and open offline.','Ask the airline desk whether they can view the approval on your phone or print it.'],['Do not travel without the original passport. A copy is not a travel document.']],
+  wrong:['Details wrong on the visa',['Open the Visa tab to see exactly which field differs.','Write to the e-Visa helpdesk with the application ID and a screenshot of the difference.','Show the airline both documents. The airline and Indian immigration decide whether a difference is acceptable.'],['Do not renew or replace the passport after the grant without checking. The e-Visa is issued against the passport number in the application.']],
+  pay:['Payment failed or unpaid',['Use the Payment section of this page: the 4-hour timer, the attempt counter and the evidence letter.','Check the status under Verify Payment on the official site.'],['Do not pay again before 4 hours have passed.','More than 3 failed attempts blocks the application.']],
+  board:['Refused boarding',['Ask the airline which document failed their check. Ask for it in writing.','Fix that item with the comparison in the Visa tab and the helpdesk.','Ask about rebooking terms before you leave the desk.'],['Do not argue the visa decision at the desk. Airlines apply the destination country\'s entry rules.']]};
+$('#sitSeg').innerHTML=Object.entries(SIT).map(([k,v])=>`<input type="radio" name="sit" id="sit-${k}" value="${k}"><label for="sit-${k}">${esc(v[0])}</label>`).join('');
+$('#sitSeg').addEventListener('change',e=>{dash.sit=e.target.value;saveDash();renderSit()});
+function renderSit(){const s=SIT[dash.sit]||SIT.pending;$('#sit-'+(SIT[dash.sit]?dash.sit:'pending')).checked=true;
+  $('#sitOut').innerHTML=`<div class="next ok"><b>Do this</b><ol>${s[1].map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div><div class="next bad"><b>Avoid</b><ul>${s[2].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`}
+function airlineList(){const {r,dates}=curPlan(),card=dates.find(d=>d[0]==='Arrival Card'),L=[['pass','Original passport','Official rule: at least 6 months valid when you apply']];
+  if(r.type==='evisa')L.push(['eta','The approval email, saved or printed','Kept in the wallet below']);
+  L.push(['ret','Return or onward ticket','Good practice: airlines often ask'],['addr','Address of your first stay','You need it for the e-Arrival Card']);
+  if(card)L.push(['eac','e-Arrival Card filed',`Opens ${fmtD(card[1])}, within 72 hours of landing`]);
+  if(r.type==='evisa')L.push(['rcpt','e-Visa payment receipt','In case the payment is questioned']);return L}
+function renderAirline(){const L=airlineList(),d=L.filter(x=>dash.al[x[0]]).length;
+  $('#alList').innerHTML=L.map(x=>`<li><input type="checkbox" id="al-${x[0]}" data-al="${x[0]}" ${dash.al[x[0]]?'checked':''}><label for="al-${x[0]}">${esc(x[1])}<small>${esc(x[2])}</small></label></li>`).join('');
+  $('#alNote').textContent=`${d} of ${L.length} ready`;return [d,L.length]}
+$('#alList').addEventListener('change',e=>{const k=e.target.dataset.al;if(k){dash.al[k]=e.target.checked;saveDash();refreshDash()}});
+const CONTACTS=[['e-Visa helpdesk','+91 82 7808 7808','tel:+918278087808','Official e-Visa home page'],['e-Visa email','indian-evisa@gov.in','mailto:indian-evisa@gov.in','Official e-Visa home page'],
+  ['SBI payments, 24 × 7','+91-022-65361671','tel:+912265361671','Official e-Visa home page'],['Axis Bank payments, 24 × 7','+91 1800-419-0073','tel:+9118004190073','Official e-Visa home page'],
+  ['Tourist helpline','1363','tel:1363','Incredible India emergency page'],['National emergency number','112','tel:112','Incredible India emergency page']];
+$('#ctList').innerHTML=CONTACTS.map(c=>`<li><div><b>${esc(c[0])}</b><br><span>${esc(c[3])}</span></div><a href="${c[2]}">${esc(c[1])}</a></li>`).join('');
+
+/* Wallet: files stay in this browser's IndexedDB */
+const W={db:null,open(){return this.db||(this.db=new Promise((res,rej)=>{const q=indexedDB.open('pravesh-wallet',1);q.onupgradeneeded=()=>q.result.createObjectStore('docs',{keyPath:'id',autoIncrement:true});q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)}))},
+  async run(mode,fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('docs',mode),q=fn(t.objectStore('docs'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})}};
+let walletN=0;
+async function renderWallet(){let all=[];try{all=await W.run('readonly',s=>s.getAll())}catch(e){$('#wList').innerHTML='<li><span>Storage is not available in this browser mode.</span></li>';return}
+  walletN=all.length;
+  $('#wList').innerHTML=all.length?all.map(d=>`<li><div><b>${esc(d.kind)}</b> <span>${esc(d.name)} · ${Math.max(1,Math.round(d.blob.size/1024))} KB</span></div><div><button class="x" type="button" data-open="${d.id}">Open</button><button class="x" type="button" data-del="${d.id}">Remove</button></div></li>`).join('')
+    :'<li><span>Nothing yet. Add the approval, a passport copy and the payment receipt.</span></li>';renderOverview()}
+$('#wFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{await W.run('readwrite',s=>s.add({kind:$('#wKind').value,name:f.name,blob:f,added:Date.now()}))}catch(err){}renderWallet()});
+$('#wList').addEventListener('click',async e=>{const o=e.target.closest('[data-open]'),d=e.target.closest('[data-del]');
+  if(o){const doc=await W.run('readonly',s=>s.get(+o.dataset.open));if(doc){const u=URL.createObjectURL(doc.blob);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000)}}
+  if(d){await W.run('readwrite',s=>s.delete(+d.dataset.del));renderWallet()}});
+
+function buildPack(){
+  const {r,docs,dates}=curPlan(),c=airChecks(),cu=customs(),made=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const row=(a,b)=>`<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`;
+  const dl=dates.map(d=>row(d[0],`${fmtY(d[1])}${clockFor(d[0])?' · '+clockFor(d[0]):''}`)).join('');
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pravesh arrival pack</title><style>body{font:16px/1.5 system-ui,sans-serif;max-width:720px;margin:0 auto;padding:20px;color:#1f2b4d}h1{font-size:26px;margin:0}h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:26px 0 6px;color:#565e75}table{width:100%;border-collapse:collapse}td{padding:8px 4px;border-top:1px solid #ddd;vertical-align:top}td:first-child{font-weight:600;width:38%}ol{padding-left:20px}p.s{color:#565e75;font-size:13.5px}</style></head><body>
+<h1>${esc(r.title)}</h1><p class="s">${esc(r.kind)} · landing at ${esc(r.port[1])} · visa status: ${esc(ST_LBL[$('#vStatus').value])}${$('#vApp').value?' · application '+esc($('#vApp').value):''} · pack made ${made}. Unofficial, not a visa.</p>
+<h2>Dates</h2><table>${dl}</table><h2>Carry</h2><table>${docs.map(d=>row(d[0],d[1])).join('')}</table>
+<h2>Approval vs passport</h2><table>${c.map(x=>row(x.n,`${AIR_LBL[x.st]}: ${x.g}`)).join('')}</table>
+<h2>Customs</h2><table>${row('Free allowance',inr(cu.allow))}${cu.rows.map(x=>row(x.n,`${AIR_LBL[x.st]}: ${x.g}`)).join('')}${row('Channel',cu.declare?'Red: declare':'Green, on this list')}</table>
+<h2>If something does not match</h2><ol><li>Write to the e-Visa helpdesk with your application ID and a screenshot.</li><li>At check-in, show the approval email and passport and ask the airline to confirm your visa status.</li><li>At Indian immigration, stay calm, show both and ask for the supervisor. The officer decides.</li></ol>
+<h2>Contacts</h2><table>${CONTACTS.map(x=>row(x[0],x[1])).join('')}</table>
+<p class="s">Only the Indian authorities can change a visa. Official site: https://indianvisaonline.gov.in</p></body></html>`;
+}
+$('#packSave').addEventListener('click',e=>{saveBlob(new Blob([buildPack()],{type:'text/html'}),'pravesh-arrival-pack.html',e.currentTarget);dash.packSaved=true;saveDash();renderOverview()});
+
+/* ---- In India ---- */
+function renderIndia(){
+  const cont=LONG_STAY.includes(state.nat)?180:90,cu=customs(),R='rule',P='tip';
+  const G=[['Your visa in India',[[R,'The e-Visa is not valid for Protected or Restricted Areas or Cantonment areas. Those need a separate permit.','Official e-Visa page'],[R,'The e-Visa cannot be extended or converted. Leave before it ends.','Official e-Visa page'],
+      [R,`On a 1-year or 5-year e-Tourist Visa: up to ${cont} days per visit for your passport, and no more than 180 days in a calendar year.`,'Official e-Visa page'],[P,'Hotels register foreign guests, so they will ask for your passport and visa at check-in.','General advice']]],
+    ['Arriving',[[R,'File the e-Arrival Card within 72 hours before landing.','Rules on this site, from the official source'],[R,`Your duty-free allowance is ${inr(cu.allow)}. Alcohol over 2 litres and cigarettes over 100 are outside it.`,'Baggage Rules, 2026'],
+      [P,'Use the prepaid taxi counter inside the terminal or an app cab. Turn down offers in the arrivals hall.','General advice'],[P,'A local SIM needs your passport and visa. Keep copies on your phone.','General advice']]],
+    ['Respect',[[P,'Take off your shoes at temples, mosques and gurdwaras. Cover shoulders and knees, and your head in a gurdwara.','General advice'],[P,'Ask before you photograph people. Do not photograph airports, military areas or security checks.','General advice'],[P,'Dress modestly away from beaches and big-city centres.','General advice']]],
+    ['Safety',[[R,'Emergency: 112. Tourist helpline: 1363.','Incredible India emergency page'],[P,'Drink bottled or filtered water.','General advice'],[P,'Do not bring or fly a drone without checking the permission rules first.','General advice'],[P,'Keep the arrival pack and wallet on your phone. They work offline.','Pravesh']]]];
+  $('#ddGrid').innerHTML=G.map(g=>`<div class="frag"><div class="frag-bar"><h3>${esc(g[0])}</h3></div><ul>${g[1].map(x=>`<li><span class="tag ${x[0]}">${x[0]===R?'Official rule':'Good practice'}</span> ${esc(x[1])}<small>${esc(x[2])}</small></li>`).join('')}</ul></div>`).join('');
+}
+
+/* ---- Overview ---- */
+let lastCost=null,lastCust=null,stayBad=false;
+function readiness(){
+  const {r}=curPlan(),c=airChecks(),st=$('#vStatus').value,get=n=>c.find(x=>x.n===n),[ad,an]=renderAirline(),L=[];
+  L.push({n:'Entry plan',st:'ok',g:r.kind+' · '+r.title});
+  L.push(r.type!=='evisa'?{n:'Visa',st:r.type==='voa'?'ok':'todo',g:r.type==='voa'?'Visa on arrival: no application':'Apply through an Indian mission'}:st==='ok'?{n:'Visa',st:'ok',g:'Granted'}:st==='no'?{n:'Visa',st:'bad',g:'Rejected: see the Visa tab'}:{n:'Visa',st:'todo',g:ST_LBL[st]});
+  const cmp=['Name','Passport number','Date of birth'].map(get);
+  L.push(r.type!=='evisa'?{n:'Approval matches passport',st:'ok',g:'No approval on this route'}:cmp.some(x=>x.st==='bad')?{n:'Approval matches passport',st:'bad',g:'A detail differs: see the Visa tab'}:cmp.every(x=>x.st==='ok')?{n:'Approval matches passport',st:'ok',g:'Name, number and birth date match'}:{n:'Approval matches passport',st:'todo',g:'Import the approval and passport in the Visa tab'});
+  const pv=get('Passport validity');L.push(pv);
+  const eac=get('e-Arrival Card');if(eac)L.push(eac);
+  L.push(stayBad?{n:'Length of stay',st:'bad',g:'Your departure is past the limit: see the Visa tab'}:{n:'Length of stay',st:'ok',g:'Within the visa limits entered'});
+  L.push(!dash.items.length?{n:'Customs',st:'todo',g:'Add what you are carrying'}:lastCust.declare?{n:'Customs',st:'warn',g:'Something to declare'}:{n:'Customs',st:'ok',g:'Nothing to declare on your list'});
+  L.push(ad===an?{n:'Airline desk',st:'ok',g:'Everything ticked'}:{n:'Airline desk',st:'todo',g:`${ad} of ${an} ready`});
+  L.push(walletN?{n:'Documents on this device',st:'ok',g:`${walletN} in the wallet`}:{n:'Documents on this device',st:'todo',g:'Add them in Airport help'});
+  L.push(dash.packSaved?{n:'Offline arrival pack',st:'ok',g:'Saved'}:{n:'Offline arrival pack',st:'todo',g:'Save it from Airport help'});
+  return L;
+}
+function renderOverview(){
+  if(!lastCust)return;
+  const {r,dates}=curPlan(),L=readiness(),done=L.filter(x=>x.st==='ok').length,nx=dates.find(d=>dayDiff(d[1])>=0),days=dayDiff(state.arr);
+  $('#readyList').innerHTML=L.map(checkLi).join('');$('#readyNote').textContent=`${done} of ${L.length} done`;
+  const bad=L.filter(x=>x.st==='bad').length;
+  $('#dashSum').innerHTML=`<b>${esc(r.kind)} · ${esc(r.port[1])}</b><span>${days>=0?days+' days to landing':'Landed'}</span>${nx?`<span class="${dayDiff(nx[1])<=2&&nx[0]!=='Land'?'hot':''}">Next: ${esc(nx[0])}, ${esc(fmtD(nx[1]))} (${esc(subFor(nx[0],nx[1]).toLowerCase())})</span>`:''}<span>${done} of ${L.length} ready</span>${bad?`<span class="hot">${bad} to fix</span>`:''}`;
+  const card=(t,small,big,sub,k)=>`<button class="card ${k||''}" type="button" data-go="${t}"><small>${esc(small)}</small><b>${esc(big)}</b><span>${esc(sub)}</span></button>`;
+  $('#overCards').innerHTML=card('visa','Visa',r.type==='evisa'?ST_LBL[$('#vStatus').value]:r.kind,r.type==='evisa'?($('#vApp').value?'ID '+$('#vApp').value:'Add your application ID'):'No application needed',$('#vStatus').value==='no'?'bad':$('#vStatus').value==='ok'?'ok':'')
+    +card('cust','Customs',lastCust.declare?'Declare':'Clear',`${inr(lastCust.allow)} allowance`,lastCust.declare?'bad':'')
+    +card('cost','Budget',lastCost===null?'Needs a rate':inr(lastCost),`${dash.nights} nights, illustrative`)
+    +card('help','Airport help',walletN?walletN+' documents':'Wallet empty','Offline pack and next steps');
+}
+$('#overCards').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)showTab(b.dataset.go)});
+
+/* ---- Wiring ---- */
+$('#vCat').value=dash.vcat||(routeFor(state).type==='voa'?'voa':state.purpose==='business'?'b1':state.purpose==='medical'?'med':'t30');$('#vGrant').value=dash.grant;$('#vStatus').value=dash.status;$('#vApp').value=dash.app;
+$('#vArr').readOnly=true;$('#vDep').value=dash.dep||isoDate(addDays(sod(state.arr),dash.nights));
+$('#cRate').value=dash.rate;$('#cCash').value=dash.cash;$('#cOther').value=dash.other;
+['#vCat','#vGrant','#vDep','#vStatus','#vApp'].forEach(id=>$(id).addEventListener('input',()=>{dash.vcat=$('#vCat').value;dash.grant=$('#vGrant').value;dash.dep=$('#vDep').value;dash.status=$('#vStatus').value;dash.app=$('#vApp').value;saveDash();refreshDash()}));
+$('#airForm').addEventListener('input',refreshDash);$('#airForm').addEventListener('change',refreshDash);
+function refreshDash(){
+  renderAirport();stayBad=renderStay();renderStatus();lastCust=renderCustoms();lastCost=renderCosts(lastCust.duty);renderSit();renderIndia();renderOverview();
+}
+window.__air=refreshDash;
+refreshDash();renderWallet();showTab(TABS.includes(dash.tab)?dash.tab:'over');
 const planBody=()=>({nat:state.nat,port:state.port,purpose:state.purpose,arr:isoDate(state.arr),prior:state.prior,pak:state.pak,mil:state.mil});
 const downBody=()=>Object.assign(planBody(),{tzOffsetMinutes:-new Date().getTimezoneOffset()});
 const planNote=$('#planNote'),NOTE0=planNote.textContent;
