@@ -1614,7 +1614,7 @@ const say=(t,k)=>{const s=$('#impStatus');s.textContent=t;s.className='imp-statu
 const MON={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
 function toISO(s){
   s=s.toUpperCase();let m=s.match(/(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);if(m)return mkISO(m[1],m[2]-1,m[3]);
-  m=s.match(/(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/);if(m)return mkISO(m[3],m[2]-1,m[1]);
+  m=s.match(/(\d{1,2})\s*[-\/. ]\s*(\d{1,2})\s*[-\/. ]\s*(\d{4})/);if(m)return mkISO(m[3],m[2]-1,m[1]);
   m=s.match(/(\d{1,2})[-\/ ]*([A-Z]{3})[A-Z]*[-\/ ,]*(\d{4})/);if(m&&m[2] in MON)return mkISO(m[3],MON[m[2]],m[1]);
   return null;
 }
@@ -1993,8 +1993,8 @@ refreshDash();renderWallet();showTab(TABS.includes(dash.tab)?dash.tab:'over');
   async function ask(text){
     hist.push({role:'user',content:text});add('me',esc(text));
     if(!ready){add('bot','The AI is not set up on this server, so I can only read documents here. The person running it adds a free NVIDIA_API_KEY in the host settings.');return}
-    add('bot wait','Thinking…');
-    const r=await api('/api/assistant',{method:'POST',timeout:30000,body:{messages:hist.slice(-12),context:context()}});
+    add('bot wait','Thinking… the free AI tier can take up to a minute.');
+    const r=await api('/api/assistant',{method:'POST',timeout:75000,body:{messages:hist.slice(-12),context:context()}});
     log.querySelector('.wait')?.remove();
     if(!r.ok){add('bot',esc(r.data?.error?.message||'The assistant did not answer. Try again.'));hist.pop();return}
     hist.push({role:'assistant',content:r.data.reply});add('bot',esc(r.data.reply).replace(/\n/g,'<br>'));act(r.data.actions||[]);
@@ -2010,8 +2010,15 @@ refreshDash();renderWallet();showTab(TABS.includes(dash.tab)?dash.tab:'over');
         if(m){fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);refreshDash();kind=m.ok.every(Boolean)?'passport':'passport, but a check digit did not add up'}
         else{const t=await ocr(f);$('#impText').value=t.trim();applyApproval(readApproval(t));kind='approval'}}
       log.querySelector('.wait')?.remove();
-      const c=airChecks(),bad=c.filter(x=>x.st==='bad'),todo=c.filter(x=>x.st==='todo');
-      add('bot',`Read your ${esc(kind)}. ${bad.length?`<b>${bad.length} to fix:</b><br>${bad.map(x=>esc(x.n+': '+x.g)).join('<br>')}`:todo.length?`Still to compare: ${esc(todo.map(x=>x.n.toLowerCase()).join(', '))}. Add the ${kind==='approval'?'passport photo':'approval email'} next.`:'Everything matches.'}`);
+      const c=airChecks(),bad=c.filter(x=>x.st==='bad'),v=id=>$(id).value.trim();
+      const F=[['name','#aName1','#aName2'],['passport number','#aNo1','#aNo2'],['date of birth','#aDob1','#aDob2']];
+      const missA=F.filter(f=>!v(f[1])).map(f=>f[0]),missP=F.filter(f=>!v(f[2])).map(f=>f[0]);
+      const gaps=[];
+      if(missA.length)gaps.push(missP.length===3?'':`Could not find the ${missA.join(', ')} on the approval. Type ${missA.length>1?'them':'it'} in the Visa tab.`);
+      if(missP.length)gaps.push(missA.length===3?'':`Could not find the ${missP.join(', ')} on the passport. Type ${missP.length>1?'them':'it'} in the Visa tab.`);
+      if(missA.length===3)gaps.push('Now add the approval email.');else if(missP.length===3)gaps.push('Now add the passport photo.');
+      const g=gaps.filter(Boolean).join(' ');
+      add('bot',`Read your ${esc(kind)}. ${bad.length?`<b>${bad.length} to fix:</b><br>${bad.map(x=>esc(x.n+': '+x.g)).join('<br>')}<br>`:''}${g?esc(g):bad.length?'':'Name, passport number and date of birth all match.'}`);
       showTab('visa');
     }catch(err){log.querySelector('.wait')?.remove();add('bot',esc(err.message||'Could not read that file.'))}
   }
