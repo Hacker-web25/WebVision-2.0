@@ -82,7 +82,9 @@ export function buildMessages({ messages, context }) {
 /** OpenAI-compatible chat call: NVIDIA build first, Gemini as a fallback. Returns null when no key is set. */
 export function modelFromEnv(env) {
   const providers = [];
-  if (env.NVIDIA_API_KEY) providers.push({ name: 'NVIDIA', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: env.NVIDIA_API_KEY, model: env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct' });
+  // NVIDIA_MODEL may list several models, comma-separated: each is tried in turn, fastest first.
+  if (env.NVIDIA_API_KEY) for (const model of (env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct').split(',').map(m => m.trim()).filter(Boolean))
+    providers.push({ name: `NVIDIA ${model}`, url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: env.NVIDIA_API_KEY, model });
   if (env.GEMINI_API_KEY) providers.push({ name: 'Gemini', url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', key: env.GEMINI_API_KEY, model: env.GEMINI_MODEL || 'gemini-2.0-flash' });
   if (!providers.length) return null;
   return async messages => {
@@ -90,7 +92,7 @@ export function modelFromEnv(env) {
     for (const p of providers) {
       try {
         const r = await fetch(p.url, {
-          method: 'POST', signal: AbortSignal.timeout(60000),
+          method: 'POST', signal: AbortSignal.timeout(providers.length > 1 ? 30000 : 60000),
           headers: { 'content-type': 'application/json', authorization: `Bearer ${p.key}` },
           body: JSON.stringify({ model: p.model, messages, temperature: 0.2, max_tokens: 2500 }),
         });
@@ -99,7 +101,7 @@ export function modelFromEnv(env) {
         // Reasoning models can spend the whole budget thinking and return no answer: treat that as a failure.
         if (!c?.message?.content?.trim()) throw new Error(`${p.name} returned no answer (finish_reason: ${c?.finish_reason})`);
         return { text: c.message.content, provider: p.name };
-      } catch (e) { last = e; }
+      } catch (e) { last = e; console.error(`assistant: ${p.name} failed:`, e.message); }
     }
     throw last;
   };
