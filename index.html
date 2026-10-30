@@ -1642,6 +1642,10 @@ function readApproval(text){
   return out;
 }
 function fill(id,val){if(!val)return 0;const el=$(id);el.value=val;el.classList.add('filled');return 1}
+let approvalText='';
+function allDates(t){const out=new Set();(t.match(/\d{1,4}\s*[-\/. ]\s*(?:\d{1,2}|[A-Za-z]{3,9})\s*[-\/., ]\s*\d{2,4}/g)||[]).forEach(x=>{const d=toISO(x);if(d)out.add(d)});return [...out]}
+/* If the label was lost in OCR, use a date in the approval that equals the passport's birth date. */
+function dobFromText(){const p=$('#aDob2').value;if(!$('#aDob1').value&&p&&approvalText&&allDates(approvalText).includes(p)){fill('#aDob1',p);return true}return false}
 function applyApproval(o){
   let n=fill('#aName1',o.name)+fill('#aNo1',o.no)+fill('#aDob1',o.dob);
   if(o.port){aPort1.value=o.port;aPort1.classList.add('filled');n++}
@@ -1692,14 +1696,14 @@ async function ocrMRZ(blob){
 async function readPassport(blob){
   try{let m=readMRZ(await ocrMRZ(blob));if(!m)m=readMRZ(await ocr(blob));
     if(!m){say('Could not find the two machine-readable lines. Take the photo straight on, with the bottom of the page in view.','bad');return}
-    fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);refreshDash();
+    fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);dobFromText();refreshDash();
     const bad=['passport number','date of birth','expiry date'].filter((x,i)=>!m.ok[i]);
     say(bad.length?`Read the passport, but the check digit for the ${bad.join(' and ')} did not add up. Check those fields by eye.`:'Read the passport. All three check digits add up.',bad.length?'bad':'ok');
   }catch(e){say(e.message||'Could not read that image.','bad')}
 }
-$('#impRead').addEventListener('click',()=>applyApproval(readApproval($('#impText').value)));
+$('#impRead').addEventListener('click',()=>{approvalText=$('#impText').value;applyApproval(readApproval(approvalText));dobFromText()&&refreshDash()});
 $('#impFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{const t=f.type==='application/pdf'?await pdfText(f):await ocr(f);$('#impText').value=t.trim();applyApproval(readApproval(t))}catch(err){say(err.message||'Could not read that file.','bad')}});
+  try{const t=f.type==='application/pdf'?await pdfText(f):await ocr(f);$('#impText').value=t.trim();approvalText=t;applyApproval(readApproval(t));dobFromText()&&refreshDash()}catch(err){say(err.message||'Could not read that file.','bad')}});
 $('#mrzFile').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)readPassport(f)});
 $('#mrzSample').addEventListener('click',async()=>readPassport((await samplePassport()).blob));
 $('#impSample').addEventListener('click',()=>{
@@ -2005,10 +2009,10 @@ refreshDash();renderWallet();showTab(TABS.includes(dash.tab)?dash.tab:'over');
     add('me',esc('Added '+f.name));add('bot wait','Reading it on this device…');
     try{
       let kind='';
-      if(f.type==='application/pdf'){applyApproval(readApproval(await pdfText(f)));kind='approval'}
+      if(f.type==='application/pdf'){approvalText=await pdfText(f);applyApproval(readApproval(approvalText));dobFromText();kind='approval'}
       else{const m=readMRZ(await ocrMRZ(f));
-        if(m){fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);refreshDash();kind=m.ok.every(Boolean)?'passport':'passport, but a check digit did not add up'}
-        else{const t=await ocr(f);$('#impText').value=t.trim();applyApproval(readApproval(t));kind='approval'}}
+        if(m){fill('#aName2',m.name);fill('#aNo2',m.no);fill('#aDob2',m.dob);fill('#aExp',m.exp);dobFromText();refreshDash();kind=m.ok.every(Boolean)?'passport':'passport, but a check digit did not add up'}
+        else{const t=await ocr(f);$('#impText').value=t.trim();approvalText=t;applyApproval(readApproval(t));dobFromText();refreshDash();kind='approval'}}
       log.querySelector('.wait')?.remove();
       const c=airChecks(),bad=c.filter(x=>x.st==='bad'),v=id=>$(id).value.trim();
       const F=[['name','#aName1','#aName2'],['passport number','#aNo1','#aNo2'],['date of birth','#aDob1','#aDob2']];
