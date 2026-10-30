@@ -67,7 +67,7 @@ export function cleanActions(list) {
 
 /** Pull the JSON object out of a model reply, tolerating code fences or stray text. */
 export function parseReply(text) {
-  const s = String(text || '');
+  const s = String(text || '').replace(/<think>[\s\S]*?<\/think>/gi, '');
   const i = s.indexOf('{'), j = s.lastIndexOf('}');
   if (i >= 0 && j > i) {
     try { const o = JSON.parse(s.slice(i, j + 1)); if (typeof o.reply === 'string') return { reply: o.reply.slice(0, 3000), actions: cleanActions(o.actions) }; } catch { /* fall through */ }
@@ -92,11 +92,13 @@ export function modelFromEnv(env) {
         const r = await fetch(p.url, {
           method: 'POST', signal: AbortSignal.timeout(60000),
           headers: { 'content-type': 'application/json', authorization: `Bearer ${p.key}` },
-          body: JSON.stringify({ model: p.model, messages, temperature: 0.2, max_tokens: 700 }),
+          body: JSON.stringify({ model: p.model, messages, temperature: 0.2, max_tokens: 2500 }),
         });
         if (!r.ok) throw new Error(`${p.name} answered ${r.status}: ${(await r.text()).slice(0, 300)}`);
-        const j = await r.json();
-        return { text: j.choices?.[0]?.message?.content ?? '', provider: p.name };
+        const j = await r.json(), c = j.choices?.[0];
+        // Reasoning models can spend the whole budget thinking and return no answer: treat that as a failure.
+        if (!c?.message?.content?.trim()) throw new Error(`${p.name} returned no answer (finish_reason: ${c?.finish_reason})`);
+        return { text: c.message.content, provider: p.name };
       } catch (e) { last = e; }
     }
     throw last;
